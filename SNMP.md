@@ -81,7 +81,7 @@ These command can be devide as follow:
 Use:
 ```bash
 ip route | grep default
-#default via 192.168.1.1 dev wlp0s20f3 proto dhcp metric 600 
+#default via .... proto dhcp metric 600 
 ```
 or 
 ```bash
