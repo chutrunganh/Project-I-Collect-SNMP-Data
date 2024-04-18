@@ -102,6 +102,18 @@ hostname -I
 Set up the SNMP on host and virtual machine:
 Refer: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-an-snmp-daemon-and-client-on-ubuntu-18-04
 
+https://www.youtube.com/watch?v=D5uifMiVdbY&t=54s
+
+```bash
+sudo apt install snmp snmpd
+```
+snmp is SNMP utils, snmpd is the agent, which hold database and respone to query
+
+Then check the status of the agent to make sure it is active
+```bash
+systemctl status snmpd
+```
+
 I find add new user by this way is easier, just using this command in refer https://checkmk.com/blog/how-configure-snmp-linux :
 ```bash
 net-snmp-create-v3-user
