@@ -88,7 +88,7 @@ or
 route -n
 ```
 
-But my Viettel modern does not support SNMP :((
+But my Viettel modem does not support SNMP :((
 ## Run NMS on Linux host and SNMP Agent on Linux virtual machine
 Install KVM: https://phoenixnap.com/kb/ubuntu-install-kvm
 In this, I test on Linux Mint Xfce 23.1
