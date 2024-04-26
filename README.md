@@ -10,7 +10,9 @@
 
 <p align="center">A GUI program buils by JavaFX to run as a SNMP manager on your computer</p>
 <!-- Add some badges -->
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
  
 <!-- Screenshot of the app -->
 <p align="center">
