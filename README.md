@@ -20,7 +20,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Static Badge](https://img.shields.io/badge/AddLater-SonarTest-green)
-
 ![Static Badge](https://img.shields.io/badge/Messenger-00B2FF?style=flat&logo=messenger&logoColor=white)
 
 
