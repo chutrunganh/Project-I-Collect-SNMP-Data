@@ -44,15 +44,24 @@ target_ip = "192.168.122.102"
 
 # Print out some system information
 # Define a dictionary with OIDs and their corresponding messages
-oid_dict = {
-    "1.3.6.1.2.1.1.1.0": "System Information",
-    ".1.3.6.1.4.1.2021.4.5.0": "Total RAM",
-    "1.3.6.1.4.1.2021.4.6.0" :"RAM usage OID",
-    ".1.3.6.1.2.1.1.3.0": "Up Time" ,  #Up time will need futher processing to become date time format
-    #"1.3.6.1.4.1.2021.11.9.0": "Percentage of user CPU time",
-    #"1.3.6.1.2.1.2.2.1.10":"Network incoming traffic OID",
-    #"1.3.6.1.2.1.2.2.1.16" :"Network outgoing traffic OID",
+# oid_dict = {
+#     "1.3.6.1.2.1.1.1.0": "System Information",
+#     ".1.3.6.1.4.1.2021.4.5.0": "Total RAM",
+#     "1.3.6.1.4.1.2021.4.6.0" :"RAM usage OID",
+#     ".1.3.6.1.2.1.1.3.0": "Up Time" ,  #Up time will need futher processing to become date time format
+#     ".1.3.6.1.4.1.2021.10.1.3.1": "Percentage of user CPU time",
+#     #"1.3.6.1.2.1.2.2.1.10":"Network incoming traffic OID",
+#     #"1.3.6.1.2.1.2.2.1.16" :"Network outgoing traffic OID",
     
+# }
+oid_dict = {
+    "1.3.6.1.2.1.1.1.0": "System Description",  # Includes OS, specific version, hardware details
+    "1.3.6.1.2.1.1.5.0": "System Name",
+    "1.3.6.1.2.1.25.3.2.1.3.1": "Processor Description",  # CPU details
+    "1.3.6.1.4.1.2021.4.5.0": "Total RAM",
+    "1.3.6.1.2.1.25.2.3.1.5.1": "Storage Size",  # Total size of the first storage device
+    "1.3.6.1.2.1.25.3.3.1.2.1": "CPU Load",  # Percentage of CPU time
+    # There's no standard OID for GPU details, it depends on the specific GPU and its driver
 }
 
 oids = list(oid_dict.keys())
