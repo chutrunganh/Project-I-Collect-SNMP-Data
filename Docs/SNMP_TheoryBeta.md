@@ -408,13 +408,13 @@ SNMP có 3 phiên bản : **SNMPv1**, **SNMPv2c**, và **SNMPv3**. Các phiên b
 
 *Hiện tại SNMPv1 là phổ biến nhất do có nhiều thiết bị tương thích nhất và có nhiều phần mềm hỗ trợ nhất. Trong khi đó chỉ có một số thiết bị và phần mềm hỗ trợ SNMPv3.*
 
-- SNMPv1
+- **SNMPv1**
     
     The original version of SNMP, referred to as SNMPv1, has critical security and performance limitations. SNMPv1 provides authentication, which is based on a password (community string). The community string is sent in clear text between the NMS manager and the agents. Therefore, the managed device is vulnerable to unauthorized users who can easily reconfigure the device, especially if IP access control lists (ACLs) are not in place. The SNMPv1 and 2c data exchanged between the NMS administrator and the agents are not encrypted. 
 
     Regarding SNMPv1 protocol performance, the set of protocol transactions is limited to Gets, Sets, and Traps of individual objects in the MIB. Therefore, large sets of information require several transactions to retrieve a row of information.
 
-- SNMPv2c 
+- **SNMPv2c**
 
     SNMPv2c is the successor to the original SNMPv1. The standard MIB2 integer is 32 bits long in the case of SNMPv1; SNMPv2 defines a new type of integer that is 64 bits long. A 64-bit counter can better handle high-speed interfaces because 32-bit counters do not provide enough capacity and must wrap quickly. This increases network traffic and has a negative impact on both the agent and the NMS manager CPU utilization.
 
@@ -431,7 +431,7 @@ SNMP có 3 phiên bản : **SNMPv1**, **SNMPv2c**, và **SNMPv3**. Các phiên b
     SNMPv2c is a common community-based security model.
     SNMP 2u offers per-user authentication, similar to SNMPv3. SNMPv2u never really took off in the wild; anyone who wants per-user authentication uses SNMPv3. For more details (and there are a lot), consider this article in the Simple Times.
 
-- SNMPv3
+- **SNMPv3**
 
     SNMPv3 is the latest SNMP protocol that addresses the security issues introduced by older SNMP versions. SNMpv3 provides message integrity, authentication, and encryption by implementing SNMP View, SNMP Group, and SNMP User.
 
@@ -459,22 +459,24 @@ This coexistence is more commonly used while migrating from SNMPv2 to SNMPv3. On
 
 
 
-Bỏ qua vấn đề về cải thiện hiệu năng , phần này ta chỉ bàn về sư tiến hóa trong cơ chế bảo mật của SNMP:
+***Bỏ qua vấn đề về cải thiện hiệu năng , phần này ta chỉ bàn về sư tiến hóa trong cơ chế bảo mật của SNMP:***
 
 Một SNMP management station có thể quản lý/giám sát nhiều SNMP element, thông qua hoạt động gửi request và nhận trap. Tuy nhiên một SNMP element có thể được cấu hình để chỉ cho phép các SNMP management station nào đó được phép quản lý/giám sát mình.
 
 Các cơ chế bảo mật đơn giản này gồm có : community string, view và SNMP access control list.
 
-Community string
+- **Community string**
 
-Community string là một chuỗi ký tự được cài đặt giống nhau trên cả SNMP manager và SNMP agent, đóng vai trò như “mật khẩu” giữa 2 bên khi trao đổi dữ liệu. Community string có 3 loại : Read-community, Write-Community và Trap-Community.
+    Community string là một chuỗi ký tự được cài đặt giống nhau trên cả SNMP manager và SNMP agent, đóng vai trò như “mật khẩu” giữa 2 bên khi trao đổi dữ liệu. Community string có 3 loại : 
 
-Khi  manager  gửi GetRequest,  GetNextRequest đến agent  thì  trong bản tin gửi  đi  có  chứa  Read- Community. Khi agent nhận được bản tin request thì nó sẽ so sánh Read-community do manager gửi và Read-community mà nó được cài đặt. Nếu 2 chuỗi này giống nhau, agent sẽ trả lời; nếu 2 chuỗi này khác nhau, agent sẽ không trả lời.
+    - Read-community: Khi  manager  gửi GetRequest,  GetNextRequest đến agent  thì  trong bản tin gửi  đi  có  chứa  Read- Community. Khi agent nhận được bản tin request thì nó sẽ so sánh Read-community do manager gửi và Read-community mà nó được cài đặt. Nếu 2 chuỗi này giống nhau, agent sẽ trả lời; nếu 2 chuỗi này khác nhau, agent sẽ không trả lời.
 
-Write-Community được dùng trong bản tin SetRequest. Agent chỉ chấp nhận thay đổi dữ liệu khi write- community 2 bên giống nhau.
+    - Write-Community: Write-Community được dùng trong bản tin SetRequest. Agent chỉ chấp nhận thay đổi dữ liệu khi write- community 2 bên giống nhau.
 
-Trap-community nằm trong bản tin trap của trap sender gửi cho trap receiver. Trap receiver chỉ nhận và lưu trữ bản tin trap chỉ khi trap-community 2 bên giống nhau, tuy nhiên cũng có nhiều trap receiver được cấu hình nhận tất cả bản tin trap mà không quan tâm đến trap-community.
 
+    - Trap-Community: nằm trong bản tin trap của trap sender gửi cho trap receiver. Trap receiver chỉ nhận và lưu trữ bản tin trap chỉ khi trap-community 2 bên giống nhau, tuy nhiên cũng có nhiều trap receiver được cấu hình nhận tất cả bản tin trap mà không quan tâm đến trap-community.
+
+ 
 Community string có 3 loại như trên nhưng cùng một loại có thể có nhiều string khác nhau. Nghĩa là một agent có thể khai báo nhiều read-community, nhiều write-community.
 
 Trên hầu hết hệ thống, read-community mặc định là “public”, write-community mặc định là “private” và trap-community mặc định là “public”.
@@ -500,30 +502,10 @@ SNMP ACL là một danh sách các địa chỉ IP được phép quản lý/gi�
 
 
 # Structure of an data unit in snmp
-1.4.3. Các đặc tính của giao thức SNMPv2 và SNMPv3
-a. Các đặc tính cơ bản của giao thức SNMPV2
-Trên cơ sở SNMPv1, SNMPv2 được phát triển và tích hợp khả
-năng liên điều hành từ Manager tới Manager và hai đơn vị dữ liệu giao
-thức mới.
-Hai đơn vị dữ liệu giao thức PDU (Protocol Data Unit) được bổ
-sung cho SNMPv2 là GetbulkRequest và InformRequest.
-b. Cấu trúc bản tin SNMPv2
-Hình 1. 6 Cấu trúc dạng bản tin SNMP
-Các câu lệnh được thể hiện trong trường PDU Type, các giá trị
-thể hiện như sau:
-Bảng 1.1 Câu lệnh và giá trị trong trường PDU Type
-Câu lệnh Giá trị (hex) trong PDU Type
-GetRequest 0xA0
-GetNextRequest 0xA1
-Response 0xA2
-SetRequest 0xA3
-GetBulkRequest 0xA4
-InformRequest 0xA5
-SNMPv2-Trap 0xA6
-Report 0xA7
+Các đặc tính của giao thức SNMPv2 và SNMPv3
 
 
-
+![alt text](../Image/SNMPv2DataUnitStructure.png)
 # Part V: Programming
 
 
@@ -539,6 +521,6 @@ https://www.noction.com/blog/snmp-versions-evolution-security
 
 https://licensesoft.vn/snmp-la-gi.htm
 
-efer: https://www.youtube.com/watch?v=2IXP0TkwNJU and https://www.youtube.com/watch?v=Lq7j-QipNrI
+refer: https://www.youtube.com/watch?v=2IXP0TkwNJU and https://www.youtube.com/watch?v=Lq7j-QipNrI
 
 Refer: https://vietnix.vn/snmp-la-gi/
