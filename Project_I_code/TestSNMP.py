@@ -31,15 +31,15 @@ def get(target_ip, oids, credentials, port=161):
 
 # Define SNMPv3 credentials
 credentials = UsmUserData(
-    'ctav3',         # SNMPv3 username (configured on SNMP agent)
-    'chutrunganh',   # Authentication password
-    'chutrunganh',   # Privacy password
+    'chutrunganh',         # SNMPv3 username (configured on SNMP agent)
+    'chutrunganh.123',   # Authentication password
+    'chutrunganh.123',   # Privacy password
     authProtocol=usmHMACMD5AuthProtocol,   # Authentication protocol (MD5)
     privProtocol=usmDESPrivProtocol        # Privacy protocol (DES)
 )
 
 # Specify target IP address and OID
-target_ip = "192.168.122.102"
+target_ip = "192.168.1.8"
 
 
 # Print out some system information

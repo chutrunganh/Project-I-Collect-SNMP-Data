@@ -20,7 +20,7 @@ sudo apt install snmpd
 This command installs the SNMP daemon.
 
 
-*I attempted to run an SNMP agent on a KVM virtual machine, which I installed following the instructions at this link: https://phoenixnap.com/kb/ubuntu-install-kvm. However, most of the OIDs are not functioning as expected. Interestingly, some OIDs related to the system name and total system RAM are working. I don't know why :))*.
+*Or you can try to run an SNMP agent on a Virtual machine for better demonstrayion. Here I tested on Linux Mint Xfce 21.3 using KVM. Install instruction in this: https://phoenixnap.com/kb/ubuntu-install-kvm.*.
 # Step 2: Configure SNMP
 
 ## On the NMS
@@ -45,6 +45,9 @@ agentAddress udp:161,udp6:[::1]:161
 ```
 This change allows all connections to port 161 of the agent device (since the Polling Request from NMS communicates with agents through port 161 UDP).
 
+
+
+### With SNMP version v1 and v2c
 Pay attention to these lines:
 ```plaintext
 # Read-only access to everyone to the systemonly view
@@ -52,6 +55,43 @@ rocommunity  public default -V systemonly
 rocommunity6 public default -V systemonly
 ```
 These are the community strings used for SNMP v1 and v2. The default value is `public` as shown.
+
+Here's a breakdown of each part:
+
+- `rocommunity`: This keyword specifies that you are defining a read-only SNMP community. `rocommunity6` is uesd for IPv6 (maybe)
+
+- `public`: This is the community string, which is like a password. In this case, the community string is `public`.
+
+- `default`: This is the source list. It defines where SNMP requests can come from. The `default` keyword means that requests can come from any source.
+
+- `-V systemonly`: It limits the community named `public` to only the SNMP view called `systemonly`. In this case, the community has access to the `systemonly` view. A view in SNMP is a subset of the MIB (Management Information Base) that is available for management operations.
+
+The view is defined in these lines above:
+```plaintext
+#  system + hrSystem groups only
+view   systemonly  included   .1.3.6.1.2.1.1
+view   systemonly  included   .1.3.6.1.2.1.25.1
+```
+The lines you've posted are from an SNMP (Simple Network Management Protocol) configuration file. They define a view in SNMP, which is a subset of the MIB (Management Information Base) that is available for management operations. 
+
+Here's what each line means:
+
+- `view systemonly included .1.3.6.1.2.1.1`: This line is defining a view named `systemonly` that includes the MIB subtree `.1.3.6.1.2.1.1`. This subtree corresponds to the `system` group in the SNMP MIB-2, which contains system-level information like the system's description, location, and uptime.
+
+- `view systemonly included .1.3.6.1.2.1.25.1`: This line is adding the MIB subtree `.1.3.6.1.2.1.25.1` to the `systemonly` view. This subtree corresponds to the `hrSystem` group in the HOST-RESOURCES-MIB, which contains information about the host's system, like the number of users and the system's date and time.
+
+
+Now, we will configure our own community string as follows:
+```plaintext
+rwcommunity password default
+```
+This line indicates that we are setting up a read-write community string. Here, `password` is the community string, which functions like a password. You should replace `password` with your actual desired password. The `default` keyword allows SNMP requests from any source. There is no restriction on view so this configuration grants access to the entire MIB.
+
+Remember to restart snmpd to takes effect:
+```sudo systemctl restart snmpd```
+S
+
+### With SNMP version v3
 
 If you want to use SNMP v3, you need to create a user. The following commands create a new user on the agent side:
 
