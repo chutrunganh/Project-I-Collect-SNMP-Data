@@ -82,7 +82,9 @@ Navigate to `Setups > Hosts > Add host to the monitoring`. Then set up as follow
 
 ![Checkmk Configuration](../Image/ConfigCheckmk.png)
 
-Click `Change`, then `Accept all changes` in the top right corner:
+Click `Save & run service discovery` > `Monitor undecided services`
+
+Click `Change`, then `Activate on selected sites` in the top right corner:
 
 ![Accept Changes](../Image/AccpectChangeCheckmk.png)
 
