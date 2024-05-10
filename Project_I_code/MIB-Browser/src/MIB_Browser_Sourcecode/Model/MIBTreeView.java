@@ -1,8 +1,7 @@
 package MIB_Browser_Sourcecode.Model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 

@@ -1,25 +1,22 @@
 package MIB_Browser_Sourcecode.GUI;
 
 import MIB_Browser_Sourcecode.Model.MIBTreeView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 
 public class MainController {
 
     //Attributes
-    private MIBTreeView mibTreeView = new MIBTreeView();
+    private final MIBTreeView mibTreeView = new MIBTreeView();
     @FXML
     private ScrollPane A_MIBTreeScrollpane;  //Use to display list of MIBs which are loaded/opened by users + "Loaded MIBs" label
     @FXML
@@ -72,7 +69,7 @@ public class MainController {
         try { //Save the file to the MIB Database folder also
 
             //Create a new file in the MIB Databases folder and write the contents of the selected file to it
-            Files.copy(file.toPath(), new File(  "Project_I_code/MIB-Browser/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.toPath(), new File("Project_I_code/MIB-Browser/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("File Saved Successfully");
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,19 +89,14 @@ public class MainController {
         MIBTreeView.JsonToTreeView jsonToTreeView = mibTreeView.new JsonToTreeView();
         TreeView<String> treeView = jsonToTreeView.jsonToTreeView(jsonFile);
 
-        // Set a custom cell factory to limit the length of the text since the first node contains the entire JSON string is
-        // too long to display in the TreeView
-        treeView.setCellFactory(tv -> new TreeCell<String>() {
-            @Override
-            public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else {
-                    setText(item.length() > 30 ? item.substring(0, 30) + "..." : item);
-                }
-            }
-        });
+        // Create the context menu. (Click on a node will show SNMP operations)
+        ContextMenu contextMenu = createContextMenu();
+
+        // Set the cell factory look (limit cell length) and add the context menu
+        //In JavaFX, the context menu is not rendered for all cells immediately. It's only rendered
+        // when you right-click on a cell. So create a context menu for each cell like this is not resource consuming (maybe).
+        setCellFactory(treeView, contextMenu);
+
 
         // Bind the TreeView's prefWidthProperty to the ScrollPane's widthProperty
         treeView.prefWidthProperty().bind(A_MIBTreeScrollpane.widthProperty());
@@ -137,4 +129,49 @@ public class MainController {
 
         }
     }
+
+    private ContextMenu createContextMenu() {
+        // Create a ContextMenu
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Create MenuItems
+        MenuItem getItem = new MenuItem("Get");
+        MenuItem getNextItem = new MenuItem("GetNext");
+
+        // Add MenuItems to ContextMenu
+        contextMenu.getItems().addAll(getItem, getNextItem);
+
+        // Set an onAction event handler for the MenuItems
+        getItem.setOnAction(event -> {
+            // Perform the "Get" action
+            System.out.println("Get action performed");
+        });
+
+        getNextItem.setOnAction(event -> {
+            // Perform the "GetNext" action
+            System.out.println("GetNext action performed");
+        });
+
+        return contextMenu;
+    }
+
+    private void setCellFactory(TreeView<String> treeView, ContextMenu contextMenu) {
+        // Set a custom cell factory to limit the length of the text and show the context menu
+        treeView.setCellFactory(tv -> new TreeCell<String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                    setContextMenu(null);
+                } else {
+                    setText(item.length() > 30 ? item.substring(0, 30) + "..." : item);
+                    setContextMenu(contextMenu);
+                }
+            }
+        });
+    }
+
+
+
 }
