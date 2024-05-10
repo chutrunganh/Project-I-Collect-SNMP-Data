@@ -12,14 +12,14 @@ import java.io.IOException;
 public class MIBTreeView {
 
     /*
-    * JSON stands for JavaScript Object Notation, it is attribute-value pairs separated by commas, and enclosed in curly braces. There are many
-    * APIs to do this, like Jackson, GSON, etc.
-    * Here I will try to build a JSON parser to parse a JSON file into a TreeView using Jackson:  https://github.com/FasterXML/jackson
-    * */
+     * JSON stands for JavaScript Object Notation, it is attribute-value pairs separated by commas, and enclosed in curly braces. There are many
+     * APIs to do this, like Jackson, GSON, etc.
+     * Here I will try to build a JSON parser to parse a JSON file into a TreeView using Jackson:  https://github.com/FasterXML/jackson
+     * */
 
     /*
-    * Test function to parse a JSON string to a JsonNode
-    */
+     * Test function to parse a JSON string to a JsonNode
+     */
 //    private static ObjectMapper objectMapper = getdefaultObjectMapper();
 //
 //    // Initialize the ObjectMapper by using this method instead of directly initializing it, since I want to configure it initially
@@ -35,8 +35,8 @@ public class MIBTreeView {
 
 
     /*
-    * Convert a MIB in JSON format to a TreeView object
-    */
+     * Convert a MIB in JSON format to a TreeView object
+     */
 
     ObjectMapper objectMapper = new ObjectMapper();
 

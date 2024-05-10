@@ -9,12 +9,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.Files;
-
-
 
 
 public class MainController {
@@ -27,21 +26,21 @@ public class MainController {
     private FlowPane MIBsloaded; //Use to display list of MIBs which are loaded/opened by users
 
     /*
-    * Load some default MIBs when the program starts
-    */
+     * Load some default MIBs when the program starts
+     */
     @FXML
     public void initialize() {
         //Load the default MIBs
-        File defaultMIB1 = new File("MIB Databases/Test-MIB.json");
+        File defaultMIB1 = new File("Project_I_code/MIB-Browser/MIB Databases/Test-MIB.json");
         showMIBsLoaded(defaultMIB1);
     }
 
 
     @FXML
-    /*
-     * Only open the MIB without saving it to the MIB Databases directory
-     * Then show the MIB in the TreeView
-     */
+        /*
+         * Only open the MIB without saving it to the MIB Databases directory
+         * Then show the MIB in the TreeView
+         */
     void openMIBClicked(ActionEvent event) throws IOException {
         //System.out.println("Open MIB Clicked");
 
@@ -52,15 +51,15 @@ public class MainController {
 
         //Show the chosen file in loaded section
         showMIBsLoaded(file);
-}
+    }
 
 
     @FXML
-    /*
-     * This method is called when the Load MIB button is clicked
-     * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
-     * Currently, I get a NullPointerException when I try to use relative paths, so I'm using absolute paths for now
-     */
+        /*
+         * This method is called when the Load MIB button is clicked
+         * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
+         * Currently, I get a NullPointerException when I try to use relative paths, so I'm using absolute paths for now
+         */
     void importMIBClicked(ActionEvent event) {
 
         //System.out.println("Import MIB Clicked");
@@ -73,17 +72,17 @@ public class MainController {
         try { //Save the file to the MIB Database folder also
 
             //Get absolute path of the current directory solution from: https://stackoverflow.com/questions/4210239/how-to-use-relative-path-instead-of-absolute-path 
-            String path = String.format("%s/%s", System.getProperty("user.dir"), this.getClass().getPackage().getName().replace(".", "/"));
-            System.out.println(path);
+            //String path = String.format("%s/%s", System.getProperty("user.dir"), this.getClass().getPackage().getName().replace(".", "/"));
+            //System.out.println(path);
             //Go up two directories
-            path = path.substring(0, path.lastIndexOf("/"));
-            path = path.substring(0, path.lastIndexOf("/"));
-            System.out.println(path);
+            //path = path.substring(0, path.lastIndexOf("/"));
+            //path = path.substring(0, path.lastIndexOf("/"));
+            //System.out.println(path);
             //For example: when this MainController.java file is runed, the path will be: /home/chutrunganh/Desktop/MIB-Browser/MIB_Browser_Sourcecode/GUI
             // Then, I will need to go up two directories to access the MIB Databases directory to save the file there.
 
             //Create a new file in the MIB Databases folder and write the contents of the selected file to it
-            Files.copy(file.toPath(), new File(path + "/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.toPath(), new File(  "Project_I_code/MIB-Browser/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("File Saved Successfully");
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,10 +94,10 @@ public class MainController {
 
 
     /*
-    * Function to display the TreeView of the chosen MIB. The TreeView is proceeded by the JsonToTreeView class in the MIBTreeView class
-    * to transform the JSON file to a TreeView
-    * */
-    public void  DisplayTreeViewOfChosenMIB (File jsonFile) throws IOException {
+     * Function to display the TreeView of the chosen MIB. The TreeView is proceeded by the JsonToTreeView class in the MIBTreeView class
+     * to transform the JSON file to a TreeView
+     * */
+    public void DisplayTreeViewOfChosenMIB(File jsonFile) throws IOException {
         //Create a new TreeView and set its root item
         MIBTreeView.JsonToTreeView jsonToTreeView = mibTreeView.new JsonToTreeView();
         TreeView<String> treeView = jsonToTreeView.jsonToTreeView(jsonFile);
@@ -127,8 +126,8 @@ public class MainController {
 
 
     /*
-    * Function to show the MIBs loaded/opened by the user in the MIBsloaded FlowPane
-    * */
+     * Function to show the MIBs loaded/opened by the user in the MIBsloaded FlowPane
+     * */
     public void showMIBsLoaded(File file) {
         if (file != null) {
             Label fileLabel = new Label(file.getName());

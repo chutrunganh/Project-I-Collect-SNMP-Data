@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
+
 import MIB_Browser_Sourcecode.Model.MIBTreeView;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.TreeView;
 import org.junit.Test;
-
 
 
 public class MIBTreeViewTest {
@@ -22,6 +22,7 @@ public class MIBTreeViewTest {
 
 
     String PATH_TO_TEST_JSON_FILE = "MIB Databases/Test-MIB.json";
+
     @Test
     public void testJsonToTreeView() {
         // Initialize JavaFX toolkit
