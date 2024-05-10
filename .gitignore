@@ -5,6 +5,11 @@ __pycache__/
 
 # CSV file
 *.csv
+# iml file from IntelliJ
+*.iml
+
+# .class files from Java
+*.class
 
 # C extensions
 *.so
