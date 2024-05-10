@@ -71,16 +71,6 @@ public class MainController {
 
         try { //Save the file to the MIB Database folder also
 
-            //Get absolute path of the current directory solution from: https://stackoverflow.com/questions/4210239/how-to-use-relative-path-instead-of-absolute-path 
-            //String path = String.format("%s/%s", System.getProperty("user.dir"), this.getClass().getPackage().getName().replace(".", "/"));
-            //System.out.println(path);
-            //Go up two directories
-            //path = path.substring(0, path.lastIndexOf("/"));
-            //path = path.substring(0, path.lastIndexOf("/"));
-            //System.out.println(path);
-            //For example: when this MainController.java file is runed, the path will be: /home/chutrunganh/Desktop/MIB-Browser/MIB_Browser_Sourcecode/GUI
-            // Then, I will need to go up two directories to access the MIB Databases directory to save the file there.
-
             //Create a new file in the MIB Databases folder and write the contents of the selected file to it
             Files.copy(file.toPath(), new File(  "Project_I_code/MIB-Browser/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("File Saved Successfully");
