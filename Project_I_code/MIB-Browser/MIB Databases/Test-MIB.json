@@ -1,0 +1,22 @@
+{
+"host": {
+    "name": "host",
+    "oid": "1.3.6.1.2.1.25",
+    "class": "objectidentity"
+  },
+  "hrSystem": {
+    "name": "hrSystem",
+    "oid": "1.3.6.1.2.1.25.1",
+    "class": "objectidentity"
+  },
+  "hrStorage": {
+    "name": "hrStorage",
+    "oid": "1.3.6.1.2.1.25.2",
+    "class": "objectidentity"
+  },
+  "hrDevice": {
+    "name": "hrDevice",
+    "oid": "1.3.6.1.2.1.25.3",
+    "class": "objectidentity"
+  }
+}
