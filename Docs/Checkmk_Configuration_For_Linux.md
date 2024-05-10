@@ -1,11 +1,11 @@
 ## Future Tasks
 - Set a static IP address for consistent network access.
 
-# Installing Checkmk
+# Setup 
 
 In this guide, we'll be using the Checkmk Raw version. You can download it from the following link: [Checkmk Raw Version Download](https://checkmk.com/download?method=cmk&edition=cre&version=2.3.0&platform=ubuntu&os=jammy&type=cmk&google_analytics_user_id=)
 
-The Free version of Checkmk is the Enterprise edition with all features, but it limits the number of services you can monitor (only 25 hosts and 750 services). The Raw version is the community edition with fewer features, but it allows unlimited monitoring services and is open source.
+*The Free version of Checkmk is the Enterprise edition with all features, but it limits the number of services you can monitor (only 25 hosts and 750 services). The Raw version is the community edition with fewer features, but it allows unlimited monitoring services and is open source.*
 
 
 **1. Download  and install the Checkmk package:**
@@ -46,7 +46,7 @@ Created new site monitoring with version 2.3.0.cre.
   After logging in, you can change the password for cmkadmin with 'cmk-passwd cmkadmin'.
 ```
 
-*Take note of the URL, default username, and the automatically generated password for accessing the site. Make sure to change or remember this password, as it won't be displayed again.*
+*Take note of the URL, default username (here it is `cmkadmin`), and the automatically generated password for accessing the site. Make sure to change or remember this password, as it won't be displayed again.*
 
 The site is now created, but it still needs to be started. To start the site, use the following command:
 
@@ -74,13 +74,17 @@ sudo omd stop monitoring
 sudo omd rm monitoring
 ```
 
+**3. Start monitoring**
+
 Now, open the provided URL and set up a new host:
 
-Navigate to `Setups > Hosts > Add host to the monitoring`.
+Navigate to `Setups > Hosts > Add host to the monitoring`. Then set up as follow:
 
 ![Checkmk Configuration](../Image/ConfigCheckmk.png)
 
-Click `Change`, then `Accept all changes` in the top right corner:
+Click `Save & run service discovery` > `Monitor undecided services`
+
+Click `Change`, then `Activate on selected sites` in the top right corner:
 
 ![Accept Changes](../Image/AccpectChangeCheckmk.png)
 
