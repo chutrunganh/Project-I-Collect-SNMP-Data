@@ -69,7 +69,7 @@
                                 <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <TextField layoutX="149.0" layoutY="15.0" prefHeight="24.0" prefWidth="206.0" promptText="Default is Localhost" />
+                        <TextField cache="true" layoutX="149.0" layoutY="15.0" prefHeight="24.0" prefWidth="206.0" promptText="Default is Localhost" />
                   <Button layoutX="381.0" layoutY="13.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Advenced...">
                      <font>
                         <Font name="System Bold" size="14.0" />
@@ -97,7 +97,7 @@
                         <Insets left="5.0" />
                      </padding>
                   </Label>
-                  <ChoiceBox layoutX="150.0" layoutY="44.0" prefHeight="24.0" prefWidth="206.0" />
+                  <ChoiceBox cache="true" layoutX="150.0" layoutY="44.0" prefHeight="24.0" prefWidth="206.0" />
                   <Button layoutX="382.0" layoutY="42.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="65.0" text="⤷ Go" textFill="#10d354">
                      <font>
                         <Font name="System Bold" size="14.0" />
