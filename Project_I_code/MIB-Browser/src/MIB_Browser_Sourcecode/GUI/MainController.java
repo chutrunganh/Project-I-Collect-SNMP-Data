@@ -1,9 +1,12 @@
 package MIB_Browser_Sourcecode.GUI;
 
+import MIB_Browser_Sourcecode.Model.MIBNode;
 import MIB_Browser_Sourcecode.Model.MIBTreeView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
 
@@ -11,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.stream.Collectors;
 
 
 public class MainController {
@@ -27,7 +31,7 @@ public class MainController {
      */
     @FXML
     public void initialize() {
-        //Load the default MIBs
+        //Load the default MIBs to the MIBsloaded FlowPane
         File defaultMIB1 = new File("Project_I_code/MIB-Browser/MIB Databases/Test-MIB.json");
         showMIBsLoaded(defaultMIB1);
     }
@@ -81,33 +85,6 @@ public class MainController {
 
 
     /*
-     * Function to display the TreeView of the chosen MIB. The TreeView is proceeded by the JsonToTreeView class in the MIBTreeView class
-     * to transform the JSON file to a TreeView
-     * */
-    public void DisplayTreeViewOfChosenMIB(File jsonFile) throws IOException {
-        //Create a new TreeView and set its root item
-        MIBTreeView.JsonToTreeView jsonToTreeView = mibTreeView.new JsonToTreeView();
-        TreeView<String> treeView = jsonToTreeView.jsonToTreeView(jsonFile);
-
-        // Create the context menu. (Click on a node will show SNMP operations)
-        ContextMenu contextMenu = createContextMenu();
-
-        // Set the cell factory look (limit cell length) and add the context menu
-        //In JavaFX, the context menu is not rendered for all cells immediately. It's only rendered
-        // when you right-click on a cell. So create a context menu for each cell like this is not resource consuming (maybe).
-        setCellFactory(treeView, contextMenu);
-
-
-        // Bind the TreeView's prefWidthProperty to the ScrollPane's widthProperty
-        treeView.prefWidthProperty().bind(A_MIBTreeScrollpane.widthProperty());
-        //Blind the TreeView's prefHeightProperty to the ScrollPane's heightProperty
-        treeView.prefHeightProperty().bind(A_MIBTreeScrollpane.heightProperty());
-        //Add the TreeView to the GUI
-        A_MIBTreeScrollpane.setContent(treeView);
-    }
-
-
-    /*
      * Function to show the MIBs loaded/opened by the user in the MIBsloaded FlowPane
      * */
     public void showMIBsLoaded(File file) {
@@ -121,7 +98,7 @@ public class MainController {
             // Event handler for the file label. If use clicks on the label, display the TreeView of the chosen MIB
             fileLabel.setOnMouseClicked(e -> {
                 try {
-                    DisplayTreeViewOfChosenMIB(file);
+                    displayTreeFromChosenMIB(file);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -130,6 +107,36 @@ public class MainController {
         }
     }
 
+
+    /*
+     * Function to display the TreeView of the chosen MIB from MIBsloaded FlowPane. The TreeView is proceeded by the JsonToTreeView class in
+     * the MIBTreeView class
+     * to transform the JSON file to a TreeView
+     * */
+
+
+    public void displayTreeFromChosenMIB(File file) throws IOException {
+        //Create a TreeView from the JSON file
+        TreeView<MIBNode> treeView = mibTreeView.jsonToTreeView(file);
+
+        // Set the cell factory look and add the context menu when right-clicked on a node
+        setCellFactory(treeView);
+
+        // Bind the TreeView's prefWidthProperty to the ScrollPane's widthProperty
+        treeView.prefWidthProperty().bind(A_MIBTreeScrollpane.widthProperty());
+        // Bind the TreeView's prefHeightProperty to the ScrollPane's heightProperty
+        treeView.prefHeightProperty().bind(A_MIBTreeScrollpane.heightProperty());
+        // Set the TreeView as the content of the ScrollPane
+        A_MIBTreeScrollpane.setContent(treeView);
+    }
+
+
+
+
+
+    /*
+     *  Show the context menu when right-clicked on a node
+     * */
     private ContextMenu createContextMenu() {
         // Create a ContextMenu
         ContextMenu contextMenu = new ContextMenu();
@@ -155,23 +162,51 @@ public class MainController {
         return contextMenu;
     }
 
-    private void setCellFactory(TreeView<String> treeView, ContextMenu contextMenu) {
-        // Set a custom cell factory to limit the length of the text and show the context menu
-        treeView.setCellFactory(tv -> new TreeCell<String>() {
+    /*
+     * Function to handle the  click action on a tree cell /node
+     * Left-click to choose that cell (mean we will get the value of that cell)
+     * Right-click to show the context menu
+     */
+    //In the context of a TreeView, you can think of a TreeItem as your data, the TreeCell as the visual representation of that data
+    private void handleTreeCellClick(TreeCell<MIBNode> treeCell, MouseEvent event) {
+        if (event.getButton() == MouseButton.PRIMARY) {
+            // Get the TreeItem associated with the clicked TreeCell
+            TreeItem<MIBNode> treeItem = treeCell.getTreeItem();
+
+            // Concatenate the values of all leaf child items
+            String childValues = treeItem.getChildren().stream()
+                    .filter(TreeItem::isLeaf)
+                    .map(child -> child.getValue().getValue())
+                    .collect(Collectors.joining(", "));
+            // Print the concatenated string
+            System.out.println(childValues);
+
+        } else if (event.getButton() == MouseButton.SECONDARY) {
+            //Show the context menu
+            ContextMenu contextMenu = createContextMenu();
+            treeCell.setContextMenu(contextMenu);
+        }
+    }
+
+
+    /*
+     * Function to set the cell factory look (limit cell length) and add the context menu when right-clicked on a node
+     * */
+    private void setCellFactory(TreeView<MIBNode> treeView) {
+        // Set a custom cell factory to show the context menu
+        treeView.setCellFactory(tv -> new TreeCell<MIBNode>() {
             @Override
-            public void updateItem(String item, boolean empty) {
+            public void updateItem(MIBNode item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setText(null);
-                    setContextMenu(null);
                 } else {
-                    setText(item.length() > 30 ? item.substring(0, 30) + "..." : item);
-                    setContextMenu(contextMenu);
+                    String displayText = item.getKey();
+                    setText(displayText);
+                    setOnMouseClicked(event -> handleTreeCellClick(this, event));
                 }
             }
         });
     }
-
-
 
 }
