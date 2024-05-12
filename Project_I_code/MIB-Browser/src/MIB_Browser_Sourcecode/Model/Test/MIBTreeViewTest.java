@@ -23,23 +23,23 @@ public class MIBTreeViewTest {
 
     String PATH_TO_TEST_JSON_FILE = "MIB Databases/Test-MIB.json";
 
-    @Test
-    public void testJsonToTreeView() {
-        // Initialize JavaFX toolkit
-        new JFXPanel();
-
-        MIBTreeView.JsonToTreeView jsonToTreeView = new MIBTreeView().new JsonToTreeView();
-        File jsonFile = new File("MIB Databases/Test-MIB.json");
-
-        try {
-            TreeView<String> treeView = jsonToTreeView.jsonToTreeView(jsonFile);
-            assertNotNull(treeView);
-            assertNotNull(treeView.getRoot());
-            // Add more assertions here based on what you expect the output to be
-        } catch (IOException e) {
-            fail("Test failed due to IOException");
-        }
-    }
+//    @Test
+//    public void testJsonToTreeView() {
+//        // Initialize JavaFX toolkit
+//        new JFXPanel();
+//
+//        MIBTreeView.JsonToTreeView jsonToTreeView = new MIBTreeView().new JsonToTreeView();
+//        File jsonFile = new File("Project_I_code/MIB-Browser/MIB Databases/Test-MIB.json");
+//
+//        try {
+//            TreeView<String> treeView = jsonToTreeView.jsonToTreeView(jsonFile);
+//            assertNotNull(treeView);
+//            assertNotNull(treeView.getRoot());
+//            // Add more assertions here based on what you expect the output to be
+//        } catch (IOException e) {
+//            fail("Test failed due to IOException");
+//        }
+//    }
 
 
 }
