@@ -1,9 +1,7 @@
 package MIB_Browser_Sourcecode.Model;
 
-import MIB_Browser_Sourcecode.GUI.MainController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
@@ -15,85 +13,36 @@ public class MIBTreeView {
     /*
      * JSON stands for JavaScript Object Notation, it is attribute-value pairs separated by commas, and enclosed in curly braces. There are many
      * APIs to do this, like Jackson, GSON, etc.
-     * Here I will try to build a JSON parser to parse a JSON file into a TreeView using Jackson:  https://github.com/FasterXML/jackson
+     * Here I will try to build a JSON parser to parse a JSON file into a TreeView using Jackson:  https://github.com/FasterXML/jackson .
+     * See how to install this library for Intellij in the Install.md.
      * */
 
-    /*
-     * Test function to parse a JSON string to a JsonNode
-     */
-//    private static ObjectMapper objectMapper = getdefaultObjectMapper();
-//
-//    // Initialize the ObjectMapper by using this method instead of directly initializing it, since I want to configure it initially
-//    private static ObjectMapper getdefaultObjectMapper() {
-//        ObjectMapper defaultObjectMapper = new ObjectMapper();
-//        return defaultObjectMapper;
-//    }
-//
-//    public static JsonNode parseJsonStringToNode(String jsonString) throws IOException {
-//        return objectMapper.readTree(jsonString);
-//    }
-
-
 
     /*
-     * Convert a MIB in JSON format to a TreeView object
+     * First, let's understand the structure of a TreeView object in JavaFX:
+     * - TreeView: Think of TreeView as the entire window or container where your tree structure will be displayed.
+     * It's the main visual component that the user interacts with. It holds the root TreeItem. From this root, the
+     * entire hierarchical structure unfolds.
+     *
+     * - TreeItem: Each node in your tree is represented by a TreeItem. A TreeItem can hold some data (like a string,
+     * an object, etc.) and can also have children (which are also TreeItems). (TreeItem is considered as The Building Blocks)
+     *
+     * - TreeCell: A TreeCell is responsible for how each individual node (TreeItem) is displayed within the TreeView. It determines
+     * the text, icons, and overall appearance of a single node in the tree. Since the TreeCell relates to the visual representation, I
+     * put it in the GUI package in MainController.java.
      */
 
 
-    //Create a TreeItem from a JsonNode. TEach TreeItem is a MIBNode (self-defined class) which has a pair key-value
-    private TreeItem<MIBNode> createTreeItem(JsonNode jsonNode) {
-        if (jsonNode.isObject()) {
-            TreeItem<MIBNode> item = new TreeItem<>();
-            jsonNode.fields().forEachRemaining(field -> {
-                MIBNode mibNode = new MIBNode(field.getKey(), field.getValue().toString());
-                TreeItem<MIBNode> child = new TreeItem<>(mibNode);
-                item.getChildren().add(child);
-            });
-            return item;
-        } else if (jsonNode.isArray()) {
-            TreeItem<MIBNode> item = new TreeItem<>();
-            for (JsonNode arrayElement : jsonNode) {
-                MIBNode mibNode = new MIBNode(arrayElement.asText(), arrayElement.toString());
-                item.getChildren().add(new TreeItem<>(mibNode));
-            }
-            return item;
-        } else {
-            return new TreeItem<>(new MIBNode(jsonNode.asText(), jsonNode.toString()));
-        }
-    }
-
-
-        //Re explanation of createTreeItem function:
-        /*
-         * Some explanation of TreeItem function:
-         * This function is used to convert a JSONNode into a TreeItem.
-         * 1. TreeItem<MIBNode> item = new TreeItem<>(jsonNode.toString()); - This line creates a new TreeItem<MIBNode> with
-         * the string representation of the JsonNode as its value.
-         * 2. if (jsonNode.isObject()) {...} - This block is executed if the JsonNode is an object. It iterates over each field in the JsonNode, recursively calls createTreeItem on the field's value to create a child TreeItem<MIBNode>, sets
-         * the child's value to the field's key, and adds the child to the item.
-         * 3. else if (jsonNode.isArray()) {...} - This block is executed if the JsonNode is an array. It iterates over each element in the JsonNode, recursively calls createTreeItem on the element to create a child TreeItem<MIBNode>,
-         *  and adds the child to the item.
-         * 4. return item; - This line returns the TreeItem<MIBNode> that was created.
-         * */
-
-
-    //ObjectMapper is the main class to use for reading and writing JSON content
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public TreeView<MIBNode> jsonToTreeView(File jsonFile) throws IOException {
-        JsonNode rootNode = objectMapper.readTree(jsonFile);
-        TreeItem<MIBNode> rootItem = new TreeItem<>(new MIBNode(jsonFile.getName(), "")); //Use the name of the file as the root node
-        buildTree(rootNode, rootItem);
-        return new TreeView<>(rootItem);
-    }
-
+    /*
+     * This function is a recursive function that builds the tree structure from the JSON file.
+     * */
     private void buildTree(JsonNode jsonNode, TreeItem<MIBNode> parentItem) {
         if (jsonNode.isObject()) {
             jsonNode.fields().forEachRemaining(field -> {
                 MIBNode mibNode = new MIBNode(field.getKey(), field.getValue().toString());
                 TreeItem<MIBNode> child = new TreeItem<>(mibNode);
                 parentItem.getChildren().add(child);
-                buildTree(field.getValue(), child);
+                buildTree(field.getValue(), child); //Recursive call
             });
         } else if (jsonNode.isArray()) {
             for (JsonNode arrayElement : jsonNode) {
@@ -105,23 +54,85 @@ public class MIBTreeView {
         }
     }
 
-        /*
-         * Some explanation of jsonToTreeView function:
-         * This method, jsonToTreeView, is responsible for converting a JSON file into a TreeView<MIBNode> object.
-         * 1. JsonNode rootNode = objectMapper.readTree(jsonFile); - This line reads the JSON file and converts it into a JsonNode object using the ObjectMapper's readTree method. The JsonNode
-         *  object represents the root node of the JSON structure.
-         * 2. TreeItem<MIBNode> rootItem = new TreeItem<>(jsonFile.getName()); - This line creates a new TreeItem<MIBNode> object, which is the root item of the TreeView. The name of the TreeItem
-         *  is set to the name of the JSON file.
-         * 3. rootItem.getChildren().add(createTreeItem(rootNode)); - This line adds a child to the rootItem. The child is created by calling the createTreeItem method with the rootNode as the
-         * argument. The createTreeItem method is responsible for converting a JsonNode into a TreeItem<MIBNode>.
-         * 4. return new TreeView<>(rootItem); - This line creates a new TreeView<MIBNode> object with the rootItem as its root, and returns it.
-         *
-         * */
+    /*
+     * Some explanation about the buildTree function:
+     * The function takes two arguments: a JsonNode and a TreeItem<MIBNode>. It then  checks
+     * if the JSON Node is:
+     * - an object (i.e., it contains key-value pairs), like this:
+     *   {
+     *    "name": "John Doe",
+     *    "age": 30,
+     *    "city": "New York"
+     *   }
+     *  it iterates over each field in the object. For each field, it does the following: Creates a new MIBNode object with
+     * the field's key and value -> Creates a new TreeItem<MIBNode> object (child) with the MIBNode object -> Adds the child to the
+     * parent item's children -> Makes a recursive call to buildTree with the field's value and the new child as arguments.
+     * This allows it to process nested objects in the JSON structure.
+     *
+     * - an array, like this:
+     *  ["apple", "banana", "cherry"]
+     * it iterates over each element in the array. For each element, it does the following: Creates a new MIBNode object with the
+     * element's value -> Creates a new TreeItem<MIBNode> object (child) with the MIBNode object -> Adds the child to the parent
+     * item's children -> Makes a recursive call to buildTree with the element and the new child as arguments.
+     * This allows it to process nested arrays in the JSON structure.
+     * */
 
-        
-        /**/
+
+    /*
+     * From JSON file to TreeView. As written in previous comments, the TreeView is the main visual component that the user interacts
+     * with. It holds the root TreeItem, so this function is just simply build the tree from the root node.
+     * */
+
+    //ObjectMapper is the main class to use for reading and writing JSON content
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public TreeView<MIBNode> jsonToTreeView(File jsonFile) throws IOException {
+        JsonNode rootNode = objectMapper.readTree(jsonFile);
+        TreeItem<MIBNode> rootItem = new TreeItem<>(new MIBNode(jsonFile.getName(), ""));
+        //Use the name of the file as the root node instead of the actual root content
+        buildTree(rootNode, rootItem);
+        return new TreeView<>(rootItem);
+    }
 
 
+    /*
+    * Function to travel the TreeView  to try to get the oid
+    * */
+//    public static String findOid(TreeItem<MIBNode> item) {
+//        // If the current item is the 'oid' key, return its value
+//        if (item.getValue().getKey().equals("oid")) {
+//            return item.getValue().getValue();
+//        }
+//
+//        // If the current item is not the 'oid' key, check its children
+//        for (TreeItem<MIBNode> child : item.getChildren()) {
+//            String oidValue = findOid(child);
+//            if (oidValue != null) {
+//                return oidValue;
+//            }
+//        }
+//
+//        // If the 'oid' key was not found in the current item or its children, return null
+//        return null;
+//    }
 
+    /*
+    * Try to find the oid in the children of the current item. Here I only process ONE LEVEL of children of
+    * the current item.  If the 'oid' key is found in the children, return its value. If the 'oid' key is not found,
+    * return an empty string.
+    * Multiple levels of children can be processed by making recursive calls to this function as I commented above.
+     */
+    public static String findOid(TreeItem<MIBNode> item) {
+        // Check the children of the current item
+        for (TreeItem<MIBNode> child : item.getChildren()) {
+            // If the child item is the 'oid' key, return its value
+            if (child.getValue().getKey().equals("oid")) {
+                return child.getValue().getValue();
+            }
+        }
+
+        // If the 'oid' key was not found in the children of the current item, return an empty string
+        return "";
+    }
 
 }

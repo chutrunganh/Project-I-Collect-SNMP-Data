@@ -84,7 +84,7 @@
                                 <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <TextField layoutX="150.0" layoutY="4.0" prefHeight="24.0" prefWidth="362.0">
+                        <TextField fx:id="tfOID" editable="false" layoutX="150.0" layoutY="4.0" prefHeight="24.0" prefWidth="362.0">
                             <font>
                                 <Font size="11.0" />
                             </font>
