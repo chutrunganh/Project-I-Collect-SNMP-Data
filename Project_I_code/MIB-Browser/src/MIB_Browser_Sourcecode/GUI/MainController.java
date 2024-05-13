@@ -25,6 +25,11 @@ public class MainController {
     private ScrollPane A_MIBTreeScrollpane;  //Use to display list of MIBs which are loaded/opened by users + "Loaded MIBs" label
     @FXML
     private FlowPane MIBsloaded; //Use to display list of MIBs which are loaded/opened by users
+    @FXML
+    private TextField tfOID;
+
+    String oidValue = null;
+
 
     /*
      * Load some default MIBs when the program starts
@@ -38,10 +43,10 @@ public class MainController {
 
 
     @FXML
-        /*
-         * Only open the MIB without saving it to the MIB Databases directory
-         * Then show the MIB in the TreeView
-         */
+    /*
+     * Only open the MIB without saving it to the MIB Databases directory
+     * Then show the MIB in the MIBsloaded FlowPane
+     */
     void openMIBClicked(ActionEvent event) throws IOException {
         //System.out.println("Open MIB Clicked");
 
@@ -56,13 +61,12 @@ public class MainController {
 
 
     @FXML
-        /*
-         * This method is called when the Load MIB button is clicked
-         * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
-         * Currently, I get a NullPointerException when I try to use relative paths, so I'm using absolute paths for now
-         */
+    /*
+     * This method is called when the Load MIB button is clicked
+     * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
+     * Then show the MIB in the MIBsloaded FlowPane
+     */
     void importMIBClicked(ActionEvent event) {
-
         //System.out.println("Import MIB Clicked");
 
         //Ask user to select a file
@@ -70,7 +74,7 @@ public class MainController {
         File file = fileChooser.showOpenDialog(null);
         System.out.println("Opening: " + file.getName() + ".");
 
-        try { //Save the file to the MIB Database folder also
+        try { //Save the file to the MIB Database directory
 
             //Create a new file in the MIB Databases folder and write the contents of the selected file to it
             Files.copy(file.toPath(), new File("Project_I_code/MIB-Browser/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -113,29 +117,23 @@ public class MainController {
      * the MIBTreeView class
      * to transform the JSON file to a TreeView
      * */
-
-
     public void displayTreeFromChosenMIB(File file) throws IOException {
         //Create a TreeView from the JSON file
         TreeView<MIBNode> treeView = mibTreeView.jsonToTreeView(file);
 
-        // Set the cell factory look and add the context menu when right-clicked on a node
+        //Custom the appearance, event handlers of a Tree cell in the TreeView
         setCellFactory(treeView);
 
         // Bind the TreeView's prefWidthProperty to the ScrollPane's widthProperty
         treeView.prefWidthProperty().bind(A_MIBTreeScrollpane.widthProperty());
         // Bind the TreeView's prefHeightProperty to the ScrollPane's heightProperty
         treeView.prefHeightProperty().bind(A_MIBTreeScrollpane.heightProperty());
-        // Set the TreeView as the content of the ScrollPane
+        // Add the TreeView to the ScrollPane
         A_MIBTreeScrollpane.setContent(treeView);
     }
 
-
-
-
-
     /*
-     *  Show the context menu when right-clicked on a node
+     *  Menu when right-click on a tree cell
      * */
     private ContextMenu createContextMenu() {
         // Create a ContextMenu
@@ -162,24 +160,31 @@ public class MainController {
         return contextMenu;
     }
 
+
     /*
-     * Function to handle the  click action on a tree cell /node
+     * Function to handle the  click action on a tree cell /node. In the context of a TreeView, you can think of a
+     * TreeItem as your data, the TreeCell as the visual representation of that data
+     *
      * Left-click to choose that cell (mean we will get the value of that cell)
      * Right-click to show the context menu
      */
-    //In the context of a TreeView, you can think of a TreeItem as your data, the TreeCell as the visual representation of that data
     private void handleTreeCellClick(TreeCell<MIBNode> treeCell, MouseEvent event) {
         if (event.getButton() == MouseButton.PRIMARY) {
             // Get the TreeItem associated with the clicked TreeCell
             TreeItem<MIBNode> treeItem = treeCell.getTreeItem();
 
-            // Concatenate the values of all leaf child items
-            String childValues = treeItem.getChildren().stream()
-                    .filter(TreeItem::isLeaf)
-                    .map(child -> child.getValue().getValue())
-                    .collect(Collectors.joining(", "));
-            // Print the concatenated string
-            System.out.println(childValues);
+
+            // Traverse the TreeItem to find the 'oid' key
+            oidValue = MIBTreeView.findOid(treeItem);
+
+            // If the 'oid' key was found, print its value
+            if (oidValue != null) {
+                String pirntOut_oidValue = oidValue.replace("\"", "");
+                //Remove the " " when printing the oid value
+                tfOID.setText(pirntOut_oidValue);
+            }
+
+
 
         } else if (event.getButton() == MouseButton.SECONDARY) {
             //Show the context menu
