@@ -7,7 +7,9 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -16,6 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MIB_Browser_Sourcecode.GUI.MainController">
     <children>
@@ -64,32 +67,33 @@
                 </ScrollPane>
                 <AnchorPane layoutX="320.0" prefHeight="41.0" prefWidth="567.0">
                     <children>
-                        <Label alignment="CENTER" layoutX="27.0" layoutY="7.0" prefHeight="41.0" prefWidth="79.0" text="Host IP">
+                        <Label alignment="CENTER" layoutY="4.0" prefHeight="41.0" prefWidth="79.0" text="Host IP">
                             <font>
                                 <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <TextField cache="true" layoutX="149.0" layoutY="15.0" prefHeight="24.0" prefWidth="206.0" promptText="Default is Localhost" />
-                  <Button layoutX="381.0" layoutY="13.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Advenced...">
+                        <TextField fx:id="tfTargetIP" cache="true" layoutX="79.0" layoutY="13.0" prefHeight="24.0" prefWidth="146.0" promptText="Default is Localhost" />
+                  <Label layoutX="236.0" layoutY="15.0" text="Comunity String">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
-                  </Button>
+                  </Label>
+                  <PasswordField fx:id="tfCommunityString" cache="true" layoutX="375.0" layoutY="12.0" promptText="Default is 'public'" />
                     </children>
                 </AnchorPane>
                 <AnchorPane layoutX="320.0" layoutY="51.0" prefHeight="84.0" prefWidth="567.0">
                     <children>
-                        <Label alignment="CENTER" layoutX="25.0" layoutY="-4.0" prefHeight="41.0" prefWidth="79.0" text="OID">
+                        <Label alignment="CENTER" layoutY="-3.0" prefHeight="41.0" prefWidth="79.0" text="OID">
                             <font>
                                 <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="tfOID" editable="false" layoutX="150.0" layoutY="4.0" prefHeight="24.0" prefWidth="362.0">
+                        <TextField fx:id="tfOID" layoutX="79.0" layoutY="6.0" prefHeight="24.0" prefWidth="468.0">
                             <font>
                                 <Font size="11.0" />
                             </font>
                         </TextField>
-                  <Label layoutX="25.0" layoutY="42.0" prefHeight="28.0" prefWidth="86.0" text="Operation">
+                  <Label layoutX="10.0" layoutY="42.0" prefHeight="28.0" prefWidth="59.0" text="Action">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -97,8 +101,8 @@
                         <Insets left="5.0" />
                      </padding>
                   </Label>
-                  <ChoiceBox cache="true" layoutX="150.0" layoutY="44.0" prefHeight="24.0" prefWidth="206.0" />
-                  <Button layoutX="382.0" layoutY="42.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="65.0" text="⤷ Go" textFill="#10d354">
+                  <ChoiceBox cache="true" layoutX="79.0" layoutY="44.0" prefHeight="24.0" prefWidth="206.0" />
+                  <Button fx:id="btnGo" layoutX="301.0" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#GoButtonClicked" prefHeight="28.0" prefWidth="65.0" text="⤷ Go" textFill="#10d354">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -106,13 +110,13 @@
                     </children>
                 </AnchorPane>
                 <ScrollPane layoutX="320.0" layoutY="134.0" prefHeight="288.0" prefWidth="567.0">
-                    <content>
-                        <Label prefHeight="27.0" prefWidth="144.0" text="Query request">
-                            <padding>
-                                <Insets left="5.0" />
-                            </padding>
-                        </Label>
-                    </content>
+               <content>
+                  <AnchorPane prefHeight="285.0" prefWidth="564.0">
+                     <children>
+                        <TextFlow prefHeight="282.0" prefWidth="558.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
                 </ScrollPane>
             <ScrollPane layoutX="320.0" layoutY="422.0" prefHeight="168.0" prefWidth="567.0">
                <content>
@@ -122,33 +126,34 @@
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="452.0" minWidth="10.0" prefWidth="446.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="69.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label alignment="CENTER" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: lightgrey;" text="Name" />
-                        <Label prefHeight="40.0" prefWidth="446.0" style="-fx-background-color: lightgrey;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label fx:id="lbName" prefHeight="34.0" prefWidth="434.0" style="-fx-background-color: lightgrey;" GridPane.columnIndex="1">
                            <padding>
                               <Insets left="5.0" />
                            </padding>
-                        </Label>
-                        <Label alignment="CENTER" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: lightgrey;" text="Access" GridPane.rowIndex="2" />
-                        <Label prefHeight="40.0" prefWidth="446.0" style="-fx-background-color: lightgrey;" text="Something here" GridPane.columnIndex="1">
-                           <padding>
-                              <Insets left="5.0" />
-                           </padding>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
                         </Label>
                         <Label alignment="CENTER" prefHeight="39.0" prefWidth="118.0" text="Type" GridPane.rowIndex="1" />
-                        <Label alignment="CENTER" prefHeight="39.0" prefWidth="118.0" text="Status" GridPane.rowIndex="3" />
-                        <Label alignment="CENTER" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: lightgrey;" text="Desciption" GridPane.rowIndex="4" />
-                        <Label prefHeight="41.0" prefWidth="445.0" style="-fx-background-color: lightgrey;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <Label fx:id="lbType" prefHeight="34.0" prefWidth="434.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label alignment="CENTER" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: lightgrey;" text="Access" GridPane.rowIndex="2" />
+                        <Label fx:id="lbAccess" prefHeight="40.0" prefWidth="446.0" style="-fx-background-color: lightgrey;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <padding>
                               <Insets left="5.0" />
                            </padding>
                         </Label>
+                        <Label alignment="CENTER" prefHeight="39.0" prefWidth="118.0" text="Status" GridPane.rowIndex="3" />
+                        <Label fx:id="lbStatus" prefHeight="34.0" prefWidth="434.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label alignment="CENTER" prefHeight="64.0" prefWidth="120.0" style="-fx-background-color: lightgrey;" text="Description" GridPane.rowIndex="4" />
+                        <TextArea fx:id="taDescription" editable="false" prefHeight="63.0" prefWidth="450.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
                </content>
