@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.stream.Collectors;
 
 
 public class MainController {
@@ -43,10 +42,10 @@ public class MainController {
 
 
     @FXML
-    /*
-     * Only open the MIB without saving it to the MIB Databases directory
-     * Then show the MIB in the MIBsloaded FlowPane
-     */
+        /*
+         * Only open the MIB without saving it to the MIB Databases directory
+         * Then show the MIB in the MIBsloaded FlowPane
+         */
     void openMIBClicked(ActionEvent event) throws IOException {
         //System.out.println("Open MIB Clicked");
 
@@ -61,11 +60,11 @@ public class MainController {
 
 
     @FXML
-    /*
-     * This method is called when the Load MIB button is clicked
-     * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
-     * Then show the MIB in the MIBsloaded FlowPane
-     */
+        /*
+         * This method is called when the Load MIB button is clicked
+         * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
+         * Then show the MIB in the MIBsloaded FlowPane
+         */
     void importMIBClicked(ActionEvent event) {
         //System.out.println("Import MIB Clicked");
 
@@ -175,15 +174,15 @@ public class MainController {
 
 
             // Traverse the TreeItem to find the 'oid' key
+            //Current implementation only checks the immediate children of the current item
             oidValue = MIBTreeView.findOid(treeItem);
 
             // If the 'oid' key was found, print its value
             if (oidValue != null) {
-                String pirntOut_oidValue = oidValue.replace("\"", "");
+                String printOut_oidValue = oidValue.replace("\"", "");
                 //Remove the " " when printing the oid value
-                tfOID.setText(pirntOut_oidValue);
+                tfOID.setText(printOut_oidValue);
             }
-
 
 
         } else if (event.getButton() == MouseButton.SECONDARY) {

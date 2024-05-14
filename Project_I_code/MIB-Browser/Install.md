@@ -13,3 +13,6 @@ Install Jackson: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/j
 10. Once the library is downloaded, click OK in the New Library dialog.
 11. Click Apply and then OK in the Project Structure dialog.
 Now, Jackson library should be added to your project and you can use it in your code. IntelliJ IDEA will automatically handle the classpath settings.
+
+
+Install snmp4j by similar steps as above. Here I use `org.snmp4j:snmp4j:3.7.7`

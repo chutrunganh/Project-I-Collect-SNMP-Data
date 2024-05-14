@@ -34,7 +34,10 @@ public class MIBTreeView {
 
 
     /*
-     * This function is a recursive function that builds the tree structure from the JSON file.
+     * This function is a recursive function that builds the tree structure from the JSON Node.
+     * It takes two arguments: a JsonNode and a TreeItem<MIBNode>.
+     * This convert a passed in JSON Node to a TreeItem<MIBNode> object then add that TreeItem to
+     * the parentItem's children recursively.
      * */
     private void buildTree(JsonNode jsonNode, TreeItem<MIBNode> parentItem) {
         if (jsonNode.isObject()) {
@@ -80,7 +83,7 @@ public class MIBTreeView {
 
     /*
      * From JSON file to TreeView. As written in previous comments, the TreeView is the main visual component that the user interacts
-     * with. It holds the root TreeItem, so this function is just simply build the tree from the root node.
+     * with. It holds the root TreeItem, so this function is just simply pass the rootNode to the buildTree function to build the tree from there .
      * */
 
     //ObjectMapper is the main class to use for reading and writing JSON content
@@ -96,8 +99,16 @@ public class MIBTreeView {
 
 
     /*
-    * Function to travel the TreeView  to try to get the oid
-    * */
+     * Try to find the oid in the children of the current item. Here I only process ONE LEVEL of children of
+     * the current item.  If the 'oid' key is found in the children, return its value. If the 'oid' key is not found,
+     * return an empty string. As I implemented this function, it only checks the immediate children of the current item.
+     * Multiple levels of children can be processed by making recursive calls to this function as I commented above.
+     */
+
+
+    /*
+     * Function to travel the TreeView  to try to get the oid (recursively)
+     * */
 //    public static String findOid(TreeItem<MIBNode> item) {
 //        // If the current item is the 'oid' key, return its value
 //        if (item.getValue().getKey().equals("oid")) {
@@ -116,12 +127,7 @@ public class MIBTreeView {
 //        return null;
 //    }
 
-    /*
-    * Try to find the oid in the children of the current item. Here I only process ONE LEVEL of children of
-    * the current item.  If the 'oid' key is found in the children, return its value. If the 'oid' key is not found,
-    * return an empty string.
-    * Multiple levels of children can be processed by making recursive calls to this function as I commented above.
-     */
+    // This is the modified version of the findOid function that only checks the immediate children of the current item
     public static String findOid(TreeItem<MIBNode> item) {
         // Check the children of the current item
         for (TreeItem<MIBNode> child : item.getChildren()) {
