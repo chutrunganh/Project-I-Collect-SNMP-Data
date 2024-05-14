@@ -8,6 +8,13 @@ __pycache__/
 # iml file from IntelliJ
 *.iml
 
+# Congig, out file from IntelliJ and VSCode
+.idea/
+.vscode/
+/out/
+bin/
+
+
 # .class files from Java
 *.class
 

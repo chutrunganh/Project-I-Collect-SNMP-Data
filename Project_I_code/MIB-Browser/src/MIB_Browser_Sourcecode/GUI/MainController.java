@@ -2,6 +2,7 @@ package MIB_Browser_Sourcecode.GUI;
 
 import MIB_Browser_Sourcecode.Model.MIBNode;
 import MIB_Browser_Sourcecode.Model.MIBTreeView;
+import MIB_Browser_Sourcecode.Model.SNMRequest.SNMPGet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -27,7 +28,27 @@ public class MainController {
     @FXML
     private TextField tfOID;
 
+    @FXML
+    private Label lbAccess;
+    @FXML
+    private Label lbName;
+    @FXML
+    private Label lbStatus;
+    @FXML
+    private Label lbType;
+    @FXML
+    private TextArea taDescription;
+    @FXML
+    private PasswordField tfCommunityString;
+    @FXML
+    private TextField tfTargetIP;
+    @FXML
+    private Button btnGo;
+
+
     String oidValue = null;
+    String ip = "127.0.0.1"; //Localhost by default
+    String community = "public"; //Community string by default
 
 
     /*
@@ -37,7 +58,9 @@ public class MainController {
     public void initialize() {
         //Load the default MIBs to the MIBsloaded FlowPane
         File defaultMIB1 = new File("Project_I_code/MIB-Browser/MIB Databases/Test-MIB.json");
+        File defaultMIB2 = new File("Project_I_code/MIB-Browser/MIB Databases/SNMPv2-MIB.json");
         showMIBsLoaded(defaultMIB1);
+        showMIBsLoaded(defaultMIB2);
     }
 
 
@@ -172,17 +195,31 @@ public class MainController {
             // Get the TreeItem associated with the clicked TreeCell
             TreeItem<MIBNode> treeItem = treeCell.getTreeItem();
 
-
             // Traverse the TreeItem to find the 'oid' key
             //Current implementation only checks the immediate children of the current item
             oidValue = MIBTreeView.findOid(treeItem);
+            tfOID.setText(oidValue.replace("\"", "")); //remove the double quotes when displaying the oid value
 
-            // If the 'oid' key was found, print its value
-            if (oidValue != null) {
-                String printOut_oidValue = oidValue.replace("\"", "");
-                //Remove the " " when printing the oid value
-                tfOID.setText(printOut_oidValue);
-            }
+            //Load the information of the selected node to the bottom right Pane in GUI
+            //Find the name, access, status, type, description of the node
+            String name = MIBTreeView.findName(treeItem);
+            lbName.setText(name);
+
+            //Type
+            String type = MIBTreeView.findType(treeItem).replace("\"", "");
+            lbType.setText(type);
+
+            //Access
+            String access = MIBTreeView.findAccess(treeItem).replace("\"", "");
+            lbAccess.setText(access);
+
+            //Status
+            String status = MIBTreeView.findStatus(treeItem).replace("\"", "");
+            lbStatus.setText(status);
+
+            //Description
+            String description = MIBTreeView.findDescription(treeItem).replace("\"", "");
+            taDescription.setText(description);
 
 
         } else if (event.getButton() == MouseButton.SECONDARY) {
@@ -211,6 +248,41 @@ public class MainController {
                 }
             }
         });
+    }
+
+
+    /*
+     * Function to handle the Go button click event
+     * */
+    @FXML
+    public void GoButtonClicked(MouseEvent event) {
+        //Get the IP address and community string from the text fields
+        //If the user has not entered any value, the default values are used, otherwise the user's input is used
+        if (!tfTargetIP.getText().isEmpty()) {
+            ip = tfTargetIP.getText();
+        }
+        if (!tfCommunityString.getText().isEmpty()) {
+            community = tfCommunityString.getText();
+        }
+
+        oidValue = tfOID.getText();
+
+        //First check if the oidValue, ip, community are not null
+        if (oidValue.isEmpty() || ip.isEmpty() || community.isEmpty()) {
+            //Show an alert dialog if the user has not selected a node from the MIB Tree or
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Check Again");
+            alert.setHeaderText("OID or IP or Community String is empty !!!");
+            alert.showAndWait();
+            return;
+        }
+
+        //Create a new SNMPGet object and run the SNMP Get request
+        try {
+            new SNMPGet(ip, community, oidValue);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

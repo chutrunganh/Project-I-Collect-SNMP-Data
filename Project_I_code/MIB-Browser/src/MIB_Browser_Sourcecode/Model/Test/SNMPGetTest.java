@@ -3,12 +3,8 @@ package MIB_Browser_Sourcecode.Model.Test;
 import MIB_Browser_Sourcecode.Model.SNMRequest.SNMPGet;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SNMPGetTest {
 
@@ -17,7 +13,7 @@ public class SNMPGetTest {
         ArrayList<String> testAgent = new ArrayList<>();
         testAgent.add("127.0.0.1"); // IP address
         testAgent.add("public"); // community string
-        testAgent.add("1.3.6.1.2.1.1.5.0"); // OID for system name
+        testAgent.add("1.3.6.1.2.1.1.6"); // OID for system name
 
         //Uncomment the below lines to redirect the standard output to a ByteArrayOutputStream instead of
         //console, so that we can compare the printed output with the expected output using assertEquals.

@@ -1,9 +1,15 @@
 package MIB_Browser_Sourcecode.Model.SNMRequest;
 
-import org.snmp4j.*;
+import org.snmp4j.CommunityTarget;
+import org.snmp4j.PDU;
+import org.snmp4j.Snmp;
+import org.snmp4j.TransportMapping;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.*;
+import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.UdpAddress;
+import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import java.io.IOException;
@@ -83,7 +89,7 @@ public class SNMPGet {
                     Vector<VariableBinding> vbs = new Vector<>(responsePDU.getVariableBindings()); //Extract the variable bindings
                     VariableBinding vb = vbs.firstElement();
                     String sysDescr = vb.getVariable().toString();
-                    System.out.println("System Description: " + sysDescr);
+                    System.out.println(sysDescr);
 
                 } else {
                     System.out.println("Error: Request Failed");
@@ -104,6 +110,15 @@ public class SNMPGet {
      * Run the SNMP Get request
      */
     public SNMPGet(String ip, String community, String oid) throws IOException {
+
+        //Add .0 to the end of the OID so that it can be resolved
+        //Take a bit time wonder why all OID from MIB JSON file can not be resolved (all OID returnnoSuchObject when
+        // perform GET request). Turn out we need to add .0 to the end of the OID to make it resolvable.
+        //Found solution here: https://github.com/influxdata/telegraf/issues/5647
+        // and https://stackoverflow.com/questions/70939915/in-snmp-can-we-remove-0-from-the-end-of-a-scalar-oid
+
+        oid = oid + ".0";
+
         // Create a transport mapping
         TransportMapping<UdpAddress> transport = createTransportMapping();
 
