@@ -1,4 +1,4 @@
 package MIB_Browser_Sourcecode.Model.SNMRequest;
 
-public class ParseSNMPRespone {
+public class SNMPWalk {
 }
