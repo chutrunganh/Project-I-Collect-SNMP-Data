@@ -15,13 +15,22 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import java.io.IOException;
 import java.util.Vector;
 
+
+/*
+ * To verify that this class work correctly, we can use SNMP command line utility in 'snmp' package
+ * by 'sudo apt install snmp', then run: 'snmpget -v2c -c public localhost desired_OID'
+ */
+
+//https://stackoverflow.com/questions/70892857/why-did-snmp4j-return-different-result-with-net-snmp
+
 public class SNMPGet {
+
+    private final VariableBinding vb; // Variable binding to store the response from the SNMP agent
 
     /*
      * Function to create a transport mapping
+     * Here, since we only work with UDP transport protocol, we set the type of generic classes like TransportMapping, ResponseEvent E to UdpAddress.
      */
-
-    //Here, since we only work with UDP transport protocol, we set the type of generic classes like TransportMapping, ResponseEvent E to UdpAddress.
     private TransportMapping<UdpAddress> createTransportMapping() throws IOException {
         // Create a transport mapping using UDP protocol. This is used by the Snmp class to send requests.
         TransportMapping<UdpAddress> transport = new DefaultUdpTransportMapping();
@@ -66,6 +75,7 @@ public class SNMPGet {
      *- ErrorStatus: An integer representing the error status code (0 indicates success).
      *- ErrorIndex: An integer indicating the index of the variable binding where an error occurred (if any).
      * Example output: RESPONSE[requestID=1109679558, errorStatus=Success(0), errorIndex=0, VBS[1.3.6.1.2.1.1.5.0 = ThinkPad-CTA]]
+     *
      * Some related methods:
      * - responseEvent.getResponse(): Retrieves the PDU response.
      * - responsePDU.getErrorStatus(): Gets the error status code.
@@ -74,28 +84,19 @@ public class SNMPGet {
      * - responsePDU.get(index): Retrieves a specific variable binding at the given index
      */
 
-    private void processResponse(ResponseEvent<UdpAddress> response) {
+    private VariableBinding processResponse(ResponseEvent<UdpAddress> response) {
+        VariableBinding vb = null;
         if (response != null) {
             PDU responsePDU = response.getResponse(); //Retrieve the response PDU
 
             if (responsePDU != null) {
                 int errorStatus = responsePDU.getErrorStatus();
-                int errorIndex = responsePDU.getErrorIndex();
-                String errorStatusText = responsePDU.getErrorStatusText();
 
                 if (errorStatus == PDU.noError) {
-                    System.out.println(responsePDU);
-                    //System.out.println(responsePDU.getVariableBindings());
                     Vector<VariableBinding> vbs = new Vector<>(responsePDU.getVariableBindings()); //Extract the variable bindings
-                    VariableBinding vb = vbs.firstElement();
-                    String sysDescr = vb.getVariable().toString();
-                    System.out.println(sysDescr);
-
+                    vb = vbs.firstElement();
                 } else {
                     System.out.println("Error: Request Failed");
-                    System.out.println("Error Status = " + errorStatus);
-                    System.out.println("Error Index = " + errorIndex);
-                    System.out.println("Error Status Text = " + errorStatusText);
                 }
             } else {
                 System.out.println("Error: Response PDU is null");
@@ -103,6 +104,7 @@ public class SNMPGet {
         } else {
             System.out.println("Error: Agent Timeout...");
         }
+        return vb;
     }
 
 
@@ -135,9 +137,16 @@ public class SNMPGet {
         ResponseEvent<UdpAddress> response = snmp.send(pdu, target);
 
         // Process the response
-        processResponse(response);
+        vb = processResponse(response);
 
         // Close the SNMP session
         snmp.close();
+
+    }
+
+    //Use this method to get the response from the SNMP agent
+    // so that we can process further based on the data type of the response
+    public VariableBinding getVariableBinding() {
+        return this.vb;
     }
 }
