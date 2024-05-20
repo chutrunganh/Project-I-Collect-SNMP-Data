@@ -13,6 +13,7 @@ __pycache__/
 .vscode/
 /out/**
 bin/
+.run/
 
 
 # .class files from Java
