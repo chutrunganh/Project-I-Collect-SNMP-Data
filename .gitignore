@@ -11,7 +11,8 @@ __pycache__/
 # Congig, out file from IntelliJ and VSCode
 .idea/
 .vscode/
-/out/**
+/out/
+out/
 bin/
 .run/
 
