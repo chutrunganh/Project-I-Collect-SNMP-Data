@@ -1,8 +1,9 @@
 package Project_I_Code.GUI;
 
-import Project_I_Code.Model.MibNode;
-import Project_I_Code.Model.SNMPValueConverter;
-import Project_I_Code.Model.SNMPWalk;
+import Project_I_Code.Model.MIBTree.MibNode;
+import Project_I_Code.Model.SNMPRequest.SNMPGet;
+import Project_I_Code.Model.SNMPRequest.SNMPValueConverter;
+import Project_I_Code.Model.SNMPRequest.SNMPWalk;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -24,8 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static Project_I_Code.Model.MibTreeBuilder.buildMibTree;
-import static Project_I_Code.Model.MibTreeBuilder.convertToTreeItem;
+import static Project_I_Code.Model.MIBTree.MibTreeBuilder.buildMibTree;
+import static Project_I_Code.Model.MIBTree.MibTreeBuilder.convertToTreeItem;
 
 
 public class MainController {
@@ -58,6 +59,11 @@ public class MainController {
     private TableColumn<ARowInQueryTable, String> syntaxColumn;
     @FXML
     private TableColumn<ARowInQueryTable, String> valueColumn;
+
+
+    //Default value if user does not input anything
+    public String  targetAddressString = "udp:127.0.0.1/161";
+    public String  communityString = "password";
 
     @FXML
     public void initialize() throws MibLoaderException, IOException {
@@ -139,28 +145,43 @@ public class MainController {
 
     @FXML
     void SNMPGetButtonClicked(MouseEvent event) {
-//        // Get the OID from the text field
-//        String oid = tfOID.getText();
-//        // Get the target IP address from the text field
-//        String targetIPAddress = tfTargetIPAddress.getText();
-//        // Get the community string from the password field
-//        String communityString = tfCommunityString.getText();
-//
-//        //Perform SNMP GET
-//        try {
-//            SNMPGet snmpGet = new SNMPGet(targetIPAddress, communityString, oid);
-//            VariableBinding vb = snmpGet.getVariableBinding(); //Get the response from the SNMP request
-//            String responseToProcess = vb.getVariable().toString(); //Get the response as a string
-//            ParseSNMPRespone parser = new ParseSNMPRespone(responseToProcess, type); //Create a new ParseSNMPRespone object to parse the response
-//            String value = parser.returnValueBasedOnDataType(responseToProcess, type); //Get the value of the response based on the data type of the node
-//            addRowToQueryTable(name, value, type); //Add the new value to the query table
-//
-//            //Print raw response to console to debug
-//            System.out.println("Response: " + responseToProcess);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
+        // Get the OID from the text field
+        String oid = tfOID.getText();
+        // Get the target IP address from the text field, change it to UdpAddress
+
+        //In case use let this field empty, use the default IP address
+        if (!tfTargetIPAddress.getText().isEmpty()) {
+            targetAddressString = "udp:" + tfTargetIPAddress.getText() + "/161";
+        }
+        Address targetAddress = GenericAddress.parse(targetAddressString);
+        if (targetAddress instanceof UdpAddress udpTargetAddress) {
+            // Get the community string from the password field
+            if (!tfCommunityString.getText().isEmpty()) {
+                communityString = tfCommunityString.getText();
+            }
+
+            //Perform SNMP GET
+            try {
+                SNMPGet snmpGet = new SNMPGet(udpTargetAddress, communityString, oid);
+                VariableBinding vb = snmpGet.getVariableBinding(); //Get the response from the SNMP request
+
+                SNMPValueConverter converter = new SNMPValueConverter(loader);
+                Pair<String, String> result = converter.convertToHumanReadable(vb.getVariable(), oid);
+                String humanReadableValue = result.getKey();
+                String name = result.getValue();
+
+                // Add the new value to the query table
+                ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, vb.getVariable().getSyntaxString());
+                queryTable.getItems().add(row);
+
+                //Print raw response to console to debug
+                System.out.println("Response: " + vb.getVariable().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Invalid IP address format.");
+        }
     }
 
 
@@ -168,12 +189,16 @@ public class MainController {
     void SNMPWalkButtonCLicked(MouseEvent event) {
         // Get the OID from the text field
         String oid = tfOID.getText();
-        // Get the target IP address from the text field, change it to UdpAddress
-        String targetAddressString = "udp:127.0.0.1/161";
+        //In case use let this field empty, use the default IP address
+        if (!tfTargetIPAddress.getText().isEmpty()) {
+            targetAddressString = "udp:" + tfTargetIPAddress.getText() + "/161";
+        }
         Address targetAddress = GenericAddress.parse(targetAddressString);
         if (targetAddress instanceof UdpAddress udpTargetAddress) {
             // Get the community string from the password field
-            String communityString = "password";
+            if (!tfCommunityString.getText().isEmpty()) {
+                communityString = tfCommunityString.getText();
+            }
 
             //Perform SNMP Walk
             try {
@@ -183,26 +208,16 @@ public class MainController {
 
                 SNMPValueConverter converter = new SNMPValueConverter(loader);
 
-                // Use a Set to store the OIDs and ignore duplicates
-                Set<String> oidSet = new HashSet<>();
-
                 for (VariableBinding varBinding : varBindings) {
                     String oidFromWalk = varBinding.getOid().toString();
+                    Pair<String, String> result = converter.convertToHumanReadable(varBinding.getVariable(), oidFromWalk);
+                    String humanReadableValue = result.getKey();
+                    String name = result.getValue();
+                    System.out.println(name + " [" + oidFromWalk + "] " + " : " + humanReadableValue);
 
-                    // If the OID is not in the Set, process it and add it to the Set
-                    if (!oidSet.contains(oidFromWalk)) {
-                        Pair<String, String> result = converter.convertToHumanReadable(varBinding.getVariable(), oidFromWalk);
-                        String humanReadableValue = result.getKey();
-                        String name = result.getValue();
-                        System.out.println(name + " [" + oidFromWalk + "] " + " : " + humanReadableValue);
-
-                        // Create a new row in the query table for each VariableBinding
-                        ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, varBinding.getVariable().getSyntaxString());
-                        queryTable.getItems().add(row);
-
-                        // Add the OID to the Set
-                        oidSet.add(oidFromWalk);
-                    }
+                    // Create a new row in the query table for each VariableBinding
+                    ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, varBinding.getVariable().getSyntaxString());
+                    queryTable.getItems().add(row);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
