@@ -180,6 +180,8 @@ The output should be:
 ```plaintext
 SNMPv2-MIB::sysDescr.0 = STRING: Linux ThinkPad-CTA 6.5.0-1020-oem #21-Ubuntu SMP PREEMPT_DYNAMIC Wed Apr  3 14:54:32 UTC 2024 x86_64
 ```
+Write more on this: https://hiendef.wordpress.com/wp-content/uploads/2013/07/th5-nm.pdf
+
 
 # References
 

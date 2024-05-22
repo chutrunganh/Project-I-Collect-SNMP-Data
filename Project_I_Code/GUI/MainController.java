@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.util.Pair;
 import net.percederberg.mibble.Mib;
 import net.percederberg.mibble.MibLoader;
@@ -21,6 +22,7 @@ import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.VariableBinding;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,23 +62,34 @@ public class MainController {
     @FXML
     private TableColumn<ARowInQueryTable, String> valueColumn;
 
+    @FXML
+    private ChoiceBox<String> cbChooseVendors;
+    @FXML
+    private FlowPane vendorMIBs;
+
+
+
 
     //Default value if user does not input anything
     public String  targetAddressString = "udp:127.0.0.1/161";
     public String  communityString = "password";
 
+    //Some attributes to use cross multiple methods
+    public String syntax;
+    public String name;
+    public String oid;
+
     @FXML
     public void initialize() throws MibLoaderException, IOException {
         // Load the MIB files
         Mib mibRFC1213 = loader.load("RFC1213-MIB");  // replace with your MIB file name
-        loader.load("IF-MIB");
-        loader.load("IP-MIB");
-        loader.load("TCP-MIB");
-        loader.load("UDP-MIB");
-        loader.load("SNMPv2-MIB");
+       loader.load("RFC1155-SMI");
+       loader.load("RFC-1212");
+       loader.load("SNMPv2-SMI");
+         loader.load("SNMPv2-TC");
+            loader.load("SNMPv2-CONF");
         loader.load("HOST-RESOURCES-MIB");
-        loader.load("ENTITY-MIB");
-        loader.load("BRIDGE-MIB");
+
         // Get the root MIB objects
         MibValueSymbol rootRFC1213 = mibRFC1213.getRootSymbol();
 
@@ -114,31 +127,26 @@ public class MainController {
             if (newValue != null) {
                 MibNode selectedNode = newValue.getValue();
 
-                tfOID.setText(selectedNode.oid); //gt OID first, even it is not the leaf node
-
-                if (selectedNode.access == null) {
-                    return; //if the selected node is not a leaf node, do not show anything instead
-                    // of throwing error in the console
-                }
-                System.out.println("-------------------------------------------------");
-                System.out.println("Name: " + selectedNode.name);
-                System.out.println("OID: " + selectedNode.oid);
-                System.out.println("Access: " + selectedNode.access);
-                System.out.println("Status: " + selectedNode.status);
-                if (selectedNode.syntax instanceof SnmpObjectType snmpType) {
-                    System.out.println("Type: " + snmpType.getSyntax().getName());
-                    lbType.setText(snmpType.getSyntax().getName());
-
-                }
-                System.out.println("Description: " + selectedNode.description);
-
-                //Also update the labels and text area
+                //Every node has a name, OID, and description
+                tfOID.setText(selectedNode.oid); //get OID first, even it is not the leaf node
                 lbName.setText(selectedNode.name);
-                lbAccess.setText(selectedNode.access.toString());
-                lbStatus.setText(selectedNode.status.toString());
-                taDescription.setText(selectedNode.description);
+                //Also assign the name,oid to the attribute to use in other methods
+                name = selectedNode.name;
+                oid = selectedNode.oid;
 
-
+                // But not all non-leaf node have remaining fields
+                // Attempt to read all other fields, return blank if some are empty or null
+                lbAccess.setText(selectedNode.access != null ? selectedNode.access.toString() : "");
+                lbStatus.setText(selectedNode.status != null ? selectedNode.status.toString() : "");
+                taDescription.setText(selectedNode.description != null ? selectedNode.description : "");
+                if (selectedNode.syntax instanceof SnmpObjectType snmpType) { // Up cast to SnmpObjectType to get the syntax name
+                    lbType.setText(snmpType.getSyntax().getName());
+                    //Also assign the syntax to the attribute to use in other methods
+                    syntax = snmpType.getSyntax().getName();
+                } else {
+                    lbType.setText("");
+                    syntax = "";
+                }
             }
         });
     }
@@ -166,16 +174,15 @@ public class MainController {
                 VariableBinding vb = snmpGet.getVariableBinding(); //Get the response from the SNMP request
 
                 SNMPValueConverter converter = new SNMPValueConverter(loader);
-                Pair<String, String> result = converter.convertToHumanReadable(vb.getVariable(), oid);
-                String humanReadableValue = result.getKey();
-                String name = result.getValue();
+                String humanReadableValue = converter.convertToHumanReadableWithKnownDataType(vb.getVariable(), syntax);
+
 
                 // Add the new value to the query table
-                ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, vb.getVariable().getSyntaxString());
+                ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, syntax);
                 queryTable.getItems().add(row);
 
                 //Print raw response to console to debug
-                System.out.println("Response: " + vb.getVariable().toString());
+                System.out.println("Get: " + oid + " : " + vb.getVariable().toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -183,6 +190,26 @@ public class MainController {
             System.out.println("Invalid IP address format.");
         }
     }
+
+    /*
+    * Click on a non leave node in the MIB tree, just a directory to hold other nodes, perform SNMP GET on this OID
+    * should return nothing, as I tried in other MIB Browser, it returns null
+    *
+    * However. in my case, it return the value of the nearest leaf node it can get the value
+    *
+    * Why ???
+    * The behavior you're observing might be due to how the SNMP library you're
+    * using handles SNMP GET requests for non-leaf nodes. In SNMP, non-leaf
+    * nodes typically don't have associated data. They're usually just
+    * containers for other nodes. Therefore, performing an SNMP GET
+    * request on a non-leaf node's OID usually doesn't return a meaningful
+    * result.  However, some SNMP libraries may handle this situation
+    * differently. For example, when performing an SNMP GET request on a
+    * non-leaf node's OID, they might automatically perform an SNMP GETNEXT
+    * request instead. An SNMP GETNEXT request retrieves the value of the next
+    * leaf node in the MIB tree. This could explain why you're able to perform
+    * an SNMP GET request on a non-leaf node's OID and get a result.
+    * */
 
 
     @FXML
@@ -210,10 +237,10 @@ public class MainController {
 
                 for (VariableBinding varBinding : varBindings) {
                     String oidFromWalk = varBinding.getOid().toString();
-                    Pair<String, String> result = converter.convertToHumanReadable(varBinding.getVariable(), oidFromWalk);
+                    Pair<String, String> result = converter.convertToHumanReadableWithoutKnowTheDataType(varBinding.getVariable(), oidFromWalk);
                     String humanReadableValue = result.getKey();
                     String name = result.getValue();
-                    System.out.println(name + " [" + oidFromWalk + "] " + " : " + humanReadableValue);
+                    System.out.println("Walk: " + name + " [" + oidFromWalk + "] " + " : " + humanReadableValue);
 
                     // Create a new row in the query table for each VariableBinding
                     ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, varBinding.getVariable().getSyntaxString());
@@ -232,6 +259,51 @@ public class MainController {
     public void clearTableClicked(MouseEvent event) {
         queryTable.getItems().clear();
     }
+
+
+    @FXML
+    void chooseVendorsClicked(MouseEvent event) {
+        // List of famous vendors
+        List<String> vendors = Arrays.asList("Cisco", "Juniper", "Huawei", "Arista", "Dell", "HP", "IBM");
+
+        // Clear the ChoiceBox
+        cbChooseVendors.getItems().clear();
+
+        // Add the vendors to the ChoiceBox
+        cbChooseVendors.getItems().addAll(vendors);
+
+        // Add the listener to the ChoiceBox
+        addChoiceBoxListener(cbChooseVendors);
+    }
+
+    private void addChoiceBoxListener(ChoiceBox<String> choiceBox) {
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                // Clear the vendor MIBs FlowPane
+                vendorMIBs.getChildren().clear();
+                // Unload all the  current MIBs...
+                loader.unloadAll();
+
+                // Get the common MIBs for the selected vendor
+                List<String> commonMibs = getCommonMibsForVendor(newValue);
+
+                // Add the common MIBs to the FlowPane
+                for (String mib : commonMibs) {
+                    Label label = new Label(mib);
+                    // Extend the label to fit the FlowPane in width so that new label
+                    // will be added in FLowPane horizontally
+                    label.prefWidthProperty().bind(vendorMIBs.widthProperty());
+                    vendorMIBs.getChildren().add(label);
+                }
+            }
+        });
+    }
+
+    private List<String> getCommonMibsForVendor(String vendor) {
+        // Replace this with the actual logic to get the common MIBs for the vendor
+        return Arrays.asList("MIB1", "MIB2", "MIB3");
+    }
+
 
 
 }

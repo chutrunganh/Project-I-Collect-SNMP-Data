@@ -81,8 +81,11 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <ChoiceBox layoutY="1.0" prefHeight="27.0" prefWidth="343.0" />
-                              <AnchorPane layoutY="26.0" prefHeight="350.0" prefWidth="343.0" />
+                              <ChoiceBox fx:id="cbChooseVendors" layoutY="1.0" onMouseClicked="#chooseVendorsClicked" prefHeight="27.0" prefWidth="343.0" />
+                              <AnchorPane layoutY="26.0" prefHeight="350.0" prefWidth="343.0">
+                                 <children>
+                                    <FlowPane fx:id="vendorMIBs" prefHeight="352.0" prefWidth="343.0" />
+                                 </children></AnchorPane>
                            </children></AnchorPane>
                   </content>
                 </Tab>

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 import java.util.Objects;
 
@@ -16,8 +17,10 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("GUI/MainUI.fxml")));
-        primaryStage.setTitle("MIB Browser Tool");
+        primaryStage.setTitle("SNMP Browser Tool");
         primaryStage.setScene(new Scene(root, 993, 618));
+        // Set the application icon
+        primaryStage.getIcons().add(new Image("Image/AppIcon.png"));
         primaryStage.show();
     }
 }

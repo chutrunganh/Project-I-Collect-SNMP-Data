@@ -201,8 +201,9 @@ GET/GET NEXT/GET BULK/SET
 
 - **SNMPWALK**: Nhận tất cả dữ liệu
 
-    SNMPWALK sử dụng nhiều request Get-Next để truy xuất toàn bộ cây dữ liệu mạng từ một đối tượng được quản lý. Công cụ iReasoning MIB Browser sẽ rất hữu ích để xem tất cả các OID mà một agent cung cấp.
-
+    SNMPWALK sử dụng nhiều request Get-Next để truy xuất toàn bộ cây dữ liệu mạng từ một đối tượng được quản lý. SNMP Walk sẽ scan toàn bộ cấu trúc cây được cấu hình sẵn
+- trong fireware của thiết bị mạng bởi các nhà sản xuất, và trả về tất cả thông tin mà nó có thể truy cập được. Điều này giúp người quản trị mạng có thể xem toàn bộ thông tin của thiết bị mạng mà không cần biết trước các OID cụ thể.
+- 
 - **Report** – SNMP v3 is needed to use Report messages. They allow an SNMP manager to determine what kind of problem was detected by the remote SNMP agent. Based on the detected error, the SNMP engine may try to send a corrected SNMP message. If that is not possible, it may pass an indication of the error to the application on whose behalf the failed SNMP request was issued. [RFC3412]
 
 
@@ -246,7 +247,7 @@ GET/GET NEXT/GET BULK/SET
 
 # Part III: Management Information Base (MIB)
 
-
+Đây sẽ là phần ta tập trung chính vì nó có liên quan nhiều đến cấu trúc của dự án
 ### Over view
 
 MIB (Management Information Base) là một cấu trúc dữ liệu gồm các đối tượng được quản lý (managed object), được dùng cho việc quản lý các thiết bị chạy trên nền TCP/IP. MIB là kiến trúc chung mà các giao thức quản lý trên TCP/IP nên tuân theo, trong đó có SNMP. MIB được thể hiện thành 1 file (MIB file), và có thể biểu diễn thành 1 cây (MIB tree). MIB có thể được chuẩn hóa hoặc tự tạo.
@@ -286,8 +287,77 @@ deviceName OBJECT-TYPE
 
 END
 ```
+Ngoài ra thì MIB file cũng có thể có các định dạng file khác như JSON, CSV, YAML 
+Các File MIB theo các định dạng khác nhau có thể được tìm thấy tại đây : https://mibbrowser.online/mibdb_search.php?search=RFC1213&userdropdown=anymatch
+
+
+Download standard MIB format if you are planning to load a MIB file into some system (OS, Zabbix, PRTG ...) or view it with a MIB browser. CSV is more suitable for analyzing and viewing OID' and other MIB objects in excel. JSON and YAML formats are usually used in programing even though some systems can use MIB in YAML format (like Logstash).
+
+
+Keep in mind that standard MIB files can be successfully loaded by systems and programs only if all the required MIB's from the "Imports" section are already loaded.
+
+Tuy nhiên khi làm việc với các file MIB bằng đoạn code Java sau:
+```java
+//Tim lai code java  truoc BIG UPDATE trong github
+```
+Các File JSON khi đực xử lý không thể tái tạo lại cấu trúc hình cây một cách chính xác như file MIB, nó chỉ giúp ta dễ dàng hơn trong việc xử lý dữ liệu, vd với một bảng
+RFC1213 JSON ,nếu chuyển thành một tree bằng các công cụ online như: https://jsoneditoronline.org/#left=local.sekezi&right=local.setipo
+
+![Screenshot at 2024-05-21 20-32-48.png](..%2FImage%2FScreenshot%20at%202024-05-21%2020-32-48.png)
+
+Như ta thấy phần `system` directory và các child của nó bị tách ra thành các node riêng biệt, không bao gồm nhau 
+Hơn nữa, vd ta không muốn hinhiển thị tên các trường như `name`, `description`, ... và vẫn muốn thêm các trường này vào cây (vì ta vẫn cần phải truy cập đến giá trị của các trường này nên vẫn cần ađ chúng vào cây ).
+Tuy nhiên khi đã ađ nào cây thì sẽ luôn luôn phải hiển thị chúng, không thể ẩn đi được dù có dùng setText(null), setVisible(false),...thì sẽ chỉ tạo ra 1 khoảng trống chứ không biến mất hẳn đi. Điều này là do clas TreeView mà ta 
+dùng để hiển thị cây trong JavaFX không hỗ trợ việc ẩn này. Có một vài giải pháp để lm điều đó nhưng đều không phải các chính thức , toàn trick lor : https://stackoverflow.com/questions/26854301/javafx-treeview-hide-root-node
+
+Nên nhóm đã chuyển đổi từ Jackson API sang Mibble API để xử lý các file MIB, với Mibble API để của lý trên định dạng MIB.
+https://github.com/cederberg/mibble/releases
+
 
 In this example, `myDevice` is an object identifier and `deviceName` is an object type that represents the name of the device. The `deviceName` object is read-only, meaning it can be retrieved but not changed via SNMP.
+
+Or https://gemini.google.com/app/098ec03a339ccf72
+
+Basic Structure of a MIB:
+
+    Module Definition:  Each MIB starts with a module definition. This includes the module's name, imports from other modules, and any definitions of new data types.
+
+    Object Identifiers (OIDs): OIDs are used to uniquely identify managed objects (variables) within the MIB. They follow a hierarchical structure, starting from a root OID and branching out into more specific objects.
+
+    Object Types: Object types define the structure and characteristics of the managed objects. These types can be simple data types (like integers or strings) or more complex structures (like sequences or tables).
+
+    Macro Definitions (Optional): MIBs can include macro definitions to create reusable templates for object types. This helps to simplify the definition of similar objects.
+
+    Object Declarations: Each managed object is declared with its OID, object type, access permissions (read-only, read-write), and a textual description.
+
+Example ASN.1 MIB Structure:
+
+MyMIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+OBJECT-TYPE
+FROM SNMPv2-SMI;
+
+myObjectType OBJECT-TYPE
+SYNTAX     INTEGER
+MAX-ACCESS read-only
+STATUS     current
+DESCRIPTION
+"An example object of type integer."
+::= { myMIB 1 }
+
+END
+
+Explanation:
+
+    MyMIB DEFINITIONS ::= BEGIN: Starts the MIB module definition.
+    IMPORTS: Imports the OBJECT-TYPE definition from the SNMPv2-SMI module.
+    myObjectType: Defines a new object type called myObjectType as an INTEGER.
+    SYNTAX INTEGER: Specifies that the object's value is an integer.
+    MAX-ACCESS read-only: Indicates that the object is read-only.
+    STATUS current: The object is currently active.
+    DESCRIPTION: Provides a description of the object.
+    ::= { myMIB 1 }: Assigns an OID to the object (1 under the myMIB subtree).
 
 OR
 
@@ -385,7 +455,10 @@ các vùng gia tăng giá trị.
 
 - **iso-ccitt(2)**: do cả ISO và CCITT quản lý.
 
-     
+> Xem và viết thêm trong bài này: https://tailieu.vn/docview/tailieu/2011/20111228/trongkhiem236/snmp_toan_tap_diep_thanh_nguyen_chuong_3_0727.pdf
+
+
+Trong dự án, ta sẽ chỉ tập trung vào các nhánh chính như trên 1.3.6.1.2.1 cho các MIB tiêu chuẩn và 1.3.6.1.4.1 cho cấc vendor-specific MIBs.
 ***Lưu ý:***
 
 - ***Các objectID trong MIB được sắp xếp thứ tự nhưng không phải là liên tục, khi biết một OID thì không chắc chắn có thể xác định được OID tiếp theo trong MIB. VD trong chuẩn mib-2 thì object ifSpecific  và object atIfIndex nằm kề nhau nhưng OID lần lượt là 1.3.6.1.2.1.2.2.1.22 và 1.3.6.1.2.1.3.1.1.1.***
@@ -397,7 +470,45 @@ các vùng gia tăng giá trị.
     Sub-id không nhất thiết phải liên tục hay bắt đầu từ 0. VD một thiết bị có 2 mac address thì có thể chúng được gọi là ifPhysAddress.23 và ifPhysAddress.125645.
 
 Muốn hiểu được một OID nào đó thì bạn cần có file MIB mô tả OID đó. Một MIB file không nhất thiết phải chứa toàn bộ cây ở trên mà có thể chỉ chứa mô tả cho một nhánh con. Bất cứ nhánh con nào và tất cả lá của nó đều có thể gọi là một mib. Một manager có thể quản lý được một device chỉ khi ứng dụng SNMP manager và ứng dụng SNMP agent cùng hỗ trợ một MIB. Các ứng dụng này cũng có thể hỗ trợ cùng lúc nhiều MIB.
+### Một MIB object có thể có một trong các loại sau:
+- name 
+- syntax ,......
 
+### Các laoị dữ liệu trong MIB  
+Các giá trị trả về sau khi ta thực hiện SNMP request thưởng ở dạng  bytes. Thế bêb ta cần biết chính xác
+loại dữ liệu tương ứng với OID mà ta đang thực hiện request để có thể chuyển đổi giá trị bytes này thành dạng dữ liệu mà ta mong muốn. Dưới đây là một số loại dữ liệu phổ biến trong MIB:
+
+These are the core data types defined in the SNMP protocol and used in standard MIBs like MIB-2:
+
+    Primitive Types:
+        INTEGER: Represents numerical values (e.g., interface index, number of errors).
+        OCTET STRING: A sequence of bytes, often representing text, IP addresses, MAC addresses, or binary data.
+        OBJECT IDENTIFIER (OID): A unique identifier for a managed object (e.g., 1.3.6.1.2.1.1.1.0 for sysDescr).
+        NULL: Represents a null or empty value.
+
+    Constructed Types:
+        SEQUENCE: An ordered collection of elements, each of which can be a different data type.
+        SEQUENCE OF: An ordered collection of elements, all of the same data type.
+
+    Application-Wide Types:
+        IpAddress: An IP address (e.g., 192.0.2.1).
+        Counter32: A 32-bit counter that increments (e.g., number of packets received).
+        Gauge32: A 32-bit value that can increase or decrease (e.g., current CPU utilization).
+        TimeTicks: The time elapsed since some event, measured in hundredths of a second (e.g., system uptime).
+        Opaque: For vendor-specific data
+
+This is defined in the SNMPv2-SMI module, which is imported by most MIBs. In addition to these standard types, MIBs can define custom data types to represent specific information unique
+to a particular device or application, or in https://datatracker.ietf.org/doc/html/rfc1155
+Vendor-Specific MIB Data Types:
+
+Vendor-specific MIBs can define additional data types beyond the standard ones. These are typically based on or derived from the standard types:
+
+    Subtypes: Vendors can create subtypes of existing types to add constraints or semantics. For example, a "Temperature" type could be a subtype of INTEGER, restricted to a certain range of values.
+    Custom Types: In some cases, vendors might define entirely new types to represent specific data structures or concepts unique to their products.
+
+Example of Vendor-Specific Data Types:
+
+A vendor might define a custom type called "FanSpeed" as an INTEGER to represent the speed of a fan in their device. Another vendor might define a "SensorStatus" type as an ENUMERATION with values like "Normal", "Warning", and "Critical" to indicate the status of a sensor.
 # Part IV: SNMP versions
 ![alt text](../Image/SNMPhistory.jpg)
 
