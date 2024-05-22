@@ -34,7 +34,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -81,11 +81,16 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <ChoiceBox fx:id="cbChooseVendors" layoutY="1.0" onMouseClicked="#chooseVendorsClicked" prefHeight="27.0" prefWidth="343.0" />
-                              <AnchorPane layoutY="26.0" prefHeight="350.0" prefWidth="343.0">
+                              <ComboBox fx:id="cbChooseVendors" layoutY="-6.0" onMouseClicked="#chooseVendorsClicked" prefHeight="32.0" prefWidth="343.0" />
+                              <AnchorPane layoutY="64.0" prefHeight="314.0" prefWidth="349.0">
                                  <children>
-                                    <FlowPane fx:id="vendorMIBs" prefHeight="352.0" prefWidth="343.0" />
-                                 </children></AnchorPane>
+                                    <FlowPane fx:id="vendorMIBs" layoutY="-38.0" prefHeight="352.0" prefWidth="343.0">
+                                       <padding>
+                                          <Insets top="5.0" />
+                                       </padding>
+                                    </FlowPane>
+                                 </children>
+                              </AnchorPane>
                            </children></AnchorPane>
                   </content>
                 </Tab>

@@ -23,9 +23,8 @@ import org.snmp4j.smi.VariableBinding;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static Project_I_Code.Model.MIBTree.MibTreeBuilder.buildMibTree;
 import static Project_I_Code.Model.MIBTree.MibTreeBuilder.convertToTreeItem;
@@ -33,9 +32,13 @@ import static Project_I_Code.Model.MIBTree.MibTreeBuilder.convertToTreeItem;
 
 public class MainController {
 
-    MibLoader loader = new MibLoader();
+    MibLoader loader = new MibLoader(); //manage all the MIB loads to the Ram
+
+    // Top left panel
     @FXML
     private AnchorPane standardMIBTreePanel;
+
+    //Bottom left panel
     @FXML
     private Label lbAccess;
     @FXML
@@ -46,12 +49,15 @@ public class MainController {
     private Label lbType;
     @FXML
     private TextArea taDescription;
+
+    // Top right panel
     @FXML
     private PasswordField tfCommunityString;
     @FXML
     private TextField tfOID;
     @FXML
     private TextField tfTargetIPAddress;
+
     // Query table
     @FXML
     private TableView<ARowInQueryTable> queryTable;
@@ -62,17 +68,16 @@ public class MainController {
     @FXML
     private TableColumn<ARowInQueryTable, String> valueColumn;
 
+    // Second Tab top left pane
     @FXML
-    private ChoiceBox<String> cbChooseVendors;
+    private ComboBox<String> cbChooseVendors;
     @FXML
     private FlowPane vendorMIBs;
 
 
-
-
     //Default value if user does not input anything
-    public String  targetAddressString = "udp:127.0.0.1/161";
-    public String  communityString = "password";
+    public String targetAddressString = "udp:127.0.0.1/161";
+    public String communityString = "password";
 
     //Some attributes to use cross multiple methods
     public String syntax;
@@ -83,11 +88,11 @@ public class MainController {
     public void initialize() throws MibLoaderException, IOException {
         // Load the MIB files
         Mib mibRFC1213 = loader.load("RFC1213-MIB");  // replace with your MIB file name
-       loader.load("RFC1155-SMI");
-       loader.load("RFC-1212");
-       loader.load("SNMPv2-SMI");
-         loader.load("SNMPv2-TC");
-            loader.load("SNMPv2-CONF");
+        loader.load("RFC1155-SMI");
+        loader.load("RFC-1212");
+        loader.load("SNMPv2-SMI");
+        loader.load("SNMPv2-TC");
+        loader.load("SNMPv2-CONF");
         loader.load("HOST-RESOURCES-MIB");
 
         // Get the root MIB objects
@@ -151,6 +156,8 @@ public class MainController {
         });
     }
 
+
+    //SNMP GET button clicked
     @FXML
     void SNMPGetButtonClicked(MouseEvent event) {
         // Get the OID from the text field
@@ -192,26 +199,27 @@ public class MainController {
     }
 
     /*
-    * Click on a non leave node in the MIB tree, just a directory to hold other nodes, perform SNMP GET on this OID
-    * should return nothing, as I tried in other MIB Browser, it returns null
-    *
-    * However. in my case, it return the value of the nearest leaf node it can get the value
-    *
-    * Why ???
-    * The behavior you're observing might be due to how the SNMP library you're
-    * using handles SNMP GET requests for non-leaf nodes. In SNMP, non-leaf
-    * nodes typically don't have associated data. They're usually just
-    * containers for other nodes. Therefore, performing an SNMP GET
-    * request on a non-leaf node's OID usually doesn't return a meaningful
-    * result.  However, some SNMP libraries may handle this situation
-    * differently. For example, when performing an SNMP GET request on a
-    * non-leaf node's OID, they might automatically perform an SNMP GETNEXT
-    * request instead. An SNMP GETNEXT request retrieves the value of the next
-    * leaf node in the MIB tree. This could explain why you're able to perform
-    * an SNMP GET request on a non-leaf node's OID and get a result.
-    * */
+     * Click on a non leave node in the MIB tree, just a directory to hold other nodes, perform SNMP GET on this OID
+     * should return nothing, as I tried in other MIB Browser, it returns null
+     *
+     * However. in my case, it return the value of the nearest leaf node it can get the value
+     *
+     * Why ???
+     * The behavior you're observing might be due to how the SNMP library you're
+     * using handles SNMP GET requests for non-leaf nodes. In SNMP, non-leaf
+     * nodes typically don't have associated data. They're usually just
+     * containers for other nodes. Therefore, performing an SNMP GET
+     * request on a non-leaf node's OID usually doesn't return a meaningful
+     * result.  However, some SNMP libraries may handle this situation
+     * differently. For example, when performing an SNMP GET request on a
+     * non-leaf node's OID, they might automatically perform an SNMP GETNEXT
+     * request instead. An SNMP GETNEXT request retrieves the value of the next
+     * leaf node in the MIB tree. This could explain why you're able to perform
+     * an SNMP GET request on a non-leaf node's OID and get a result.
+     * */
 
 
+    // SNMP Walk button clicked
     @FXML
     void SNMPWalkButtonCLicked(MouseEvent event) {
         // Get the OID from the text field
@@ -255,55 +263,111 @@ public class MainController {
     }
 
 
+    // Clear the query table (toolbar beside the query table)
     @FXML
     public void clearTableClicked(MouseEvent event) {
         queryTable.getItems().clear();
     }
 
 
+    // Second Tab of top left pane
     @FXML
     void chooseVendorsClicked(MouseEvent event) {
         // List of famous vendors
         List<String> vendors = Arrays.asList("Cisco", "Juniper", "Huawei", "Arista", "Dell", "HP", "IBM");
 
-        // Clear the ChoiceBox
+        // Clear the ComboBox
         cbChooseVendors.getItems().clear();
 
-        // Add the vendors to the ChoiceBox
+        // Add the vendors to the ComboBox
         cbChooseVendors.getItems().addAll(vendors);
 
-        // Add the listener to the ChoiceBox
+        // Set the cell factory to use a ListCell with its prefWidthProperty bound to the widthProperty of the ComboBox
+        cbChooseVendors.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>();
+            cell.prefWidthProperty().bind(cbChooseVendors.widthProperty());
+            cell.setTextOverrun(OverrunStyle.CLIP);
+            cell.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem == null) {
+                    cell.setText(null);
+                } else {
+                    cell.setText(newItem);
+                }
+            });
+            return cell ;
+        });
+
+        // Add the listener to the ComboBox
         addChoiceBoxListener(cbChooseVendors);
     }
 
-    private void addChoiceBoxListener(ChoiceBox<String> choiceBox) {
+    private void addChoiceBoxListener(ComboBox<String> choiceBox) {
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 // Clear the vendor MIBs FlowPane
                 vendorMIBs.getChildren().clear();
-                // Unload all the  current MIBs...
+                // Unload all the  current MIBs
                 loader.unloadAll();
+                loader.reset();
 
                 // Get the common MIBs for the selected vendor
                 List<String> commonMibs = getCommonMibsForVendor(newValue);
 
-                // Add the common MIBs to the FlowPane
-                for (String mib : commonMibs) {
-                    Label label = new Label(mib);
-                    // Extend the label to fit the FlowPane in width so that new label
-                    // will be added in FLowPane horizontally
-                    label.prefWidthProperty().bind(vendorMIBs.widthProperty());
-                    vendorMIBs.getChildren().add(label);
+                // Load the root MIB file and build the MIB tree
+                try {
+                    // Load the root MIB file
+                    Mib rootMibFile = loader.load(commonMibs.get(0));
+                    for (String mib : commonMibs) {
+                        loader.load(mib);
+                    }
+
+                    // Get the root MIB object
+                    MibValueSymbol root = rootMibFile.getRootSymbol();
+
+                    // Build the MIB tree
+                    MibNode rootNode = buildMibTree(root);
+
+                    // Convert the MIB tree to a TreeItem
+                    TreeItem<MibNode> rootItem = convertToTreeItem(rootNode);
+
+                    // Create a TreeView from the TreeItem
+                    TreeView<MibNode> tree = new TreeView<>(rootItem);
+
+                    // Extend the tree to fit the pane
+                    tree.prefWidthProperty().bind(vendorMIBs.widthProperty());
+                    tree.prefHeightProperty().bind(vendorMIBs.heightProperty());
+
+                    // Add the TreeView to the FlowPane
+                    vendorMIBs.getChildren().add(tree);
+                } catch (MibLoaderException | IOException e) {
+                    e.printStackTrace();
+                }
+
+                // Load the other MIB files without building their MIB trees
+                for (int i = 1; i < commonMibs.size(); i++) {
+                    try {
+                        // Load the MIB file
+                        loader.load(commonMibs.get(i));
+                    } catch (MibLoaderException | IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
     }
 
     private List<String> getCommonMibsForVendor(String vendor) {
-        // Replace this with the actual logic to get the common MIBs for the vendor
-        return Arrays.asList("MIB1", "MIB2", "MIB3");
-    }
+        // List to store the common MIBs
+        List<String> commonMibs = switch (vendor) {
+            case "Cisco" -> Arrays.asList("IF-MIB");
+            case "Juniper" ->
+                    Arrays.asList("RFC1213-MIB");
+            // Add more cases for other vendors if needed
+            default -> Collections.emptyList();
+        };
 
+        return commonMibs;
+    }
 
 
 }
