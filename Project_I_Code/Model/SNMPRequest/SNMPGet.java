@@ -22,15 +22,17 @@ import java.io.IOException;
  * this class: https://stackoverflow.com/questions/70892857/why-did-snmp4j-return-different-result-with-net-snmp
  */
 
-/*  Perform SNMP GET request to retrieve the value of a specific OID from an SNMP agent.
- * @input: ip address (UdpAddress data type), community string, and OID we want to scan
+/**
+ * Perform SNMP GET request to retrieve the value of a specific OID from an SNMP agent.
+ *
+ * @input: ipAddress (UdpAddress data type), community string, and OID we want to scan
  * @output: the response from the SNMP agent in the form of a VariableBinding object
- * */
+ */
 public class SNMPGet {
 
     private final VariableBinding vb; // Variable binding to store the response from the SNMP agent
 
-    /*
+    /**
      * Function to create a transport mapping
      * Here, since we only work with UDP transport protocol, we set the type of generic classes
      * like TransportMapping, ResponseEvent to UdpAddress.
@@ -42,21 +44,21 @@ public class SNMPGet {
         return transport;
     }
 
-    /*
+    /**
      * Function to create a target address
      */
-    private CommunityTarget<UdpAddress> createTarget(UdpAddress ip, String community) {
+    private CommunityTarget<UdpAddress> createTarget(UdpAddress ipAddress, String community) {
         // Create a target address. This is where the SNMP request will be sent.
         CommunityTarget<UdpAddress> target = new CommunityTarget<>();
         target.setCommunity(new OctetString(community)); // Set the community string
         target.setVersion(SnmpConstants.version2c); // Set the SNMP version. Could be v1, v2c, or v3.
-        target.setAddress(ip); // Set the address of the SNMP agent. The port number is 161 for SNMP Get request.
+        target.setAddress(ipAddress); // Set the address of the SNMP agent. The port number is 161 for SNMP Get request.
         target.setRetries(2); // Set the number of retries when a request fails.
         target.setTimeout(1000); // Set the timeout (in milliseconds).
         return target;
     }
 
-    /*
+    /**
      * Function to create a PDU
      * What is a PDU? A PDU stands for Protocol Data Unit. In the context of SNMP (Simple Network Management Protocol),
      * a PDU is a packet of data that contains SNMP commands, variables, and associated identifiers.
@@ -83,13 +85,16 @@ public class SNMPGet {
      * Some related methods:
      * - responseEvent.getResponse(): Retrieves the PDU response.
      * - responsePDU.getErrorStatus(): Gets the error status code.
-     * - responsePDU.getErrorStatusText(): Gets the error status description.
+     * - responsePDU.getErrorStatusText(): Gets the error status descripAddresstion.
      * - responsePDU.getVariableBindings(): Retrieves a vector of variable bindings containing the requested data (for GET and GETNEXT responses).
      * - responsePDU.get(index): Retrieves a specific variable binding at the given index
      */
 
-    /*
-     * Function to process the response
+    /**
+     * Function to process the response from the SNMP agent
+     *
+     * @param response: The ResponseEvent object containing the response from the SNMP agent
+     * @return The VariableBinding object containing the response data
      */
     private VariableBinding processResponse(ResponseEvent<UdpAddress> response) {
         VariableBinding vb = null;
@@ -114,15 +119,15 @@ public class SNMPGet {
     }
 
 
-    /*
+    /**
      * Constructor to perform the SNMP GET request
      */
-    public SNMPGet(UdpAddress ip, String community, String oid) throws IOException {
+    public SNMPGet(UdpAddress ipAddress, String community, String oid) throws IOException {
         // Create a transport mapping
         TransportMapping<UdpAddress> transport = createTransportMapping();
 
         // Create a target address
-        CommunityTarget<UdpAddress> target = createTarget(ip, community);
+        CommunityTarget<UdpAddress> target = createTarget(ipAddress, community);
 
         // Create a PDU
         PDU pdu = createPDU(oid);
@@ -140,9 +145,13 @@ public class SNMPGet {
         snmp.close();
     }
 
-    // Use this method to get the response from the SNMP agent
-    // so that we can process further based on the data type of the response
+    /**
+     * Function to get the VariableBinding object containing the response data
+     *
+     * @return The VariableBinding object containing the response data
+     */
     public VariableBinding getVariableBinding() {
         return this.vb;
     }
+
 }

@@ -7,12 +7,12 @@ package Project_I_Code.GUI;
 public class ARowInQueryTable {
     private final String name;
     private final String value;
-    private final String syntax;
+    private final String dataType;
 
-    public ARowInQueryTable(String name, String value, String type) {
+    public ARowInQueryTable(String name, String value, String dataType) {
         this.name = name;
         this.value = value;
-        this.syntax = type;
+        this.dataType = dataType;
     }
 
     public String getName() {
@@ -23,8 +23,8 @@ public class ARowInQueryTable {
         return value;
     }
 
-    public String getSyntax() {
-        return syntax;
+    public String getDataType() {
+        return dataType;
     }
 
     //the table API will call getXXX so do not mark attributes as public and remove getters

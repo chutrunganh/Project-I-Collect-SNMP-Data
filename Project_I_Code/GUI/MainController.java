@@ -36,11 +36,11 @@ public class MainController {
 
     MibLoader loader = new MibLoader(); //manage all the MIB loads to the Ram
 
-    // Top left panel
+    // Top left panel: this is where we display the MIB tree
     @FXML
     private AnchorPane standardMIBTreePanel;
 
-    //Bottom left panel
+    //Bottom left panel: this is where we display the information of the selected node
     @FXML
     private Label lbAccess;
     @FXML
@@ -52,7 +52,7 @@ public class MainController {
     @FXML
     private TextArea taDescription;
 
-    // Top right panel
+    // Top right panel: this is we input, display the IP address, community string, OID
     @FXML
     private PasswordField tfCommunityString;
     @FXML
@@ -60,24 +60,24 @@ public class MainController {
     @FXML
     private TextField tfTargetIPAddress;
 
-    // Query table
+    // Query table to display the result of the SNMP GET and SNMP WALK
     @FXML
     private TableView<ARowInQueryTable> queryTable;
     @FXML
     private TableColumn<ARowInQueryTable, String> nameColumn;
     @FXML
-    private TableColumn<ARowInQueryTable, String> syntaxColumn;
+    private TableColumn<ARowInQueryTable, String> dataTypeColumn;
     @FXML
     private TableColumn<ARowInQueryTable, String> valueColumn;
 
-    // Second Tab top left pane
+    // Second Tab top left pane for vendor sspecific MIBs
     @FXML
     private ComboBox<String> cbChooseVendors;
     @FXML
     private FlowPane vendorMIBs;
 
 
-    //Default value if user does not input anything
+    //Default value if user does not input anything in the targetAddress, communityString text field
     public String targetAddressString = "udp:127.0.0.1/161";
     public String communityString = "password";
 
@@ -86,22 +86,22 @@ public class MainController {
     public String name;
     public String oid;
 
-    SNMPValueConverter converter;  //Convert the raw response to human readable format
+    SNMPValueConverter converter;  //Class contains methods to convert the raw response to human-readable format
 
     @FXML
     public void initialize() throws MibLoaderException, IOException {
-        // Load the MIB files
-        Mib mibRFC1213 = loader.load("RFC1213-MIB");  // replace with your MIB file name
+
+        // Load some default standard MIB files
+        Mib mibRFC1213 = loader.load("RFC1213-MIB");
         loader.load("RFC1155-SMI");
         loader.load("RFC-1212");
         loader.load("SNMPv2-SMI");
         loader.load("SNMPv2-TC");
         loader.load("SNMPv2-CONF");
-        //loader.load("HOST-RESOURCES-MIB");
+        loader.load("HOST-RESOURCES-MIB");
 
         // Get the root MIB objects
         MibValueSymbol rootRFC1213 = mibRFC1213.getRootSymbol();
-
 
         // Build the MIB trees
         MibNode rootNodeRFC1213 = buildMibTree(rootRFC1213);
@@ -127,30 +127,42 @@ public class MainController {
         // Set up the TableView. The TableView requires ti initialize the columns and set the cell value factory at start
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
-        syntaxColumn.setCellValueFactory(new PropertyValueFactory<>("syntax"));
+        dataTypeColumn.setCellValueFactory(new PropertyValueFactory<>("dataType"));
 
 
-        converter = new SNMPValueConverter(); // Create a new instance of the SNMPValueConverter class
+        converter = new SNMPValueConverter(); // Create a new instance of the SNMPValueConverter class to use its methods to parse the raw response
 
     }
 
+
+    /**
+     * Add a listener to the TreeView's selection model to display the information of the selected node
+     * in the bottom left panel. When we interact with the tree by clicking on a node, the information of that node
+     * will be displayed in the bottom left panel.
+     *
+     * @param tree The TreeView to add the listener to
+     */
     private void addSelectionListener(TreeView<MibNode> tree) {
         tree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 MibNode selectedNode = newValue.getValue();
 
-
                 // Update the labels and text area with the selected node's information
                 lbName.setText(selectedNode.name);
                 tfOID.setText(selectedNode.oid);
-
-                dataType = converter.getDataTypeAndName(selectedNode.oid).getValue().getKey();
-                lbType.setText(dataType);
                 name = selectedNode.name;
                 oid = selectedNode.oid;
+
+                //Get the data type of the OID by calling the method in the SNMPValueConverter class
+                // I tried to use getType() in Mibble API to get the data type of the selected node (the datatype which assign to each node when they are added
+                // to the constructing MIB tree), but it just returns the primitive type instead of the Textual Convention.
+                dataType = converter.getDataTypeAndName(selectedNode.oid).getValue().getKey();
+                lbType.setText(dataType);
+
                 taDescription.setText(selectedNode.description);
 
-                //Check if access, status are null, if it is, set it to "Not Defined"
+                //Check if access, status are null, if it is, set it to "Not Defined" (non leaf node does not have access, status so we want to check this
+                // , otherwise, it will throw null pointer exception when we click on non leaf node)
                 lbAccess.setText(selectedNode.access == null ? "" : selectedNode.access.toString());
                 lbStatus.setText(selectedNode.status == null ? "" : selectedNode.status.toString());
             }
@@ -158,42 +170,44 @@ public class MainController {
     }
 
 
-    //SNMP GET button clicked
+    /**
+     * SNMP Get button clicked
+     */
     @FXML
     void SNMPGetButtonClicked(MouseEvent event) {
-        // Get the OID from the text field
-        oid = tfOID.getText();
-        // Get the target IP address from the text field, change it to UdpAddress
 
+        oid = tfOID.getText(); // Get the OID from the text field
+
+        // Get the target IP address from the text field, change it to UdpAddress format
         //In case use let this field empty, use the default IP address
         if (!tfTargetIPAddress.getText().isEmpty()) {
             targetAddressString = "udp:" + tfTargetIPAddress.getText() + "/161";
         }
         Address targetAddress = GenericAddress.parse(targetAddressString);
+
         if (targetAddress instanceof UdpAddress udpTargetAddress) {
             // Get the community string from the password field
             if (!tfCommunityString.getText().isEmpty()) {
                 communityString = tfCommunityString.getText();
             }
 
-            //Perform SNMP GET
+            // Perform SNMP GET
             try {
                 SNMPGet snmpGet = new SNMPGet(udpTargetAddress, communityString, oid);
                 VariableBinding vb = snmpGet.getVariableBinding(); //Get the response from the SNMP request
 
-                SNMPValueConverter converter = new SNMPValueConverter();
                 //Get the data type of the OID
-                //the variable dataType here is different from the dataType in the main controller, this is the data type of the OID + detail information
-                Pair<String, HashMap<Integer, String>> dataType = converter.getDataTypeAndName(oid).getValue();
-                String humanReadableValue = converter.convertToHumanReadable(vb.getVariable(), dataType);
+                Pair<String, HashMap<Integer, String>> dataTypeAndDataTypeDetail = converter.getDataTypeAndName(oid).getValue(); //EX: "INTEGER", "1: up(1)"
+                String humanReadableValue = converter.convertToHumanReadable(vb.getVariable(), dataTypeAndDataTypeDetail);
 
 
                 // Add the new value to the query table
-                ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, dataType.getKey());
+                ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, dataTypeAndDataTypeDetail.getKey()); //EX: "INTEGER"
                 queryTable.getItems().add(row);
 
                 //Print raw response to console to debug
                 System.out.println("Get: " + oid + " : " + vb.getVariable().toString());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -222,10 +236,12 @@ public class MainController {
      * an SNMP GET request on a non-leaf node's OID and get a result.
      * */
 
-    // SNMP Walk button clicked
 
-
-    //Still meet issue with egp groups
+    /**
+     * SNMP Walk button clicked
+     */
+    //Still meet issue when clicked egp groups. Seem like the OID of this groud is not valid in my machine (I checked in the MIB browser, it can not find this OID), so
+    // we can not start the SNMP Walk operation from this OID
     @FXML
     void SNMPWalkButtonCLicked(MouseEvent event) {
         // Get the OID from the text field if it is not empty
@@ -255,16 +271,17 @@ public class MainController {
                     String oidFromWalk = varBinding.getOid().toString();
 
                     Pair<String, Pair<String, HashMap<Integer, String>>> result = converter.getDataTypeAndName(oidFromWalk);
+                    // EX of result: <ifAdminStatus, <INTEGER, {1 : up(1), 2 : down(2), 3 : testing(3)}>>
                     String nameInWalk = result.getKey();
-                    Pair<String, HashMap<Integer, String>> dataType = result.getValue();
+                    Pair<String, HashMap<Integer, String>> dataTypeAndDataTypeDetail = result.getValue();
 
-                    String humanReadableValue = converter.convertToHumanReadable(varBinding.getVariable(), dataType);
+                    String humanReadableValue = converter.convertToHumanReadable(varBinding.getVariable(), dataTypeAndDataTypeDetail);
 
                     // Create a new row in the query table for each VariableBinding
-                    ARowInQueryTable row = new ARowInQueryTable(nameInWalk, humanReadableValue, dataType.getKey());
+                    ARowInQueryTable row = new ARowInQueryTable(nameInWalk, humanReadableValue, dataTypeAndDataTypeDetail.getKey());
 
                     // Add the new row to the query table
-                    Platform.runLater(() -> queryTable.getItems().add(row));
+                    queryTable.getItems().add(row);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -274,21 +291,19 @@ public class MainController {
         }
     }
 
-    public MibValueSymbol locateSymbolByOid(MibLoader loader, String oid) {
-        ObjectIdentifierValue iso = loader.getRootOid();
-        ObjectIdentifierValue match = iso.find(oid);
-        return (match == null) ? null : match.getSymbol();
-    }
 
-
-    // Clear the query table (toolbar beside the query table)
+    /**
+     * Clear the query table
+     */
     @FXML
     public void clearTableClicked(MouseEvent event) {
         queryTable.getItems().clear();
     }
 
 
-    // Second Tab of top left pane
+    /**
+     ** Choose Vendors Combo Box clicked
+     */
     @FXML
     void chooseVendorsClicked(MouseEvent event) {
         // List of famous vendors
@@ -315,6 +330,11 @@ public class MainController {
         addChoiceBoxListener(cbChooseVendors);
     }
 
+    /**
+     * Add a listener to the ComboBox to display the MIB tree of the selected vendor
+     *
+     * @param choiceBox The ComboBox to add the listener to
+     */
     private void addChoiceBoxListener(ComboBox<String> choiceBox) {
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -381,13 +401,5 @@ public class MainController {
 
         return commonMibs;
     }
-
-
-    @FXML
-    void stopOperationClicked(MouseEvent event) {
-        //Stop the SNMP operation
-        // DO later
-    }
-
 
 }

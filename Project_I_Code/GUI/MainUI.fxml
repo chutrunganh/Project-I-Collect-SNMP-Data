@@ -185,7 +185,7 @@
                     <columns>
                       <TableColumn fx:id="nameColumn" prefWidth="134.0" text="Name" />
                       <TableColumn fx:id="valueColumn" prefWidth="364.0" text="Value" />
-                        <TableColumn fx:id="syntaxColumn" prefWidth="130.0" text="Data Type" />
+                        <TableColumn fx:id="dataTypeColumn" prefWidth="130.0" text="Data Type" />
                     </columns>
                   </TableView>
                </children>
@@ -199,11 +199,6 @@
                      <FlowPane.margin>
                         <Insets top="30.0" />
                      </FlowPane.margin>
-                  </Label>
-                  <Label alignment="CENTER" onMouseClicked="#stopOperationClicked" prefHeight="34.0" prefWidth="36.0" text="⛔" textFill="#eb0202">
-                     <font>
-                        <Font size="26.0" />
-                     </font>
                   </Label>
                </children>
             </FlowPane>
