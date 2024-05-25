@@ -9,7 +9,7 @@ import java.util.List;
 
 /*
  * The MibNode class represents a node in the MIBtree. Each MibNode object holds information
- * about a specific MIB node, including its name, syntax, OID, access level, status, and description.
+ * about a specific MIB node, including its name, dataType, OID, access level, status, and description.
  */
 public class MibNode {
 
@@ -18,12 +18,28 @@ public class MibNode {
     public String name;
     public SnmpAccess access;
     public SnmpStatus status;
-    public MibType syntax;
+    //public MibType dataType;
     public String description;
 
-    public MibNode(String name, MibType syntax, String oid, SnmpAccess access, SnmpStatus status, String description) {
+//    public MibNode(String name, MibType dataType, String oid, SnmpAccess access, SnmpStatus status, String description) {
+//        this.name = name;
+//        this.dataType = dataType;
+//        this.oid = oid;
+//        this.access = access;
+//        this.status = status;
+//        this.description = description;
+//        this.children = new ArrayList<>();
+//    }
+
+    /*
+    * Currently, we can not handle the MibType dataType in the MibNode class, so we will replace it by the data type string we get
+    * from snmp translate command.
+    * I tried getType() method in the MibValueSymbol class, but it just returns the primitive type instead of the Textual Convention.
+    */
+    public String dataType;
+    public MibNode(String name, String dataType, String oid, SnmpAccess access, SnmpStatus status, String description) {
         this.name = name;
-        this.syntax = syntax;
+        this.dataType = dataType;
         this.oid = oid;
         this.access = access;
         this.status = status;

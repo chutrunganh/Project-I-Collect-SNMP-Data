@@ -4,6 +4,7 @@ import Project_I_Code.Model.MIBTree.MibNode;
 import Project_I_Code.Model.SNMPRequest.SNMPGet;
 import Project_I_Code.Model.SNMPRequest.SNMPValueConverter;
 import Project_I_Code.Model.SNMPRequest.SNMPWalk;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,7 +16,7 @@ import net.percederberg.mibble.Mib;
 import net.percederberg.mibble.MibLoader;
 import net.percederberg.mibble.MibLoaderException;
 import net.percederberg.mibble.MibValueSymbol;
-import net.percederberg.mibble.snmp.SnmpObjectType;
+import net.percederberg.mibble.value.ObjectIdentifierValue;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.UdpAddress;
@@ -24,6 +25,7 @@ import org.snmp4j.smi.VariableBinding;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static Project_I_Code.Model.MIBTree.MibTreeBuilder.buildMibTree;
@@ -80,9 +82,11 @@ public class MainController {
     public String communityString = "password";
 
     //Some attributes to use cross multiple methods
-    public String syntax;
+    public String dataType;
     public String name;
     public String oid;
+
+    SNMPValueConverter converter;  //Convert the raw response to human readable format
 
     @FXML
     public void initialize() throws MibLoaderException, IOException {
@@ -93,7 +97,7 @@ public class MainController {
         loader.load("SNMPv2-SMI");
         loader.load("SNMPv2-TC");
         loader.load("SNMPv2-CONF");
-        loader.load("HOST-RESOURCES-MIB");
+        //loader.load("HOST-RESOURCES-MIB");
 
         // Get the root MIB objects
         MibValueSymbol rootRFC1213 = mibRFC1213.getRootSymbol();
@@ -125,6 +129,9 @@ public class MainController {
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
         syntaxColumn.setCellValueFactory(new PropertyValueFactory<>("syntax"));
 
+
+        converter = new SNMPValueConverter(); // Create a new instance of the SNMPValueConverter class
+
     }
 
     private void addSelectionListener(TreeView<MibNode> tree) {
@@ -132,26 +139,20 @@ public class MainController {
             if (newValue != null) {
                 MibNode selectedNode = newValue.getValue();
 
-                //Every node has a name, OID, and description
-                tfOID.setText(selectedNode.oid); //get OID first, even it is not the leaf node
+
+                // Update the labels and text area with the selected node's information
                 lbName.setText(selectedNode.name);
-                //Also assign the name,oid to the attribute to use in other methods
+                tfOID.setText(selectedNode.oid);
+
+                dataType = converter.getDataTypeAndName(selectedNode.oid).getValue().getKey();
+                lbType.setText(dataType);
                 name = selectedNode.name;
                 oid = selectedNode.oid;
+                taDescription.setText(selectedNode.description);
 
-                // But not all non-leaf node have remaining fields
-                // Attempt to read all other fields, return blank if some are empty or null
-                lbAccess.setText(selectedNode.access != null ? selectedNode.access.toString() : "");
-                lbStatus.setText(selectedNode.status != null ? selectedNode.status.toString() : "");
-                taDescription.setText(selectedNode.description != null ? selectedNode.description : "");
-                if (selectedNode.syntax instanceof SnmpObjectType snmpType) { // Up cast to SnmpObjectType to get the syntax name
-                    lbType.setText(snmpType.getSyntax().getName());
-                    //Also assign the syntax to the attribute to use in other methods
-                    syntax = snmpType.getSyntax().getName();
-                } else {
-                    lbType.setText("");
-                    syntax = "";
-                }
+                //Check if access, status are null, if it is, set it to "Not Defined"
+                lbAccess.setText(selectedNode.access == null ? "" : selectedNode.access.toString());
+                lbStatus.setText(selectedNode.status == null ? "" : selectedNode.status.toString());
             }
         });
     }
@@ -161,7 +162,7 @@ public class MainController {
     @FXML
     void SNMPGetButtonClicked(MouseEvent event) {
         // Get the OID from the text field
-        String oid = tfOID.getText();
+        oid = tfOID.getText();
         // Get the target IP address from the text field, change it to UdpAddress
 
         //In case use let this field empty, use the default IP address
@@ -180,12 +181,15 @@ public class MainController {
                 SNMPGet snmpGet = new SNMPGet(udpTargetAddress, communityString, oid);
                 VariableBinding vb = snmpGet.getVariableBinding(); //Get the response from the SNMP request
 
-                SNMPValueConverter converter = new SNMPValueConverter(loader);
-                String humanReadableValue = converter.convertToHumanReadableWithKnownDataType(vb.getVariable(), syntax);
+                SNMPValueConverter converter = new SNMPValueConverter();
+                //Get the data type of the OID
+                //the variable dataType here is different from the dataType in the main controller, this is the data type of the OID + detail information
+                Pair<String, HashMap<Integer, String>> dataType = converter.getDataTypeAndName(oid).getValue();
+                String humanReadableValue = converter.convertToHumanReadable(vb.getVariable(), dataType);
 
 
                 // Add the new value to the query table
-                ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, syntax);
+                ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, dataType.getKey());
                 queryTable.getItems().add(row);
 
                 //Print raw response to console to debug
@@ -218,12 +222,15 @@ public class MainController {
      * an SNMP GET request on a non-leaf node's OID and get a result.
      * */
 
-
     // SNMP Walk button clicked
+
+
+    //Still meet issue with egp groups
     @FXML
     void SNMPWalkButtonCLicked(MouseEvent event) {
-        // Get the OID from the text field
-        String oid = tfOID.getText();
+        // Get the OID from the text field if it is not empty
+        oid = tfOID.getText();
+
         //In case use let this field empty, use the default IP address
         if (!tfTargetIPAddress.getText().isEmpty()) {
             targetAddressString = "udp:" + tfTargetIPAddress.getText() + "/161";
@@ -241,18 +248,23 @@ public class MainController {
                 snmpWalk.start();
                 List<VariableBinding> varBindings = snmpWalk.performSNMPWalk(oid);
 
-                SNMPValueConverter converter = new SNMPValueConverter(loader);
+                SNMPValueConverter converter = new SNMPValueConverter();
 
                 for (VariableBinding varBinding : varBindings) {
+                    //Get the OID from the VariableBinding
                     String oidFromWalk = varBinding.getOid().toString();
-                    Pair<String, String> result = converter.convertToHumanReadableWithoutKnowTheDataType(varBinding.getVariable(), oidFromWalk);
-                    String humanReadableValue = result.getKey();
-                    String name = result.getValue();
-                    System.out.println("Walk: " + name + " [" + oidFromWalk + "] " + " : " + humanReadableValue);
+
+                    Pair<String, Pair<String, HashMap<Integer, String>>> result = converter.getDataTypeAndName(oidFromWalk);
+                    String nameInWalk = result.getKey();
+                    Pair<String, HashMap<Integer, String>> dataType = result.getValue();
+
+                    String humanReadableValue = converter.convertToHumanReadable(varBinding.getVariable(), dataType);
 
                     // Create a new row in the query table for each VariableBinding
-                    ARowInQueryTable row = new ARowInQueryTable(name, humanReadableValue, varBinding.getVariable().getSyntaxString());
-                    queryTable.getItems().add(row);
+                    ARowInQueryTable row = new ARowInQueryTable(nameInWalk, humanReadableValue, dataType.getKey());
+
+                    // Add the new row to the query table
+                    Platform.runLater(() -> queryTable.getItems().add(row));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -260,6 +272,12 @@ public class MainController {
         } else {
             System.out.println("Invalid IP address format.");
         }
+    }
+
+    public MibValueSymbol locateSymbolByOid(MibLoader loader, String oid) {
+        ObjectIdentifierValue iso = loader.getRootOid();
+        ObjectIdentifierValue match = iso.find(oid);
+        return (match == null) ? null : match.getSymbol();
     }
 
 
@@ -288,13 +306,9 @@ public class MainController {
             cell.prefWidthProperty().bind(cbChooseVendors.widthProperty());
             cell.setTextOverrun(OverrunStyle.CLIP);
             cell.itemProperty().addListener((obs, oldItem, newItem) -> {
-                if (newItem == null) {
-                    cell.setText(null);
-                } else {
-                    cell.setText(newItem);
-                }
+                cell.setText(newItem);
             });
-            return cell ;
+            return cell;
         });
 
         // Add the listener to the ComboBox
@@ -359,14 +373,20 @@ public class MainController {
     private List<String> getCommonMibsForVendor(String vendor) {
         // List to store the common MIBs
         List<String> commonMibs = switch (vendor) {
-            case "Cisco" -> Arrays.asList("IF-MIB");
-            case "Juniper" ->
-                    Arrays.asList("RFC1213-MIB");
+            case "Cisco" -> List.of("IF-MIB");
+            case "Juniper" -> List.of("RFC1213-MIB");
             // Add more cases for other vendors if needed
             default -> Collections.emptyList();
         };
 
         return commonMibs;
+    }
+
+
+    @FXML
+    void stopOperationClicked(MouseEvent event) {
+        //Stop the SNMP operation
+        // DO later
     }
 
 

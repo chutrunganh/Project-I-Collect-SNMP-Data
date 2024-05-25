@@ -6,6 +6,10 @@ import net.percederberg.mibble.snmp.SnmpAccess;
 import net.percederberg.mibble.snmp.SnmpObjectType;
 import net.percederberg.mibble.snmp.SnmpStatus;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /*
  * The MibTreeBuilder class is used to build the MIB tree from the MIB file. See the example
  * from the Mibble API doc: https://www.mibble.org/doc/faq-java-api.html .
@@ -43,8 +47,31 @@ public class MibTreeBuilder {
             status = snmpType.getStatus();
             description = snmpType.getDescription();
         }
+        
+        //Perform the snmp translate command to get the data type of the OID
+//        String dataType = "";
+//        try {
+//            Process process = new ProcessBuilder("snmptranslate", "-Td", "-OS", oid).start();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                //System.out.println("Command output: " + line);
+//                if (line.trim().startsWith("SYNTAX")) {
+//                    dataType = line.substring(line.indexOf("SYNTAX") + 7).trim();
+//                    //System.out.println("Data type: " + dataType);
+//                }
+//            }
+//        } catch (IOException e) {
+//            System.out.println("Error executing snmptranslate command or reading its output");
+//            e.printStackTrace();
+//        }
 
-        MibNode node = new MibNode(symbol.getName(), symbol.getType(), oid, access, status, description);
+        //Perform the snmp translate command to get the data type of the OID here will take the app longer to load, instead I will perform
+        // it in the main controller, only run command with selected node. So right now just pass the datatype = empt   y
+        
+        String dataType = "";
+        MibNode node = new MibNode(symbol.getName(), dataType , oid, access, status, description);
 
         for (MibValueSymbol child : symbol.getChildren()) {
             node.addChild(buildMibTree(child));

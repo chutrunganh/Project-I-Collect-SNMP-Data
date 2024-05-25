@@ -50,8 +50,8 @@ import java.util.List;
 * */
 public class SNMPWalk {
 
-    private static final int RETRIES = 2; // Number of retries when a request fails
-    private static final int TIMEOUT = 1500; // Timeout in milliseconds
+    private static final int RETRIES = 1; // Number of retries when a request fails
+    private static final int TIMEOUT = 150; // Timeout in milliseconds
     private static final int VERSION = SnmpConstants.version2c; // SNMP version. Could be v1, v2c, or v3
 
     private Snmp snmp = null;
@@ -125,10 +125,13 @@ public class SNMPWalk {
 
                 VariableBinding[] varBindings = event.getVariableBindings();
                 if (varBindings != null) {
+                    System.out.println("oid " + varBindings[0].getOid() + " : " + varBindings[0].getVariable());
+
                     varBindingsList.addAll(Arrays.asList(varBindings));
                 }
             }
         }
+        System.out.println("Parse the response to human-readable format, estimate 2 minutes to complete");
         return varBindingsList;
     }
 }
