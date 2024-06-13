@@ -1,13 +1,15 @@
 package GUI;
 
-import Model.MIBTreeStructure.JsonTreeConverter;
-import Model.MIBTreeStructure.JsonTreeItem;
-import Model.MIBTreeStructure.MIBReader;
+import Model.MIBTreeStructure.BuildTreeFromJson;
+import Model.MIBTreeStructure.MibLoader;
+import Model.MIBTreeStructure.Node;
 import Model.SNMRequest.SNMPGet;
 import Model.SNMRequest.SNMPValueConverter;
 import Model.SNMRequest.SNMPWalk;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -22,7 +24,6 @@ import org.snmp4j.smi.VariableBinding;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class MainController {
@@ -64,7 +65,49 @@ public class MainController {
         showMIBsLoaded(defaultMIB2);
 
 
-        loadMIBs();
+        //loadMIBs();
+
+        BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
+//        try {
+//            treeBuilder.buildTreeFromJson("Project_I_code/MIB Databases/IF-MIB.json");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        List<String> mibFilePaths = Arrays.asList(
+                "Project_I_code/MIB Databases/RFC1213-MIB.json",
+                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
+        );
+        try {
+            treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
+        TreeView<Node> treeView = new TreeView<>(rootItem);
+
+        treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Node>>() {
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<Node>> observable, TreeItem<Node> oldValue, TreeItem<Node> newValue) {
+                if (newValue != null) {
+                    Node selectedNode = newValue.getValue();
+                    //printNodeAttributes(selectedNode);
+                    //Set the value to label
+                    tfOID.setText(selectedNode.oid);
+                    lbName.setText(selectedNode.name);
+                    lbType.setText(selectedNode.type);
+                    lbAccess.setText(selectedNode.access);
+                    lbStatus.setText(selectedNode.status);
+                    taDescription.setText(selectedNode.description);
+                }
+            }
+        });
+
+        //Expand the treeview to fit the anchorpane width and height
+        treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
+        treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
+        MIBTreeDisplay.getChildren().add(treeView);
 
     }
 
@@ -176,62 +219,33 @@ public class MainController {
      * */
 
         public void displayTreeFromChosenMIB(File jsonFile) throws IOException {
-            // Create the new tree from TestMain and replace the old tree
+            //Clear the MIBTreeDisplay AnchorPane before displaying the new MIB
+            MIBTreeDisplay.getChildren().clear();
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            AtomicReference<JsonNode> jsonNode = new AtomicReference<>(objectMapper.readTree(jsonFile));
+            BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
 
-            TreeItem<String> rootItem = JsonTreeConverter.convertJsonToTree(jsonNode.get(), "root");
-            treeView = new TreeView<>(rootItem);
+            List<String> mibFilePaths = Arrays.asList(
+                    "Project_I_code/MIB Databases/RFC1213-MIB.json",
+                    "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
+            );
+            try {
+                treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null && !newValue.isLeaf()){
-                    JsonTreeItem item = (JsonTreeItem) newValue;
-                    jsonNode.set(item.getJsonNode());
+            TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
+            TreeView<Node> treeView = new TreeView<>(rootItem);
 
-                    jsonNode.get().fieldNames().forEachRemaining(fieldName -> {
-                        JsonNode childNode = jsonNode.get().get(fieldName);
-                        if (fieldName.equals("name")) {
-                            lbName.setText(childNode.asText());
-                        } else if (fieldName.equals("maxaccess")) {
-                            lbAccess.setText(childNode.asText());
-                        } else if (fieldName.equals("description")) {
-                            taDescription.setText(childNode.asText());
-                        } else if (fieldName.equals("status")) {
-                            lbStatus.setText(childNode.asText());
-                        } else if (fieldName.equals("oid")) {
-                            tfOID.setText(childNode.asText());
-                        } else if (fieldName.equals("syntax")) {
-                            if (childNode.has("type")) {
-                                String type = childNode.get("type").asText();
-                                lbType.setText(type);
-                            }
-                            if (childNode.has("constraints")) {
-                                JsonNode constraintsNode = childNode.get("constraints");
-                                Map<String, Object> constraints = getConstraints(constraintsNode);
-                                // Now you have a map of constraints that you can use
-                                // For example, if the constraint is an enumeration:
-                                if (constraints.containsKey("enumeration")) {
-                                    Map<String, String> enumeration = (Map<String, String>) constraints.get("enumeration");
-                                    enumeration.forEach((key, value) -> {
-                                        // Handle each field in the enumeration
-                                        // For example, print the field name and value
-                                        System.out.println(key + ": " + value);
-                                    });
-                                }
-                                // Add additional checks for other types of constraints as needed
-                            }
-                        }
-                    });
+            treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Node>>() {
+                @Override
+                public void changed(ObservableValue<? extends TreeItem<Node>> observable, TreeItem<Node> oldValue, TreeItem<Node> newValue) {
+                    if (newValue != null) {
+                        Node selectedNode = newValue.getValue();
+                        //printNodeAttributes(selectedNode);
+                    }
                 }
             });
-
-            // Bind the TreeView's prefWidthProperty to the ScrollPane's widthProperty
-            treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
-            // Bind the TreeView's prefHeightProperty to the ScrollPane's heightProperty
-            treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
-            // Add the TreeView to the ScrollPane
-            MIBTreeDisplay.getChildren().add(treeView);
         }
 
 
@@ -359,10 +373,12 @@ public class MainController {
     @FXML
     void SNMPWalkClicked(MouseEvent event) {
         // Get the OID from the text field
-        oidValue = tfOID.getText();
+        String oidValue = tfOID.getText();
+        oidValue = oidValue + ".0";
 
         // Get the target IP address from the text field, change it to UdpAddress format
         // In case user leaves this field empty, use the default IP address
+        String ip;
         if (!tfTargetIP.getText().isEmpty()) {
             ip = "udp:" + tfTargetIP.getText() + "/161";
         } else {
@@ -372,70 +388,40 @@ public class MainController {
 
         if (targetAddress instanceof UdpAddress udpTargetAddress) {
             // Get the community string from the password field
-            if (!tfCommunityString.getText().isEmpty()) {
-                community = tfCommunityString.getText();
-            }
+            String community = tfCommunityString.getText();
 
             try {
-                SNMPWalk snmpWalk = new SNMPWalk((UdpAddress) targetAddress, community);
+                // Initialize SNMPWalk with target address, community string, and MIB folder path
+                SNMPWalk snmpWalk = new SNMPWalk((UdpAddress) targetAddress, community, "Project_I_code/MIB Databases");
                 snmpWalk.start(); // Start the SNMP session
                 List<VariableBinding> varBindings = snmpWalk.performSNMPWalk(oidValue);
+
+                // Create MibLoader instance to load MIB files and resolve OIDs
+                MibLoader mibLoader = new MibLoader();
+                mibLoader.loadMibsFromFolder("Project_I_code/MIB Databases");
+
                 // Handle the results of the SNMP walk
-                // For example, print the results to the console
+                // For each VariableBinding, print OID, name, and data type
                 for (VariableBinding varBinding : varBindings) {
                     String oid = varBinding.getOid().toString();
-                    // Find the corresponding node in the MIB tree
-                    MIBReader mibReader = new MIBReader();
-                    mibReader.findNodeByOIDInAllFiles("Project_I_code/MIB Databases", oid);
+                    String name = mibLoader.lookupName(oid);
+                    String dataType = mibLoader.lookupDataType(oid);
 
-                    //Print out the node to the console
-                    //System.out.println(node);
-//                    if (node != null) {
-//                        // Get the data type and constraints
-//                        String dataType = node.get("syntax").get("type").asText();
-//                        Map<String, Object> constraints = getConstraints(node.get("syntax").get("constraints"));
-//                        // Convert the variable to a human-readable format
-//                        String humanReadableValue = converter.convertToHumanReadable(varBinding.getVariable(), dataType, constraints);
-//                        System.out.println(oid + ": (human readable) " + humanReadableValue);
-//                    } else {
-//                        System.out.println(oid + ": " + varBinding.getVariable());
-//                    }
+                    // Example: Output to console
+                    System.out.println("OID: " + oid + ", Name: " + name + ", DataType: " + dataType);
+
+                    // Optionally, you can display results in a UI component or process further
+                    // For example, update a TableView with OID, Name, and DataType
+                    // tableView.getItems().add(new SNMPResult(oid, name, dataType));
                 }
+
+                snmpWalk.close(); // Close SNMP session when done
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             System.out.println("Error: Invalid target address");
         }
-    }
-
-
-
-    private String extractNodeName(JsonNode node) {
-        if (node.has("name")) {
-            return node.get("name").asText();
-        }
-        return "Unknown";
-    }
-
-    private String extractNodeDatatype(JsonNode node) {
-        if (node.has("syntax") && node.get("syntax").has("type")) {
-            return node.get("syntax").get("type").asText();
-        }
-        return "Unknown";
-    }
-
-    private Map<String, Object> getConstraints(JsonNode constraintsNode) {
-        Map<String, Object> constraints = new HashMap<>();
-        // Extract the constraints from the given JsonNode
-        // This is a placeholder implementation and may need to be adjusted based on your actual constraints structure
-        if (constraintsNode != null) {
-            constraintsNode.fieldNames().forEachRemaining(fieldName -> {
-                JsonNode constraintValue = constraintsNode.get(fieldName);
-                constraints.put(fieldName, constraintValue.asText());
-            });
-        }
-        return constraints;
     }
 
 }
