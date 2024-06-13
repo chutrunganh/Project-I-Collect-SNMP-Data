@@ -1,5 +1,3 @@
-package MIB_Browser_Sourcecode;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +8,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("GUI/MainUI.fxml"));
-        primaryStage.setTitle("MIB Browser Tool");
+        primaryStage.setTitle("SNMP Browser Tool");
         primaryStage.setScene(new Scene(root, 885, 620));
         primaryStage.show();
     }
