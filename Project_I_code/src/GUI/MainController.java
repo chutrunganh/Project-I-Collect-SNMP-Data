@@ -2,19 +2,18 @@ package GUI;
 
 import Model.MIBTreeStructure.JsonTreeConverter;
 import Model.MIBTreeStructure.JsonTreeItem;
+import Model.MIBTreeStructure.MIBReader;
 import Model.SNMRequest.SNMPGet;
 import Model.SNMRequest.SNMPValueConverter;
+import Model.SNMRequest.SNMPWalk;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.stage.FileChooser;
-import javafx.util.Pair;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.UdpAddress;
@@ -22,9 +21,7 @@ import org.snmp4j.smi.VariableBinding;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -46,11 +43,14 @@ public class MainController {
 
     SNMPValueConverter converter = new SNMPValueConverter();
 
+    private List<JsonNode> mibTree = new ArrayList<>();
+
 
     String oidValue = null;
     String ip = "127.0.0.1"; //Localhost by default
-    String community = "public"; //Community string by default
+    String community = "password"; //Community string by default
 
+    TreeView<String> treeView;
 
     /*
      * Load some default MIBs when the program starts
@@ -64,7 +64,36 @@ public class MainController {
         showMIBsLoaded(defaultMIB2);
 
 
+        loadMIBs();
 
+    }
+
+
+    public void loadMIBs() {
+        File folder = new File("Project_I_code/MIB Databases");
+        File[] listOfFiles = folder.listFiles();
+
+        System.out.println("Loading MIBs from the MIB Databases directory...");
+        System.out.println("Number of MIBs found: " + listOfFiles.length);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                try {
+                    JsonNode mib = objectMapper.readTree(file);
+                    mibTree.add(mib);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        System.out.println("MIBs loaded successfully.");
+        //print out the mibTree for testing
+        for (JsonNode node : mibTree) {
+            System.out.println(node);
+        }
 
     }
 
@@ -153,7 +182,7 @@ public class MainController {
             AtomicReference<JsonNode> jsonNode = new AtomicReference<>(objectMapper.readTree(jsonFile));
 
             TreeItem<String> rootItem = JsonTreeConverter.convertJsonToTree(jsonNode.get(), "root");
-            TreeView<String> treeView = new TreeView<>(rootItem);
+            treeView = new TreeView<>(rootItem);
 
             treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null && !newValue.isLeaf()){
@@ -179,19 +208,18 @@ public class MainController {
                             }
                             if (childNode.has("constraints")) {
                                 JsonNode constraintsNode = childNode.get("constraints");
-                                constraintsNode.fieldNames().forEachRemaining(constraintType -> {
-                                    JsonNode constraintValue = constraintsNode.get(constraintType);
-                                    // Handle each type of constraint here
-                                    // For example, if the constraint is an enumeration:
-                                    if (constraintType.equals("enumeration")) {
-                                        constraintValue.fieldNames().forEachRemaining(enumFieldName -> {
-                                            // Handle each field in the enumeration
-                                            // For example, print the field name and value
-                                            System.out.println(enumFieldName + ": " + constraintValue.get(enumFieldName).asText());
-                                        });
-                                    }
-                                    // Add additional checks for other types of constraints as needed
-                                });
+                                Map<String, Object> constraints = getConstraints(constraintsNode);
+                                // Now you have a map of constraints that you can use
+                                // For example, if the constraint is an enumeration:
+                                if (constraints.containsKey("enumeration")) {
+                                    Map<String, String> enumeration = (Map<String, String>) constraints.get("enumeration");
+                                    enumeration.forEach((key, value) -> {
+                                        // Handle each field in the enumeration
+                                        // For example, print the field name and value
+                                        System.out.println(key + ": " + value);
+                                    });
+                                }
+                                // Add additional checks for other types of constraints as needed
                             }
                         }
                     });
@@ -281,7 +309,11 @@ public class MainController {
     void SNMPGetClicked(MouseEvent event) {
 
         oidValue = tfOID.getText(); // Get the OID from the text field
-        oidValue = oidValue + ".0"; // Replace the dots with spaces
+
+        // Check if the OID corresponds to a scalar object
+        if (lbType.getText() != null && !lbType.getText().isEmpty()) {
+            oidValue = oidValue + ".0"; // Append .0 for scalar objects
+        }
 
         // Get the target IP address from the text field, change it to UdpAddress format
         //In case use let this field empty, use the default IP address
@@ -298,7 +330,6 @@ public class MainController {
                 community = tfCommunityString.getText();
             }
 
-            // Perform SNMP GET
             try {
                 SNMPGet snmpGet = new SNMPGet((UdpAddress) targetAddress, community, oidValue);
                 VariableBinding vb = snmpGet.getVariableBinding(); //Get the response from the SNMP request
@@ -306,15 +337,15 @@ public class MainController {
                 // Print raw response to console
                 System.out.println("Get: " + oidValue + " : " + vb.getVariable().toString());
 
-//                Pair<String, String> dataTypeAndDataTypeDetail = new Pair<>(lbType.getText(), null);
-//                String humanReadableValue = converter.convertToHumanReadable(vb.getVariable(), dataTypeAndDataTypeDetail);
-//                System.out.println("Human Readable Value: " + humanReadableValue);
+                // Get the data type and constraints
+                String dataType = lbType.getText();
+                Map<String, Object> constraints = null; // Replace this with the actual constraints
 
-            // Add the new value to the query table
-            //ARowInQueryTable row = new ARowInQueryTable(lbName, humanReadableValue, dataTypeAndDataTypeDetail.getKey()); //EX: "INTEGER"
-            //queryTable.getItems().add(row);
+                // Convert the variable to a human-readable format
+                String humanReadableValue = converter.convertToHumanReadable(vb.getVariable(), dataType, constraints);
+                System.out.println("Human Readable Value: " + humanReadableValue);
 
-
+                // Existing code...
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -327,7 +358,84 @@ public class MainController {
 
     @FXML
     void SNMPWalkClicked(MouseEvent event) {
+        // Get the OID from the text field
+        oidValue = tfOID.getText();
+
         // Get the target IP address from the text field, change it to UdpAddress format
+        // In case user leaves this field empty, use the default IP address
+        if (!tfTargetIP.getText().isEmpty()) {
+            ip = "udp:" + tfTargetIP.getText() + "/161";
+        } else {
+            ip = "udp:127.0.0.1/161";
+        }
+        Address targetAddress = GenericAddress.parse(ip);
+
+        if (targetAddress instanceof UdpAddress udpTargetAddress) {
+            // Get the community string from the password field
+            if (!tfCommunityString.getText().isEmpty()) {
+                community = tfCommunityString.getText();
+            }
+
+            try {
+                SNMPWalk snmpWalk = new SNMPWalk((UdpAddress) targetAddress, community);
+                snmpWalk.start(); // Start the SNMP session
+                List<VariableBinding> varBindings = snmpWalk.performSNMPWalk(oidValue);
+                // Handle the results of the SNMP walk
+                // For example, print the results to the console
+                for (VariableBinding varBinding : varBindings) {
+                    String oid = varBinding.getOid().toString();
+                    // Find the corresponding node in the MIB tree
+                    MIBReader mibReader = new MIBReader();
+                    mibReader.findNodeByOIDInAllFiles("Project_I_code/MIB Databases", oid);
+
+                    //Print out the node to the console
+                    //System.out.println(node);
+//                    if (node != null) {
+//                        // Get the data type and constraints
+//                        String dataType = node.get("syntax").get("type").asText();
+//                        Map<String, Object> constraints = getConstraints(node.get("syntax").get("constraints"));
+//                        // Convert the variable to a human-readable format
+//                        String humanReadableValue = converter.convertToHumanReadable(varBinding.getVariable(), dataType, constraints);
+//                        System.out.println(oid + ": (human readable) " + humanReadableValue);
+//                    } else {
+//                        System.out.println(oid + ": " + varBinding.getVariable());
+//                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Error: Invalid target address");
+        }
+    }
+
+
+
+    private String extractNodeName(JsonNode node) {
+        if (node.has("name")) {
+            return node.get("name").asText();
+        }
+        return "Unknown";
+    }
+
+    private String extractNodeDatatype(JsonNode node) {
+        if (node.has("syntax") && node.get("syntax").has("type")) {
+            return node.get("syntax").get("type").asText();
+        }
+        return "Unknown";
+    }
+
+    private Map<String, Object> getConstraints(JsonNode constraintsNode) {
+        Map<String, Object> constraints = new HashMap<>();
+        // Extract the constraints from the given JsonNode
+        // This is a placeholder implementation and may need to be adjusted based on your actual constraints structure
+        if (constraintsNode != null) {
+            constraintsNode.fieldNames().forEachRemaining(fieldName -> {
+                JsonNode constraintValue = constraintsNode.get(fieldName);
+                constraints.put(fieldName, constraintValue.asText());
+            });
+        }
+        return constraints;
     }
 
 }

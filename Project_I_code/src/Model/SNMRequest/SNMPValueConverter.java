@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class contains:
@@ -134,39 +135,59 @@ public class SNMPValueConverter {
      * @param dataType A Pair containing the data type and the detail of the data type.
      * @return The human-readable string of the SNMP response value.
      */
-    public String convertToHumanReadable(Variable variable, Pair<String, HashMap<Integer, String>> dataType) {
-        String humanReadableString= "";
+//    public String convertToHumanReadable(Variable variable, Pair<String, HashMap<Integer, String>> dataType) {
+//        String humanReadableString= "";
+//
+//        // Ensure that we can retrieve from the response, the response return nothing, we return null
+//        // Also, in case the node do not have the data type, like most of non-leaf nodes, we return null
+//        if (variable == null || dataType.getKey() == null) {
+//            return "Can not resolve this OID";
+//        }
+//
+//        String dataTypeKey = dataType.getKey().toLowerCase(); //The data type part in lower case
+//
+//        if (dataTypeKey.contains("integer")) { //EX: interface > ifTable > ifEntry > ifOpenStatus
+//
+//            //If it is INTEGER, we will need to use data type detail part (if have) to convert it to right status
+//            if (dataType.getValue().size() > 0) {
+//                humanReadableString = dataType.getValue().get(variable.toInt()); //Use the detail data type  dictionary to convert the value
+//            } else {
+//                humanReadableString = variable.toString();
+//            }
+//        }
+//
+//
+//        else if (dataTypeKey.contains("dateandtime")) { //EX: host > hrSystem > hrSystemDate
+//            humanReadableString = dateAndTimeDataType(variable.toString());
+//        }
+//
+//
+//        else {
+//            humanReadableString = variable.toString(); //If can not resolve the value, return the raw value
+//        }
+//
+//        return humanReadableString;
+//    }
 
-        // Ensure that we can retrieve from the response, the response return nothing, we return null
-        // Also, in case the node do not have the data type, like most of non-leaf nodes, we return null
-        if (variable == null || dataType.getKey() == null) {
-            return "Can not resolve this OID";
-        }
+    public String convertToHumanReadable(Variable variable, String dataType, Map<String, Object> constraints) {
+        String humanReadableValue = variable.toString();
 
-        String dataTypeKey = dataType.getKey().toLowerCase(); //The data type part in lower case
-
-        if (dataTypeKey.contains("integer")) { //EX: interface > ifTable > ifEntry > ifOpenStatus
-
-            //If it is INTEGER, we will need to use data type detail part (if have) to convert it to right status
-            if (dataType.getValue().size() > 0) {
-                humanReadableString = dataType.getValue().get(variable.toInt()); //Use the detail data type  dictionary to convert the value
-            } else {
-                humanReadableString = variable.toString();
+        if (dataType.equals("INTEGER") && constraints != null) {
+            if (constraints.containsKey("enumeration")) {
+                Map<String, Integer> enumeration = (Map<String, Integer>) constraints.get("enumeration");
+                int variableAsInt = Integer.parseInt(humanReadableValue);
+                for (Map.Entry<String, Integer> entry : enumeration.entrySet()) {
+                    if (entry.getValue() == variableAsInt) {
+                        humanReadableValue = entry.getKey();
+                        break;
+                    }
+                }
             }
         }
 
-
-        else if (dataTypeKey.contains("dateandtime")) { //EX: host > hrSystem > hrSystemDate
-            humanReadableString = dateAndTimeDataType(variable.toString());
-        }
-
-
-        else {
-            humanReadableString = variable.toString(); //If can not resolve the value, return the raw value
-        }
-
-        return humanReadableString;
+        return humanReadableValue;
     }
+
 
 
     /**
