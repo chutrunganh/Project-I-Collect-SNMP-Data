@@ -386,6 +386,106 @@ các vùng gia tăng giá trị.
 - **iso-ccitt(2)**: do cả ISO và CCITT quản lý.
 
      
+
+Nhóm đã thử một API có tên Mibble có khả năng xử lý trực tiếp file Mib dạng ASN1 nhưng có một vài vấn đề do API mà nó không trả về kiểu đữ liệu như 
+mong muốn nnên sau cùng bọn em vẫn phải dùng pysmi để chuyyẻn sang file dạng JSON rồi parse thủ công.
+
+cấu trúc cảu một Object trong fiel JSON:
+
+```json
+  "sysDescr": {
+    "name": "sysDescr",
+    "oid": "1.3.6.1.2.1.1.1",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "DisplayString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "mandatory",
+    "description": "A textual description of the entity. This value should include the full name and version identification of the system's hardware type, software operating-system, and networking software. It is mandatory that this only contain printable ASCII characters."
+  }
+```
+sysDescr (Outer Key)
+
+    Definition: This is the name of the MIB object. It's used as a key in the JSON structure to uniquely identify the MIB object.
+
+name
+
+    Definition: The name of the MIB object, which is usually the same as the outer key. It provides a human-readable identifier for the MIB object.
+    Example: "name": "sysDescr"
+
+oid
+
+    Definition: The Object Identifier (OID) is a globally unique identifier for the MIB object. It is used to identify the object in SNMP (Simple Network Management Protocol) operations.
+    Example: "oid": "1.3.6.1.2.1.1.1"
+
+nodetype
+
+    Definition: This specifies the type of node, such as scalar or table. A scalar node represents a single data item, while a table node represents a collection of related data items.
+    Example: "nodetype": "scalar"
+
+https://stackoverflow.com/questions/41844706/using-pysnmp-mib-browser-how-to-determine-a-scalar-or-a-tabular-oid
+
+https://docs.oracle.com/cd/E95618_01/html/sbc_scz810_mibguide/GUID-050076D7-8339-4AB8-8CF5-3D07DB3754DC.htm
+
+class
+
+    Definition: This field specifies the class of the MIB object. In this case, it's "objecttype," which indicates that this is a defined object type within the MIB.
+    Example: "class": "objecttype"
+
+syntax
+
+    Definition: The syntax field provides information about the data type and constraints for the MIB object. It usually includes the type and any constraints on the data.
+maxaccess
+
+    Definition: This specifies the maximum access level for the MIB object. Common values are read-only, read-write, or no-access. It indicates whether the value can be read and/or modified.
+    Example: "maxaccess": "read-only"
+
+status
+
+    Definition: The status of the MIB object indicates its implementation status. Common values are current, deprecated, or mandatory. This helps in understanding whether the object is actively used or is being phased out.
+    Example: "status": "mandatory"
+
+description
+
+    Definition: A textual description of the MIB object. It provides detailed information about the object, including its purpose and any important notes. This field helps administrators understand what the MIB object represents and how it should be used.
+
+
+The class field in the JSON representation of a MIB node can be important depending on the specific requirements and functionality of your SNMP browser. Here’s a breakdown of what the class field represents and how it might be used:
+Understanding the class Field
+
+The class field typically indicates the type or category of the MIB node. Here are some common values you might encounter and their meanings:
+
+    objecttype:
+        This indicates that the node is an object type, which is a basic element in the MIB. Object types define variables that can be read or written via SNMP.
+        Example: An OID representing a scalar value or an entry in a table.
+
+    type:
+        This indicates a type definition, which is used to specify the data type of a variable in the MIB.
+        Example: Integer32, OCTET STRING, OBJECT IDENTIFIER, etc.
+
+    objectgroup:
+        This indicates a grouping of related objects, often used to simplify the structure of the MIB and make it easier to manage.
+        Example: A group of related scalar objects or table entries.
+
+    notificationgroup:
+        This indicates a group of notifications (traps or informs) that are related.
+        Example: Notifications that are grouped together for easier management.
+
+    compliance:
+        This indicates compliance statements, which specify which parts of the MIB must be implemented to be compliant with a standard.
+        Example: Specifications about mandatory objects for compliance.
+
 ***Lưu ý:***
 
 - ***Các objectID trong MIB được sắp xếp thứ tự nhưng không phải là liên tục, khi biết một OID thì không chắc chắn có thể xác định được OID tiếp theo trong MIB. VD trong chuẩn mib-2 thì object ifSpecific  và object atIfIndex nằm kề nhau nhưng OID lần lượt là 1.3.6.1.2.1.2.2.1.22 và 1.3.6.1.2.1.3.1.1.1.***

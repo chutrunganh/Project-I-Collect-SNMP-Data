@@ -6,6 +6,7 @@ import Model.MIBTreeStructure.Node;
 import Model.SNMRequest.SNMPGet;
 import Model.SNMRequest.SNMPValueConverter;
 import Model.SNMRequest.SNMPWalk;
+import Model.SNMRequest.SnmpResponseFormatter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.value.ChangeListener;
@@ -13,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -24,6 +26,8 @@ import org.snmp4j.smi.VariableBinding;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static Model.SNMRequest.SnmpResponseFormatter.format;
 
 
 public class MainController {
@@ -40,16 +44,25 @@ public class MainController {
     @FXML private TextArea taDescription;
     @FXML private PasswordField tfCommunityString;
     @FXML private TextField tfTargetIP;
-    @FXML private Button btnGo;
 
-    SNMPValueConverter converter = new SNMPValueConverter();
+    @FXML
+    private TableView<ARowInQueryTable> queryTable;
+    @FXML
+    private TableColumn<ARowInQueryTable, String> nameColumn;
+    @FXML
+    private TableColumn<ARowInQueryTable, String> valueColumn;
+    @FXML
+    private TableColumn<ARowInQueryTable, String> typeColumn;
 
+    SnmpResponseFormatter converter = new SnmpResponseFormatter();
     private List<JsonNode> mibTree = new ArrayList<>();
 
 
     String oidValue = null;
     String ip = "127.0.0.1"; //Localhost by default
     String community = "password"; //Community string by default
+    String nodeType = null;
+    HashMap<String,Object> constraints = new HashMap<>();
 
     TreeView<String> treeView;
 
@@ -96,6 +109,8 @@ public class MainController {
                     //Set the value to label
                     tfOID.setText(selectedNode.oid);
                     lbName.setText(selectedNode.name);
+                    nodeType = selectedNode.nodeType; //No need to display this value
+                    constraints = (HashMap<String, Object>) selectedNode.constraints; //No need to display this value
                     lbType.setText(selectedNode.type);
                     lbAccess.setText(selectedNode.access);
                     lbStatus.setText(selectedNode.status);
@@ -108,6 +123,11 @@ public class MainController {
         treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
         treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
         MIBTreeDisplay.getChildren().add(treeView);
+
+
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
     }
 
@@ -321,16 +341,15 @@ public class MainController {
 
     @FXML
     void SNMPGetClicked(MouseEvent event) {
-
         oidValue = tfOID.getText(); // Get the OID from the text field
 
-        // Check if the OID corresponds to a scalar object
-        if (lbType.getText() != null && !lbType.getText().isEmpty()) {
-            oidValue = oidValue + ".0"; // Append .0 for scalar objects
+        if (oidValue.isEmpty()) {
+            System.out.println("Error: OID field is empty");
+            return;
         }
 
         // Get the target IP address from the text field, change it to UdpAddress format
-        //In case use let this field empty, use the default IP address
+        // In case user let this field empty, use the default IP address
         if (!tfTargetIP.getText().isEmpty()) {
             ip = "udp:" + tfTargetIP.getText() + "/161";
         } else {
@@ -344,28 +363,70 @@ public class MainController {
                 community = tfCommunityString.getText();
             }
 
-            try {
-                SNMPGet snmpGet = new SNMPGet((UdpAddress) targetAddress, community, oidValue);
-                VariableBinding vb = snmpGet.getVariableBinding(); //Get the response from the SNMP request
+            // If the nodeType is scalar, append ".0" to the OID
+            if (nodeType.equals("scalar")) {
+                oidValue = oidValue + ".0";
+                try {
+                    SNMPGet snmpGet = new SNMPGet((UdpAddress) targetAddress, community, oidValue);
+                    VariableBinding vb = snmpGet.getVariableBinding(); // Get the response from the SNMP request
 
-                // Print raw response to console
-                System.out.println("Get: " + oidValue + " : " + vb.getVariable().toString());
+                    if (vb != null) {
+                        // Print raw response to console
+                        System.out.println("Get: " + oidValue + " : (raw value)  " + vb.getVariable().toString());
 
-                // Get the data type and constraints
-                String dataType = lbType.getText();
-                Map<String, Object> constraints = null; // Replace this with the actual constraints
+                        // Get the data type and constraints
+                        String dataType = lbType.getText();
+                        //constraint already defined ad assign to the constraints variable
 
-                // Convert the variable to a human-readable format
-                String humanReadableValue = converter.convertToHumanReadable(vb.getVariable(), dataType, constraints);
-                System.out.println("Human Readable Value: " + humanReadableValue);
+                        // Convert the variable to a human-readable format
+                        String humanReadableValue = format(vb.getVariable(), dataType, constraints);
+                        System.out.println("Human Readable Value: " + humanReadableValue);
+                        //Add the result to the query table
+                        queryTable.getItems().add(new ARowInQueryTable(lbName.getText(), humanReadableValue, lbType.getText()));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // If the nodeType is not scalar, append from ".1" to ".100" and perform SNMP Get until a response is received
+                for (int i = 1; i <= 100; i++) {
+                    String oidToTry = oidValue + "." + i;
+                    try {
+                        SNMPGet snmpGet = new SNMPGet((UdpAddress) targetAddress, community, oidToTry);
+                        VariableBinding vb = snmpGet.getVariableBinding(); // Get the response from the SNMP request
 
-                // Existing code...
-            } catch (IOException e) {
-                e.printStackTrace();
+                        if (vb != null) {
+                            // Print raw response to console
+                            String response = vb.getVariable().toString();
+
+                            // If the response is not "noSuchInstance", print it
+                            if (!response.equals("noSuchInstance")) {
+                                System.out.println("Get: " + oidToTry + " : (raw value)  " + response);
+
+                                // Get the data type and constraints
+                                String dataType = lbType.getText();
+                                //constraint already defined ad assign to the constraints variable
+
+                                // Convert the variable to a human-readable format
+                                String humanReadableValue = format(vb.getVariable(), dataType, constraints);
+                                System.out.println("Human Readable Value: " + humanReadableValue);
+                                //Add the result to the query table
+                                queryTable.getItems().add(new ARowInQueryTable(lbName.getText() +"."+ i, humanReadableValue, lbType.getText()));
+                            }
+
+
+                            // If the response is "noSuchInstance", break the loop
+                            if (response.equals("noSuchInstance")) {
+                                break;
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-
-        }
-        else {
+        } else {
             System.out.println("Error: Invalid target address");
         }
     }
@@ -373,55 +434,63 @@ public class MainController {
     @FXML
     void SNMPWalkClicked(MouseEvent event) {
         // Get the OID from the text field
-        String oidValue = tfOID.getText();
-        oidValue = oidValue + ".0";
+        oidValue = tfOID.getText();
 
         // Get the target IP address from the text field, change it to UdpAddress format
         // In case user leaves this field empty, use the default IP address
-        String ip;
         if (!tfTargetIP.getText().isEmpty()) {
             ip = "udp:" + tfTargetIP.getText() + "/161";
         } else {
             ip = "udp:127.0.0.1/161";
         }
+
+        if (!tfCommunityString.getText().isEmpty()) {
+            community = tfCommunityString.getText();
+        }
         Address targetAddress = GenericAddress.parse(ip);
 
         if (targetAddress instanceof UdpAddress udpTargetAddress) {
-            // Get the community string from the password field
-            String community = tfCommunityString.getText();
+
 
             try {
                 // Initialize SNMPWalk with target address, community string, and MIB folder path
-                SNMPWalk snmpWalk = new SNMPWalk((UdpAddress) targetAddress, community, "Project_I_code/MIB Databases");
+                SNMPWalk snmpWalk = new SNMPWalk((UdpAddress) targetAddress, community);
                 snmpWalk.start(); // Start the SNMP session
                 List<VariableBinding> varBindings = snmpWalk.performSNMPWalk(oidValue);
 
                 // Create MibLoader instance to load MIB files and resolve OIDs
                 MibLoader mibLoader = new MibLoader();
-                mibLoader.loadMibsFromFolder("Project_I_code/MIB Databases");
+                mibLoader.loadMibsFromFolder("Project_I_code/MIB Databases/");
 
                 // Handle the results of the SNMP walk
                 // For each VariableBinding, print OID, name, and data type
                 for (VariableBinding varBinding : varBindings) {
                     String oid = varBinding.getOid().toString();
-                    String name = mibLoader.lookupName(oid);
-                    String dataType = mibLoader.lookupDataType(oid);
+                    //Print raw response to console
+                    System.out.println("Walk: " + oid + " : " + varBinding.getVariable().toString());
+                    Node node = mibLoader.lookupNode(oid.substring(0, oid.length()-2));
+                    System.out.println("Node: " + node);
 
-                    // Example: Output to console
-                    System.out.println("OID: " + oid + ", Name: " + name + ", DataType: " + dataType);
+                    if (node != null) {
+                        System.out.println("Look up by OID Fucking work!");
+                        String name = node.name;
+                        String dataType = node.type;
 
-                    // Optionally, you can display results in a UI component or process further
-                    // For example, update a TableView with OID, Name, and DataType
-                    // tableView.getItems().add(new SNMPResult(oid, name, dataType));
+                        System.out.println("OID: " + oid + ", Name: " + name + ", DataType: " + dataType);
+                    }
                 }
-
-                snmpWalk.close(); // Close SNMP session when done
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             System.out.println("Error: Invalid target address");
         }
+    }
+
+    @FXML
+    public void clearTableClicked(MouseEvent event) {
+        // Clear the query table
+        queryTable.getItems().clear();
     }
 
 }

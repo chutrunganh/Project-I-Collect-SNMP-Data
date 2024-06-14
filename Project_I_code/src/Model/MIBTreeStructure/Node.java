@@ -6,19 +6,24 @@ import java.util.Map;
 public class Node {
     public String name;
     public String oid;
+    public String nodeType;
     public String type;
     public String access;
     public String status;
     public String description;
+
+    public Map<String, Object> constraints; // New field for constraints
     Map<String, Node> children = new HashMap<>();
 
-    Node(String name, String oid, String type, String access, String status, String description) {
+    Node(String name, String oid, String nodeType, String type, String access, String status, String description, Map<String, Object> constraints) {
         this.name = name;
         this.oid = oid;
+        this.nodeType = nodeType;
         this.type = type;
         this.access = access;
         this.status = status;
         this.description = description;
+        this.constraints = constraints; // Initialize the new field
     }
 
     /**
