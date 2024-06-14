@@ -13,7 +13,7 @@
 <p><img src="Image/ColorLine.png" alt="Not Found Image">  </p>
 
 
-<p align="center">A simple GUI program buils by JavaFX to run as a SNMP manager on your computer</p>
+
 <!-- Add some badges -->
 
 <div align="center"> 
@@ -34,6 +34,8 @@
 Replace This Cat By Gif App Screenshot Demo later
 
 <p><img src="Image/ColorLine.png" alt="Not Found Image"> </P>
+
+# Overeview 📝
 
 # Installation ⚒️
 
@@ -78,7 +80,7 @@ sudo apt install snmpd   #for agent side
 
 
 
-# Usage 🕹️
+# Features 🕹️
 
 
 Choose the one that you feel best fits your project.
