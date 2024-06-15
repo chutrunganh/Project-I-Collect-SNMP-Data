@@ -8,9 +8,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class BuildTreeFromJson {
-    private Node root = new Node("root", "", "", "", "", "", "", null);
+/**
+ * This class contains all necessary methods to build a tree structure from a directory of MIB files. To test if the tree can be build successfully,
+ *  we only need this class and the Node class, then using the TestBuildTree class in the Test package to run the test, the resul will be displayed in a TreeView object.
+ * @return: the TreeView object in javafx
+ */
 
+public class BuildTreeFromJson {
+    private final Node root = new Node("root", "", "", "", "", "", "", null); // Root node of the tree
+    // Using the same root node for all trees created by this class, allowing to concatenate multiple MIB files into a single tree
+
+    /**
+     * Build a tree structure from a single JSON file. With each node in the JSON file, extract the following information: name, oid, nodeType, type, access, status, description, constraints
+     * then assign them to the corresponding attributes of the Node object. Recursively build the tree structure based on the OID of each node.
+     * @param jsonFilePath: the path to the JSON file containing the MIB data.
+     */
     public void buildTreeFromJson(String jsonFilePath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(new File(jsonFilePath));
@@ -38,12 +50,19 @@ public class BuildTreeFromJson {
         }
     }
 
+    /**
+     * Build a tree structure from multiple JSON files. For each JSON file, call the buildTreeFromJson method to build the tree structure.
+     * @param mibFilePaths: a list of paths to the JSON files containing the MIB data.
+     */
     public void buildTreeFromMultipleMIBs(List<String> mibFilePaths) throws IOException {
         for (String mibFilePath : mibFilePaths) {
             buildTreeFromJson(mibFilePath);
         }
     }
 
+    /**
+     * Add a node to the tree structure based on its OID. The node is identified by its OID. If a node with the same OID already exists, update its information.
+     */
     private void addNode(String name, String oid, String nodeType, String type, String access, String status, String description, Map<String, Object> constraints) {
         if (oid != null && name != null) {
             String[] parts = oid.split("\\.");
@@ -76,6 +95,9 @@ public class BuildTreeFromJson {
         }
     }
 
+    /**
+     * Convert the tree structure to a TreeItem object for display in a TreeView.
+     */
     public TreeItem<Node> convertNodeToTreeItem(Node node) {
         TreeItem<Node> treeItem = new TreeItem<>(node);
         for (Node child : node.children.values()) {
@@ -83,6 +105,7 @@ public class BuildTreeFromJson {
         }
         return treeItem;
     }
+
 
     public Node getRoot() {
         return root;

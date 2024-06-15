@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("GUI/MainUI.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("View/MainUI.fxml"));
         primaryStage.setTitle("SNMP Browser Tool");
         primaryStage.setScene(new Scene(root, 885, 620));
         primaryStage.show();

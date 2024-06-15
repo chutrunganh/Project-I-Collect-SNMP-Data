@@ -1,13 +1,12 @@
+package Test;
+
 import Model.MIBTreeStructure.MibLoader;
 import Model.MIBTreeStructure.Node;
 
 import Model.SNMRequest.SnmpResponseFormatter;
 import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
-import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
-
-import java.io.IOException;
 
 public class TestConstraint {
 

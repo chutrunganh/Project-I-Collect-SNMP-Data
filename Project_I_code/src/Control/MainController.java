@@ -1,10 +1,9 @@
-package GUI;
+package Control;
 
 import Model.MIBTreeStructure.BuildTreeFromJson;
 import Model.MIBTreeStructure.MibLoader;
 import Model.MIBTreeStructure.Node;
 import Model.SNMRequest.SNMPGet;
-import Model.SNMRequest.SNMPValueConverter;
 import Model.SNMRequest.SNMPWalk;
 import Model.SNMRequest.SnmpResponseFormatter;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -62,7 +61,7 @@ public class MainController {
     String ip = "127.0.0.1"; //Localhost by default
     String community = "password"; //Community string by default
     String nodeType = null;
-    HashMap<String,Object> constraints = new HashMap<>();
+    Map<String,Object> constraints = new HashMap<>();
 
     TreeView<String> treeView;
 
@@ -119,6 +118,9 @@ public class MainController {
             }
         });
 
+
+
+
         //Expand the treeview to fit the anchorpane width and height
         treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
         treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
@@ -129,6 +131,41 @@ public class MainController {
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
+        treeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                TreeItem<Node> selectedItem = treeView.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    Node selectedNode = selectedItem.getValue();
+                    System.out.println("Double-clicked node: " + selectedNode.name); // Debug print
+
+                    if (selectedNode.type != null && !selectedNode.type.isEmpty()) {
+                        System.out.println("Node has a type: " + selectedNode.type); // Debug print
+
+                        // Set the necessary fields for SNMPGetClicked
+                        tfOID.setText(selectedNode.oid);
+                        lbName.setText(selectedNode.name);
+                        lbType.setText(selectedNode.type);
+                        nodeType = selectedNode.nodeType;  // Ensure nodeType is set
+                        constraints = selectedNode.constraints;  // Ensure constraints is set
+
+                        System.out.println("Fields set. Calling SNMPGetClicked."); // Debug print
+
+                        // Call SNMPGetClicked
+                        try {
+                            SNMPGetClicked(null);
+                        } catch (Exception e) {
+                            System.out.println("Error calling SNMPGetClicked.");
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        System.out.println("Node type is null."); // Debug print
+                    }
+                } else {
+                    System.out.println("No tree item selected."); // Debug print
+                }
+            }
+        });
     }
 
 
@@ -257,19 +294,10 @@ public class MainController {
             TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
             TreeView<Node> treeView = new TreeView<>(rootItem);
 
-            treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Node>>() {
-                @Override
-                public void changed(ObservableValue<? extends TreeItem<Node>> observable, TreeItem<Node> oldValue, TreeItem<Node> newValue) {
-                    if (newValue != null) {
-                        Node selectedNode = newValue.getValue();
-                        //printNodeAttributes(selectedNode);
-                    }
-                }
-            });
         }
 
 
-    /*
+            /*
      * Function to handle the  click action on a tree cell /node. In the context of a TreeView, you can think of a
      * TreeItem as your data, the TreeCell as the visual representation of that data
      *
@@ -286,7 +314,7 @@ public class MainController {
 //            oidValue = MIBTreeView.findOid(treeItem);
 //            tfOID.setText(oidValue.replace("\"", "")); //remove the double quotes when displaying the oid value
 //
-//            //Load the information of the selected node to the bottom right Pane in GUI
+//            //Load the information of the selected node to the bottom right Pane in Control
 //            //Find the name, access, status, type, description of the node
 //            String name = MIBTreeView.findName(treeItem);
 //            lbName.setText(name);
@@ -341,6 +369,7 @@ public class MainController {
 
     @FXML
     void SNMPGetClicked(MouseEvent event) {
+        System.out.println("perfroming SNMP Get.......");
         oidValue = tfOID.getText(); // Get the OID from the text field
 
         if (oidValue.isEmpty()) {
@@ -357,16 +386,24 @@ public class MainController {
         }
         Address targetAddress = GenericAddress.parse(ip);
 
+
+        System.out.println("Still Working on this part 1");
+
         if (targetAddress instanceof UdpAddress udpTargetAddress) {
             // Get the community string from the password field
             if (!tfCommunityString.getText().isEmpty()) {
                 community = tfCommunityString.getText();
             }
 
+            System.out.println("Still Working on this part 2");
+            System.out.println("Node Type: " + nodeType);
+
             // If the nodeType is scalar, append ".0" to the OID
             if (nodeType.equals("scalar")) {
                 oidValue = oidValue + ".0";
                 try {
+
+                    System.out.println("Still Working on this part 3");
                     SNMPGet snmpGet = new SNMPGet((UdpAddress) targetAddress, community, oidValue);
                     VariableBinding vb = snmpGet.getVariableBinding(); // Get the response from the SNMP request
 
@@ -431,8 +468,12 @@ public class MainController {
         }
     }
 
+
+
     @FXML
     void SNMPWalkClicked(MouseEvent event) {
+
+        System.out.println("perfroming SNMP Get.......");
         // Get the OID from the text field
         oidValue = tfOID.getText();
 
@@ -468,15 +509,29 @@ public class MainController {
                     String oid = varBinding.getOid().toString();
                     //Print raw response to console
                     System.out.println("Walk: " + oid + " : " + varBinding.getVariable().toString());
+                    //Stroe the last teo chracter to add to name when print out
+                    String lastTwoChar = oid.substring(oid.length()-2);
+                    //remove the last two characters of the OID to get the node
                     Node node = mibLoader.lookupNode(oid.substring(0, oid.length()-2));
                     System.out.println("Node: " + node);
 
                     if (node != null) {
-                        System.out.println("Look up by OID Fucking work!");
+                        //System.out.println("Look up by OID Fucking work!");
                         String name = node.name;
                         String dataType = node.type;
+                        Map<String, Object> constraint = node.constraints;
 
-                        System.out.println("OID: " + oid + ", Name: " + name + ", DataType: " + dataType);
+                        System.out.println("OID: " + oid + ", Name: " + name + ", DataType: " + dataType + ", Constraints: " + constraint);
+                        // Convert the variable to a human-readable format
+                        String humanReadableValue = format(varBinding.getVariable(), dataType, constraints);
+                        System.out.println("Human Readable Value: " + humanReadableValue);
+                        //Add the result to the query table
+                        queryTable.getItems().add(new ARowInQueryTable(name + lastTwoChar, humanReadableValue, dataType));
+                    }
+                    else { //In case we can find that node base on OID, return the OID and raw inout
+                        System.out.println("Can not find OID: " + oid + ": return raw value: " + varBinding.getVariable().toString());
+                        //Add the result to the query table
+                        queryTable.getItems().add(new ARowInQueryTable(oid, varBinding.getVariable().toString() + " (raw value)", "None defined"));
                     }
                 }
             } catch (IOException e) {

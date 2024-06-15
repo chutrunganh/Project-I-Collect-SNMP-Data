@@ -1,3 +1,5 @@
+package Test;
+
 import Model.MIBTreeStructure.BuildTreeFromJson;
 import Model.MIBTreeStructure.Node;
 import javafx.application.Application;
@@ -13,16 +15,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestMain extends Application {
+/**
+ * This class is used to test for the BuildTreeFromJson class and the Node class.
+ * If two of these classes run successfully, there will be a TreeView object in JavaFX to display the tree structure built from the MIB files when running this
+ * TestBuildTree class. Also, clicking on each node in the TreeView will display the attributes of the node in the console.
+ */
+public class TestBuildTree extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
         BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
-//        try {
-//            treeBuilder.buildTreeFromJson("Project_I_code/MIB Databases/IF-MIB.json");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         List<String> mibFilePaths = Arrays.asList(
                 "Project_I_code/MIB Databases/RFC1213-MIB.json",
@@ -60,6 +62,8 @@ public class TestMain extends Application {
             System.out.println("Type: " + node.type);
             System.out.println("Access: " + node.access);
             System.out.println("Status: " + node.status);
+            System.out.println("Description: " + node.description);
+            System.out.println("Constraints: " + node.constraints);
         }
     }
 

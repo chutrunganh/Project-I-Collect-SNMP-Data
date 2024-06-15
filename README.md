@@ -13,7 +13,7 @@
 <p><img src="Image/ColorLine.png" alt="Not Found Image">  </p>
 
 
-<p align="center">A simple GUI program buils by JavaFX to run as a SNMP manager on your computer</p>
+<p align="center">A simple Control program buils by JavaFX to run as a SNMP manager on your computer</p>
 <!-- Add some badges -->
 
 <div align="center"> 

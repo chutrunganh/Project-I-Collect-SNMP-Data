@@ -6,11 +6,23 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 
+/**
+ * This class is responsible for loading MIB files from a folder and looking up nodes based on a provided OID, primarily used for SNMP Walk operations.
+ * Its opens all the files in the directory, loads them into the memory, then for each incoming OID, it looks up the corresponding node in the loaded MIB files.
+ * @return: the Node object corresponding to the OID, if found.
+ */
 public class MibLoader {
     private JsonNode rootNode;
 
+    /**
+     * Load MIB files from a folder. For each file in the directory (in our project context it will be the MIB Databases directory), call the loadMibFromFile method to load the MIB file.
+     * @param folderPath: the path to the folder containing the MIB files.
+     */
     public void loadMibsFromFolder(String folderPath) {
         File folder = new File(folderPath);
         File[] files = folder.listFiles();
@@ -29,6 +41,11 @@ public class MibLoader {
         }
     }
 
+    /**
+     * Load a single MIB file. Read the JSON file using the ObjectMapper from the Jackson library and store the JSON tree structure in the rootNode attribute.
+     * If the rootNode is already initialized, combine the existing rootNode with the new fileNode.
+     * @param file: the MIB file to load.
+     */
     private void loadMibFromFile(File file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         if (rootNode == null) {
@@ -40,6 +57,11 @@ public class MibLoader {
         }
     }
 
+    /**
+     * Look up a node based on the provided OID. Traverse the JSON tree structure starting from the rootNode and recursively search for the node with the matching OID.
+     * @param oid: the OID to look up.
+     * @return: the Node object corresponding to the OID, if found.
+     */
     public Node lookupNode(String oid) {
         // Print OID that is being looked up
         System.out.println("Looking up node for OID: " + oid);
@@ -57,7 +79,7 @@ public class MibLoader {
 
         // Check if the current node has the matching OID
         if (currentNode.has("oid") && oid.equals(currentNode.get("oid").asText())) {
-            return createNodeFromJson(currentNode);
+            return createNodeFromJson(currentNode); // Create a Node object from the JSON node with the matching OID node
         }
 
         // Traverse the children of the current node
@@ -106,4 +128,13 @@ public class MibLoader {
     public Node getRootNode() {
         return createNodeFromJson(rootNode);
     }
+
+
+    //Close all the open resources after the work is done
+//    public void close() {
+//        // Close any open resources
+//    }
+
+   //We are using ObjectMapper from the Jackson library to read the files.
+    // This library handles closing files on its own, so no need to worry about that.
 }

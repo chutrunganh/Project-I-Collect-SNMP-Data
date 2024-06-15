@@ -1,4 +1,4 @@
-package GUI;
+package Control;
 
 
 public class ARowInQueryTable {
