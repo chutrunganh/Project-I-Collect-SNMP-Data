@@ -1,0 +1,524 @@
+{
+  "imports": {
+    "class": "imports",
+    "RMON-MIB": [
+      "OwnerString"
+    ],
+    "SNMP-FRAMEWORK-MIB": [
+      "SnmpAdminString"
+    ],
+    "SNMPv2-CONF": [
+      "NOTIFICATION-GROUP",
+      "OBJECT-GROUP",
+      "MODULE-COMPLIANCE"
+    ],
+    "SNMPv2-SMI": [
+      "MODULE-IDENTITY",
+      "Bits",
+      "Integer32",
+      "NOTIFICATION-TYPE",
+      "Counter64",
+      "Unsigned32",
+      "IpAddress",
+      "TimeTicks",
+      "OBJECT-TYPE",
+      "Counter32",
+      "OBJECT-IDENTITY",
+      "Gauge32",
+      "iso",
+      "Opaque",
+      "experimental",
+      "MibIdentifier"
+    ],
+    "SNMPv2-TC": [
+      "StorageType",
+      "RowStatus",
+      "TEXTUAL-CONVENTION",
+      "DisplayString"
+    ]
+  },
+  "aggrMIB": {
+    "name": "aggrMIB",
+    "oid": "1.3.6.1.3.123",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2006-04-27 00:00",
+        "description": "Initial version, published as RFC 4498."
+      }
+    ]
+  },
+  "AggrMOErrorStatus": {
+    "name": "AggrMOErrorStatus",
+    "class": "textualconvention",
+    "type": {
+      "type": "Opaque",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 1024
+          }
+        ]
+      }
+    },
+    "status": "current"
+  },
+  "AggrMOValue": {
+    "name": "AggrMOValue",
+    "class": "textualconvention",
+    "type": {
+      "type": "Opaque",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 1024
+          }
+        ]
+      }
+    },
+    "status": "current"
+  },
+  "AggrMOCompressedValue": {
+    "name": "AggrMOCompressedValue",
+    "class": "textualconvention",
+    "type": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 1024
+          }
+        ]
+      }
+    },
+    "status": "current"
+  },
+  "aggrCtlTable": {
+    "name": "aggrCtlTable",
+    "oid": "1.3.6.1.3.123.1",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "aggrCtlEntry": {
+    "name": "aggrCtlEntry",
+    "oid": "1.3.6.1.3.123.1.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlEntryID",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "aggrCtlEntryID": {
+    "name": "aggrCtlEntryID",
+    "oid": "1.3.6.1.3.123.1.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "SnmpAdminString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 1,
+            "max": 32
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "aggrCtlMOIndex": {
+    "name": "aggrCtlMOIndex",
+    "oid": "1.3.6.1.3.123.1.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 2147483647
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrCtlMODescr": {
+    "name": "aggrCtlMODescr",
+    "oid": "1.3.6.1.3.123.1.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "SnmpAdminString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 64
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrCtlCompressionAlgorithm": {
+    "name": "aggrCtlCompressionAlgorithm",
+    "oid": "1.3.6.1.3.123.1.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "none": 1,
+          "deflate": 2
+        }
+      }
+    },
+    "default": {
+      "default": {
+        "value": "none",
+        "format": "enum"
+      }
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrCtlEntryOwner": {
+    "name": "aggrCtlEntryOwner",
+    "oid": "1.3.6.1.3.123.1.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OwnerString",
+      "class": "type"
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrCtlEntryStorageType": {
+    "name": "aggrCtlEntryStorageType",
+    "oid": "1.3.6.1.3.123.1.1.6",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "StorageType",
+      "class": "type"
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrCtlEntryStatus": {
+    "name": "aggrCtlEntryStatus",
+    "oid": "1.3.6.1.3.123.1.1.7",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RowStatus",
+      "class": "type"
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrMOTable": {
+    "name": "aggrMOTable",
+    "oid": "1.3.6.1.3.123.2",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "aggrMOEntry": {
+    "name": "aggrMOEntry",
+    "oid": "1.3.6.1.3.123.2.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrMOEntryID",
+        "implied": 0
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrMOEntryMOID",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "aggrMOEntryID": {
+    "name": "aggrMOEntryID",
+    "oid": "1.3.6.1.3.123.2.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 2147483647
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "aggrMOEntryMOID": {
+    "name": "aggrMOEntryMOID",
+    "oid": "1.3.6.1.3.123.2.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 65535
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "aggrMOInstance": {
+    "name": "aggrMOInstance",
+    "oid": "1.3.6.1.3.123.2.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OBJECT IDENTIFIER",
+      "class": "type"
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrMODescr": {
+    "name": "aggrMODescr",
+    "oid": "1.3.6.1.3.123.2.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "SnmpAdminString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 64
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrMOEntryStorageType": {
+    "name": "aggrMOEntryStorageType",
+    "oid": "1.3.6.1.3.123.2.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "StorageType",
+      "class": "type"
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrMOEntryStatus": {
+    "name": "aggrMOEntryStatus",
+    "oid": "1.3.6.1.3.123.2.1.6",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RowStatus",
+      "class": "type"
+    },
+    "maxaccess": "read-create",
+    "status": "current"
+  },
+  "aggrDataTable": {
+    "name": "aggrDataTable",
+    "oid": "1.3.6.1.3.123.3",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "aggrDataEntry": {
+    "name": "aggrDataEntry",
+    "oid": "1.3.6.1.3.123.3.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlEntryID",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "aggrDataRecord": {
+    "name": "aggrDataRecord",
+    "oid": "1.3.6.1.3.123.3.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "AggrMOValue",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "aggrDataRecordCompressed": {
+    "name": "aggrDataRecordCompressed",
+    "oid": "1.3.6.1.3.123.3.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "AggrMOCompressedValue",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "aggrDataErrorRecord": {
+    "name": "aggrDataErrorRecord",
+    "oid": "1.3.6.1.3.123.3.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "AggrMOErrorStatus",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "aggrConformance": {
+    "name": "aggrConformance",
+    "oid": "1.3.6.1.3.123.4",
+    "class": "objectidentity"
+  },
+  "aggrGroups": {
+    "name": "aggrGroups",
+    "oid": "1.3.6.1.3.123.4.1",
+    "class": "objectidentity"
+  },
+  "aggrCompliances": {
+    "name": "aggrCompliances",
+    "oid": "1.3.6.1.3.123.4.2",
+    "class": "objectidentity"
+  },
+  "aggrMibCompliance": {
+    "name": "aggrMibCompliance",
+    "oid": "1.3.6.1.3.123.4.2.1",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "aggrMibBasicGroup",
+        "module": "AGGREGATE-MIB"
+      }
+    ],
+    "status": "current"
+  },
+  "aggrMibBasicGroup": {
+    "name": "aggrMibBasicGroup",
+    "oid": "1.3.6.1.3.123.4.1.1",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlMOIndex"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlMODescr"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlCompressionAlgorithm"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlEntryOwner"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlEntryStorageType"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrCtlEntryStatus"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrMOInstance"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrMODescr"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrMOEntryStorageType"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrMOEntryStatus"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrDataRecord"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrDataRecordCompressed"
+      },
+      {
+        "module": "AGGREGATE-MIB",
+        "object": "aggrDataErrorRecord"
+      }
+    ],
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/AGGREGATE-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:29:46 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "AGGREGATE-MIB"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "imports": {
+    "class": "imports",
+    "SNMPv2-CONF": [
+      "NOTIFICATION-GROUP",
+      "MODULE-COMPLIANCE"
+    ],
+    "SNMPv2-SMI": [
+      "Bits",
+      "mib-2",
+      "MODULE-IDENTITY",
+      "Gauge32",
+      "NOTIFICATION-TYPE",
+      "Counter64",
+      "OBJECT-TYPE",
+      "Integer32",
+      "OBJECT-IDENTITY",
+      "Counter32",
+      "Unsigned32",
+      "iso",
+      "IpAddress",
+      "MibIdentifier",
+      "TimeTicks"
+    ],
+    "SNMPv2-TC": [
+      "DisplayString",
+      "TEXTUAL-CONVENTION"
+    ]
+  },
+  "sipTC": {
+    "name": "sipTC",
+    "oid": "1.3.6.1.2.1.148",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2007-04-20 00:00",
+        "description": "Initial version of the IETF SIP-TC-MIB module. This version published as part of RFC 4780."
+      }
+    ]
+  },
+  "SipTCTransportProtocol": {
+    "name": "SipTCTransportProtocol",
+    "class": "textualconvention",
+    "type": {
+      "type": "Bits",
+      "class": "type",
+      "bits": {
+        "other": 0,
+        "udp": 1,
+        "tcp": 2,
+        "sctp": 3,
+        "tlsTcp": 4,
+        "tlsSctp": 5
+      }
+    },
+    "status": "current"
+  },
+  "SipTCEntityRole": {
+    "name": "SipTCEntityRole",
+    "class": "textualconvention",
+    "type": {
+      "type": "Bits",
+      "class": "type",
+      "bits": {
+        "other": 0,
+        "userAgent": 1,
+        "proxyServer": 2,
+        "redirectServer": 3,
+        "registrarServer": 4
+      }
+    },
+    "status": "current"
+  },
+  "SipTCOptionTagHeaders": {
+    "name": "SipTCOptionTagHeaders",
+    "class": "textualconvention",
+    "type": {
+      "type": "Bits",
+      "class": "type",
+      "bits": {
+        "require": 0,
+        "proxyRequire": 1,
+        "supported": 2,
+        "unsupported": 3
+      }
+    },
+    "status": "current"
+  },
+  "SipTCMethodName": {
+    "name": "SipTCMethodName",
+    "class": "textualconvention",
+    "type": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 1,
+            "max": 100
+          }
+        ]
+      }
+    },
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/SIP-TC-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:54:51 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "SIP-TC-MIB"
+  }
+}

@@ -1,0 +1,394 @@
+{
+  "imports": {
+    "class": "imports",
+    "INET-ADDRESS-MIB": [
+      "InetAddress",
+      "InetAddressType"
+    ],
+    "RMON-MIB": [
+      "OwnerString"
+    ],
+    "SNMP-FRAMEWORK-MIB": [
+      "SnmpAdminString"
+    ],
+    "SNMPv2-CONF": [
+      "NOTIFICATION-GROUP",
+      "OBJECT-GROUP",
+      "MODULE-COMPLIANCE"
+    ],
+    "SNMPv2-SMI": [
+      "Integer32",
+      "OBJECT-TYPE",
+      "NOTIFICATION-TYPE",
+      "IpAddress",
+      "iso",
+      "TimeTicks",
+      "MODULE-IDENTITY",
+      "enterprises",
+      "Counter64",
+      "OBJECT-IDENTITY",
+      "MibIdentifier",
+      "Unsigned32",
+      "Bits",
+      "Gauge32",
+      "Counter32"
+    ],
+    "SNMPv2-TC": [
+      "DisplayString",
+      "TEXTUAL-CONVENTION"
+    ]
+  },
+  "sFlowMIB": {
+    "name": "sFlowMIB",
+    "oid": "1.3.6.1.4.1.4300.1",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2001-05-15 00:00",
+        "description": "Version 1.2 Brings MIB into SMI v2 compliance."
+      },
+      {
+        "revision": "2001-05-01 00:00",
+        "description": "Version 1.1 Adds sFlowDatagramVersion."
+      }
+    ]
+  },
+  "sFlowAgent": {
+    "name": "sFlowAgent",
+    "oid": "1.3.6.1.4.1.4300.1.1",
+    "class": "objectidentity"
+  },
+  "sFlowVersion": {
+    "name": "sFlowVersion",
+    "oid": "1.3.6.1.4.1.4300.1.1.1",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "SnmpAdminString",
+      "class": "type"
+    },
+    "default": {
+      "default": {
+        "value": "1.2;;",
+        "format": "string"
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "sFlowAgentAddressType": {
+    "name": "sFlowAgentAddressType",
+    "oid": "1.3.6.1.4.1.4300.1.1.2",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "sFlowAgentAddress": {
+    "name": "sFlowAgentAddress",
+    "oid": "1.3.6.1.4.1.4300.1.1.3",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "sFlowTable": {
+    "name": "sFlowTable",
+    "oid": "1.3.6.1.4.1.4300.1.1.4",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "sFlowEntry": {
+    "name": "sFlowEntry",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowDataSource",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "sFlowDataSource": {
+    "name": "sFlowDataSource",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OBJECT IDENTIFIER",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "sFlowOwner": {
+    "name": "sFlowOwner",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OwnerString",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowTimeout": {
+    "name": "sFlowTimeout",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Integer32",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowPacketSamplingRate": {
+    "name": "sFlowPacketSamplingRate",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Integer32",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowCounterSamplingInterval": {
+    "name": "sFlowCounterSamplingInterval",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Integer32",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowMaximumHeaderSize": {
+    "name": "sFlowMaximumHeaderSize",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.6",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Integer32",
+      "class": "type"
+    },
+    "default": {
+      "default": {
+        "value": 128,
+        "format": "decimal"
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowMaximumDatagramSize": {
+    "name": "sFlowMaximumDatagramSize",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.7",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Integer32",
+      "class": "type"
+    },
+    "default": {
+      "default": {
+        "value": 1400,
+        "format": "decimal"
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowCollectorAddressType": {
+    "name": "sFlowCollectorAddressType",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.8",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type"
+    },
+    "default": {
+      "default": {
+        "value": "ipv4",
+        "format": "enum"
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowCollectorAddress": {
+    "name": "sFlowCollectorAddress",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.9",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type"
+    },
+    "default": {
+      "default": {
+        "value": "0.0.0.0",
+        "format": "string"
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowCollectorPort": {
+    "name": "sFlowCollectorPort",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.10",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Integer32",
+      "class": "type"
+    },
+    "default": {
+      "default": {
+        "value": 6343,
+        "format": "decimal"
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowDatagramVersion": {
+    "name": "sFlowDatagramVersion",
+    "oid": "1.3.6.1.4.1.4300.1.1.4.1.11",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Integer32",
+      "class": "type"
+    },
+    "default": {
+      "default": {
+        "value": 4,
+        "format": "decimal"
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "sFlowMIBConformance": {
+    "name": "sFlowMIBConformance",
+    "oid": "1.3.6.1.4.1.4300.1.2",
+    "class": "objectidentity"
+  },
+  "sFlowMIBGroups": {
+    "name": "sFlowMIBGroups",
+    "oid": "1.3.6.1.4.1.4300.1.2.1",
+    "class": "objectidentity"
+  },
+  "sFlowMIBCompliances": {
+    "name": "sFlowMIBCompliances",
+    "oid": "1.3.6.1.4.1.4300.1.2.2",
+    "class": "objectidentity"
+  },
+  "sFlowCompliance": {
+    "name": "sFlowCompliance",
+    "oid": "1.3.6.1.4.1.4300.1.2.2.1",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "sFlowAgentGroup",
+        "module": "SFLOW-MIB"
+      }
+    ],
+    "status": "current"
+  },
+  "sFlowAgentGroup": {
+    "name": "sFlowAgentGroup",
+    "oid": "1.3.6.1.4.1.4300.1.2.1.1",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowVersion"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowAgentAddressType"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowAgentAddress"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowDataSource"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowOwner"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowTimeout"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowPacketSamplingRate"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowCounterSamplingInterval"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowMaximumHeaderSize"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowMaximumDatagramSize"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowCollectorAddressType"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowCollectorAddress"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowCollectorPort"
+      },
+      {
+        "module": "SFLOW-MIB",
+        "object": "sFlowDatagramVersion"
+      }
+    ],
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/SFLOW-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:54:50 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "SFLOW-MIB"
+  }
+}

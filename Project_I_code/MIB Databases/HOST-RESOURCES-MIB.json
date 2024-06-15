@@ -1,8 +1,56 @@
 {
+  "imports": {
+    "class": "imports",
+    "IF-MIB": [
+      "InterfaceIndexOrZero"
+    ],
+    "SNMPv2-CONF": [
+      "NOTIFICATION-GROUP",
+      "MODULE-COMPLIANCE",
+      "OBJECT-GROUP"
+    ],
+    "SNMPv2-SMI": [
+      "TimeTicks",
+      "MibIdentifier",
+      "Integer32",
+      "NOTIFICATION-TYPE",
+      "mib-2",
+      "Counter32",
+      "IpAddress",
+      "MODULE-IDENTITY",
+      "Counter64",
+      "Bits",
+      "Unsigned32",
+      "Gauge32",
+      "iso",
+      "OBJECT-IDENTITY",
+      "OBJECT-TYPE"
+    ],
+    "SNMPv2-TC": [
+      "AutonomousType",
+      "TEXTUAL-CONVENTION",
+      "TruthValue",
+      "DisplayString",
+      "DateAndTime"
+    ]
+  },
   "hostResourcesMibModule": {
     "name": "hostResourcesMibModule",
     "oid": "1.3.6.1.2.1.25.7.1",
     "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2000-03-06 00:00",
+        "description": "Clarifications and bug fixes based on implementation experience. This revision was also reformatted in the SMIv2 format. The revisions made were: New RFC document standards: Added Copyright notice, updated introduction to SNMP Framework, updated references section, added reference to RFC 2119, and added a meaningful Security Considerations section. New IANA considerations section for registration of new types Conversion to new SMIv2 syntax for the following types and macros: Counter32, Integer32, Gauge32, MODULE-IDENTITY, OBJECT-TYPE, TEXTUAL-CONVENTION, OBJECT-IDENTITY, MODULE-COMPLIANCE, OBJECT-GROUP Used new Textual Conventions: TruthValue, DateAndTime, AutonomousType, InterfaceIndexOrZero Fixed typo in hrPrinterStatus. Added missing error bits to hrPrinterDetectedErrorState and clarified confusion resulting from suggested mappings to hrPrinterStatus. Clarified that size of objects of type InternationalDisplayString is number of octets, not number of encoded symbols. Clarified the use of the following objects based on implementation experience: hrSystemInitialLoadDevice, hrSystemInitialLoadParameters, hrMemorySize, hrStorageSize, hrStorageAllocationFailures, hrDeviceErrors, hrProcessorLoad, hrNetworkIfIndex, hrDiskStorageCapacity, hrSWRunStatus, hrSWRunPerfCPU, and hrSWInstalledDate. Clarified implementation technique for hrSWInstalledTable. Used new AUGMENTS clause for hrSWRunPerfTable. Added Internationalization Considerations section. This revision published as RFC2790."
+      },
+      {
+        "revision": "1999-10-20 22:00",
+        "description": "The original version of this MIB, published as RFC1514."
+      }
+    ],
+    "lastupdated": "200003060000Z",
+    "organization": "IETF Host Resources MIB Working Group",
+    "contactinfo": "Steve Waldbusser Postal: Lucent Technologies, Inc. 1213 Innsbruck Dr. Sunnyvale, CA 94089 USA Phone: 650-318-1251 Fax: 650-318-1633 Email: waldbusser@lucent.com In addition, the Host Resources MIB mailing list is dedicated to discussion of this MIB. To join the mailing list, send a request message to hostmib-request@andrew.cmu.edu. The mailing list address is hostmib@andrew.cmu.edu.",
     "description": "This MIB is for use in managing host systems. The term `host' is construed to mean any computer that communicates with other similar computers attached to the internet and that is directly used by one or more human beings. Although this MIB does not necessarily apply to devices whose primary function is communications services (e.g., terminal servers, routers, bridges, monitoring equipment), such relevance is not explicitly precluded. This MIB instruments attributes common to all internet hosts including, for example, both personal computers and systems that run variants of Unix."
   },
   "host": {
@@ -1768,5 +1816,14 @@
     ],
     "status": "current",
     "description": "The Host Resources Installed Software Group."
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///Users/neermitt/kusanagi/mibs.snmplabs.com/asn1/HOST-RESOURCES-MIB",
+      "Produced by pysmi-0.3.4 at Fri May 24 16:31:43 2019",
+      "On host NEERMITT-M-J0NV platform Darwin version 18.6.0 by user neermitt",
+      "Using Python version 3.7.3 (default, Mar 27 2019, 09:23:15) "
+    ],
+    "module": "HOST-RESOURCES-MIB"
   }
 }

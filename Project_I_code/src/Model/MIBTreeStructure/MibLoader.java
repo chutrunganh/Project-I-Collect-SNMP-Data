@@ -29,7 +29,7 @@ public class MibLoader {
 
         if (files != null) {
             for (File file : files) {
-                System.out.println("Using file: " + file.getName());
+                //System.out.println("Using file: " + file.getName());
                 if (file.isFile() && file.getName().endsWith(".json")) {
                     try {
                         loadMibFromFile(file);
@@ -64,10 +64,10 @@ public class MibLoader {
      */
     public Node lookupNode(String oid) {
         // Print OID that is being looked up
-        System.out.println("Looking up node for OID: " + oid);
+        //System.out.println("Looking up node for OID: " + oid);
         Node node = findNodeWithOid(rootNode, oid);
         if (node == null) {
-            System.out.println("Node not found for OID: " + oid);
+            //System.out.println("Node not found for OID: " + oid);
         }
         return node;
     }

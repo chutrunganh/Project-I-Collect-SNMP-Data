@@ -99,7 +99,7 @@ public class SNMPWalk {
      * immediately, this will be done in the MainController class to remain the code readability.
      */
     public List<VariableBinding> performSNMPWalk(String startOid) throws IOException {
-        System.out.println("Performing SNMP walk for OID: " + startOid);
+        //System.out.println("Performing SNMP walk for OID: " + startOid);
 
         TreeUtils treeUtils = new TreeUtils(snmp, new DefaultPDUFactory());
         List<TreeEvent> events = treeUtils.getSubtree(createCommunityTarget(), new OID(startOid));
@@ -109,7 +109,7 @@ public class SNMPWalk {
             return Collections.emptyList();
         }
 
-        System.out.println("SNMP walk completed. Extracting VariableBindings...");
+        //System.out.println("SNMP walk completed. Extracting VariableBindings...");
 
         List<VariableBinding> varBindings = extractVariableBindingsFromEvents(startOid, events);
 

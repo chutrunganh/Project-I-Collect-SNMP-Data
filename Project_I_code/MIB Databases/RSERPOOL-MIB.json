@@ -1,0 +1,2061 @@
+{
+  "imports": {
+    "class": "imports",
+    "INET-ADDRESS-MIB": [
+      "InetAddress",
+      "InetAddressType",
+      "InetPortNumber"
+    ],
+    "SNMPv2-CONF": [
+      "OBJECT-GROUP",
+      "NOTIFICATION-GROUP",
+      "MODULE-COMPLIANCE"
+    ],
+    "SNMPv2-SMI": [
+      "experimental",
+      "IpAddress",
+      "MODULE-IDENTITY",
+      "Counter32",
+      "OBJECT-TYPE",
+      "Counter64",
+      "iso",
+      "OBJECT-IDENTITY",
+      "Unsigned32",
+      "TimeTicks",
+      "Integer32",
+      "Gauge32",
+      "MibIdentifier",
+      "NOTIFICATION-TYPE",
+      "Bits"
+    ],
+    "SNMPv2-TC": [
+      "DisplayString",
+      "TEXTUAL-CONVENTION"
+    ]
+  },
+  "rserpoolMIB": {
+    "name": "rserpoolMIB",
+    "oid": "1.3.6.1.3.125",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2009-04-07 00:00",
+        "description": "This version of the MIB module is published as RFC 5525"
+      }
+    ]
+  },
+  "RSerPoolENRPServerIdentifierTC": {
+    "name": "RSerPoolENRPServerIdentifierTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "displayhint": "x",
+    "status": "current"
+  },
+  "RSerPoolOperationScopeTC": {
+    "name": "RSerPoolOperationScopeTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 65535
+          }
+        ]
+      }
+    },
+    "displayhint": "1024t",
+    "status": "current"
+  },
+  "RSerPoolPoolHandleTC": {
+    "name": "RSerPoolPoolHandleTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 65535
+          }
+        ]
+      }
+    },
+    "displayhint": "1024t",
+    "status": "current"
+  },
+  "RserpoolPoolElementIdentifierTC": {
+    "name": "RserpoolPoolElementIdentifierTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "displayhint": "x",
+    "status": "current"
+  },
+  "RSerPoolPolicyIdentifierTC": {
+    "name": "RSerPoolPolicyIdentifierTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "displayhint": "x",
+    "status": "current"
+  },
+  "RSerPoolPolicyLoadTC": {
+    "name": "RSerPoolPolicyLoadTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 0,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "displayhint": "d",
+    "status": "current"
+  },
+  "RSerPoolPolicyWeightTC": {
+    "name": "RSerPoolPolicyWeightTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 0,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "displayhint": "d",
+    "status": "current"
+  },
+  "RSerPoolTransportUseTypeTC": {
+    "name": "RSerPoolTransportUseTypeTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "dataOnly": 0,
+          "dataPlusControl": 1
+        }
+      }
+    },
+    "status": "current"
+  },
+  "RSerPoolOpaqueAddressTC": {
+    "name": "RSerPoolOpaqueAddressTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 65535
+          }
+        ]
+      }
+    },
+    "displayhint": "1024t",
+    "status": "current"
+  },
+  "rserpoolMIBObjects": {
+    "name": "rserpoolMIBObjects",
+    "oid": "1.3.6.1.3.125.1",
+    "class": "objectidentity"
+  },
+  "rserpoolMIBConformance": {
+    "name": "rserpoolMIBConformance",
+    "oid": "1.3.6.1.3.125.2",
+    "class": "objectidentity"
+  },
+  "rserpoolENRPServers": {
+    "name": "rserpoolENRPServers",
+    "oid": "1.3.6.1.3.125.1.1",
+    "class": "objectidentity"
+  },
+  "rserpoolPoolElements": {
+    "name": "rserpoolPoolElements",
+    "oid": "1.3.6.1.3.125.1.2",
+    "class": "objectidentity"
+  },
+  "rserpoolPoolUsers": {
+    "name": "rserpoolPoolUsers",
+    "oid": "1.3.6.1.3.125.1.3",
+    "class": "objectidentity"
+  },
+  "rserpoolENRPTable": {
+    "name": "rserpoolENRPTable",
+    "oid": "1.3.6.1.3.125.1.1.1",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPEntry": {
+    "name": "rserpoolENRPEntry",
+    "oid": "1.3.6.1.3.125.1.1.1.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPIndex": {
+    "name": "rserpoolENRPIndex",
+    "oid": "1.3.6.1.3.125.1.1.1.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPOperationScope": {
+    "name": "rserpoolENRPOperationScope",
+    "oid": "1.3.6.1.3.125.1.1.1.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolOperationScopeTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPIdentifier": {
+    "name": "rserpoolENRPIdentifier",
+    "oid": "1.3.6.1.3.125.1.1.1.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolENRPServerIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPDescription": {
+    "name": "rserpoolENRPDescription",
+    "oid": "1.3.6.1.3.125.1.1.1.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolENRPUptime": {
+    "name": "rserpoolENRPUptime",
+    "oid": "1.3.6.1.3.125.1.1.1.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeTicks",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPort": {
+    "name": "rserpoolENRPPort",
+    "oid": "1.3.6.1.3.125.1.1.1.1.6",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPASAPAnnouncePort": {
+    "name": "rserpoolENRPASAPAnnouncePort",
+    "oid": "1.3.6.1.3.125.1.1.1.1.7",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPASAPAnnounceAddrType": {
+    "name": "rserpoolENRPASAPAnnounceAddrType",
+    "oid": "1.3.6.1.3.125.1.1.1.1.8",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPASAPAnnounceAddr": {
+    "name": "rserpoolENRPASAPAnnounceAddr",
+    "oid": "1.3.6.1.3.125.1.1.1.1.9",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPENRPAnnouncePort": {
+    "name": "rserpoolENRPENRPAnnouncePort",
+    "oid": "1.3.6.1.3.125.1.1.1.1.10",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPENRPAnnounceAddrType": {
+    "name": "rserpoolENRPENRPAnnounceAddrType",
+    "oid": "1.3.6.1.3.125.1.1.1.1.11",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPENRPAnnounceAddr": {
+    "name": "rserpoolENRPENRPAnnounceAddr",
+    "oid": "1.3.6.1.3.125.1.1.1.1.12",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPoolTable": {
+    "name": "rserpoolENRPPoolTable",
+    "oid": "1.3.6.1.3.125.1.1.3",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPoolEntry": {
+    "name": "rserpoolENRPPoolEntry",
+    "oid": "1.3.6.1.3.125.1.1.3.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPPoolIndex": {
+    "name": "rserpoolENRPPoolIndex",
+    "oid": "1.3.6.1.3.125.1.1.3.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPoolHandle": {
+    "name": "rserpoolENRPPoolHandle",
+    "oid": "1.3.6.1.3.125.1.1.3.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPoolHandleTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPoolElementTable": {
+    "name": "rserpoolENRPPoolElementTable",
+    "oid": "1.3.6.1.3.125.1.1.4",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPoolElementEntry": {
+    "name": "rserpoolENRPPoolElementEntry",
+    "oid": "1.3.6.1.3.125.1.1.4.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolElementIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPPoolElementIndex": {
+    "name": "rserpoolENRPPoolElementIndex",
+    "oid": "1.3.6.1.3.125.1.1.4.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPoolElementID": {
+    "name": "rserpoolENRPPoolElementID",
+    "oid": "1.3.6.1.3.125.1.1.4.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RserpoolPoolElementIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPASAPTransportPort": {
+    "name": "rserpoolENRPASAPTransportPort",
+    "oid": "1.3.6.1.3.125.1.1.4.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPUserTransportProto": {
+    "name": "rserpoolENRPUserTransportProto",
+    "oid": "1.3.6.1.3.125.1.1.4.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPUserTransportPort": {
+    "name": "rserpoolENRPUserTransportPort",
+    "oid": "1.3.6.1.3.125.1.1.4.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPUserTransportUse": {
+    "name": "rserpoolENRPUserTransportUse",
+    "oid": "1.3.6.1.3.125.1.1.4.1.6",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolTransportUseTypeTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPolicyID": {
+    "name": "rserpoolENRPPolicyID",
+    "oid": "1.3.6.1.3.125.1.1.4.1.7",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPolicyDescription": {
+    "name": "rserpoolENRPPolicyDescription",
+    "oid": "1.3.6.1.3.125.1.1.4.1.8",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPolicyWeight": {
+    "name": "rserpoolENRPPolicyWeight",
+    "oid": "1.3.6.1.3.125.1.1.4.1.9",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyWeightTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPolicyLoad": {
+    "name": "rserpoolENRPPolicyLoad",
+    "oid": "1.3.6.1.3.125.1.1.4.1.10",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyLoadTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPolicyLoadDeg": {
+    "name": "rserpoolENRPPolicyLoadDeg",
+    "oid": "1.3.6.1.3.125.1.1.4.1.11",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyLoadTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPRegistrationLife": {
+    "name": "rserpoolENRPRegistrationLife",
+    "oid": "1.3.6.1.3.125.1.1.4.1.12",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeTicks",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPHomeENRPServer": {
+    "name": "rserpoolENRPHomeENRPServer",
+    "oid": "1.3.6.1.3.125.1.1.4.1.13",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolENRPServerIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPASAPAddrTable": {
+    "name": "rserpoolENRPASAPAddrTable",
+    "oid": "1.3.6.1.3.125.1.1.5",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPASAPAddrTableEntry": {
+    "name": "rserpoolENRPASAPAddrTableEntry",
+    "oid": "1.3.6.1.3.125.1.1.5.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolElementIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPASAPAddrTableIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPASAPAddrTableIndex": {
+    "name": "rserpoolENRPASAPAddrTableIndex",
+    "oid": "1.3.6.1.3.125.1.1.5.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPASAPL3Type": {
+    "name": "rserpoolENRPASAPL3Type",
+    "oid": "1.3.6.1.3.125.1.1.5.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPASAPL3Addr": {
+    "name": "rserpoolENRPASAPL3Addr",
+    "oid": "1.3.6.1.3.125.1.1.5.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPUserAddrTable": {
+    "name": "rserpoolENRPUserAddrTable",
+    "oid": "1.3.6.1.3.125.1.1.6",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPUserAddrTableEntry": {
+    "name": "rserpoolENRPUserAddrTableEntry",
+    "oid": "1.3.6.1.3.125.1.1.6.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolElementIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUserAddrTableIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPUserAddrTableIndex": {
+    "name": "rserpoolENRPUserAddrTableIndex",
+    "oid": "1.3.6.1.3.125.1.1.6.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPUserL3Type": {
+    "name": "rserpoolENRPUserL3Type",
+    "oid": "1.3.6.1.3.125.1.1.6.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "unknown": 0,
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPUserL3Addr": {
+    "name": "rserpoolENRPUserL3Addr",
+    "oid": "1.3.6.1.3.125.1.1.6.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 0
+          },
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPUserL3Opaque": {
+    "name": "rserpoolENRPUserL3Opaque",
+    "oid": "1.3.6.1.3.125.1.1.6.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolOpaqueAddressTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPENRPAddrTable": {
+    "name": "rserpoolENRPENRPAddrTable",
+    "oid": "1.3.6.1.3.125.1.1.7",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPENRPAddrTableEntry": {
+    "name": "rserpoolENRPENRPAddrTableEntry",
+    "oid": "1.3.6.1.3.125.1.1.7.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPENRPAddrTableIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPENRPAddrTableIndex": {
+    "name": "rserpoolENRPENRPAddrTableIndex",
+    "oid": "1.3.6.1.3.125.1.1.7.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPENRPL3Type": {
+    "name": "rserpoolENRPENRPL3Type",
+    "oid": "1.3.6.1.3.125.1.1.7.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPENRPL3Addr": {
+    "name": "rserpoolENRPENRPL3Addr",
+    "oid": "1.3.6.1.3.125.1.1.7.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPeerTable": {
+    "name": "rserpoolENRPPeerTable",
+    "oid": "1.3.6.1.3.125.1.1.8",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPeerEntry": {
+    "name": "rserpoolENRPPeerEntry",
+    "oid": "1.3.6.1.3.125.1.1.8.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPPeerIndex": {
+    "name": "rserpoolENRPPeerIndex",
+    "oid": "1.3.6.1.3.125.1.1.8.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPeerIdentifier": {
+    "name": "rserpoolENRPPeerIdentifier",
+    "oid": "1.3.6.1.3.125.1.1.8.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolENRPServerIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPeerPort": {
+    "name": "rserpoolENRPPeerPort",
+    "oid": "1.3.6.1.3.125.1.1.8.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPeerLastHeard": {
+    "name": "rserpoolENRPPeerLastHeard",
+    "oid": "1.3.6.1.3.125.1.1.8.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeTicks",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPeerAddrTable": {
+    "name": "rserpoolENRPPeerAddrTable",
+    "oid": "1.3.6.1.3.125.1.1.9",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPeerAddrTableEntry": {
+    "name": "rserpoolENRPPeerAddrTableEntry",
+    "oid": "1.3.6.1.3.125.1.1.9.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerAddrTableIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPPeerAddrTableIndex": {
+    "name": "rserpoolENRPPeerAddrTableIndex",
+    "oid": "1.3.6.1.3.125.1.1.9.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolENRPPeerL3Type": {
+    "name": "rserpoolENRPPeerL3Type",
+    "oid": "1.3.6.1.3.125.1.1.9.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolENRPPeerL3Addr": {
+    "name": "rserpoolENRPPeerL3Addr",
+    "oid": "1.3.6.1.3.125.1.1.9.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPETable": {
+    "name": "rserpoolPETable",
+    "oid": "1.3.6.1.3.125.1.2.1",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPEEntry": {
+    "name": "rserpoolPEEntry",
+    "oid": "1.3.6.1.3.125.1.2.1.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolPEIndex": {
+    "name": "rserpoolPEIndex",
+    "oid": "1.3.6.1.3.125.1.2.1.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPEOperationScope": {
+    "name": "rserpoolPEOperationScope",
+    "oid": "1.3.6.1.3.125.1.2.1.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolOperationScopeTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEPoolHandle": {
+    "name": "rserpoolPEPoolHandle",
+    "oid": "1.3.6.1.3.125.1.2.1.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPoolHandleTC",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPEIdentifier": {
+    "name": "rserpoolPEIdentifier",
+    "oid": "1.3.6.1.3.125.1.2.1.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RserpoolPoolElementIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEDescription": {
+    "name": "rserpoolPEDescription",
+    "oid": "1.3.6.1.3.125.1.2.1.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPEUptime": {
+    "name": "rserpoolPEUptime",
+    "oid": "1.3.6.1.3.125.1.2.1.1.6",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeTicks",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEASAPTransportPort": {
+    "name": "rserpoolPEASAPTransportPort",
+    "oid": "1.3.6.1.3.125.1.2.1.1.7",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEUserTransportProto": {
+    "name": "rserpoolPEUserTransportProto",
+    "oid": "1.3.6.1.3.125.1.2.1.1.8",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEUserTransportPort": {
+    "name": "rserpoolPEUserTransportPort",
+    "oid": "1.3.6.1.3.125.1.2.1.1.9",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetPortNumber",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEUserTransportUse": {
+    "name": "rserpoolPEUserTransportUse",
+    "oid": "1.3.6.1.3.125.1.2.1.1.10",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolTransportUseTypeTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEPolicyID": {
+    "name": "rserpoolPEPolicyID",
+    "oid": "1.3.6.1.3.125.1.2.1.1.11",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPEPolicyDescription": {
+    "name": "rserpoolPEPolicyDescription",
+    "oid": "1.3.6.1.3.125.1.2.1.1.12",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPEPolicyWeight": {
+    "name": "rserpoolPEPolicyWeight",
+    "oid": "1.3.6.1.3.125.1.2.1.1.13",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyWeightTC",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPEPolicyLoad": {
+    "name": "rserpoolPEPolicyLoad",
+    "oid": "1.3.6.1.3.125.1.2.1.1.14",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyLoadTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEPolicyLoadDeg": {
+    "name": "rserpoolPEPolicyLoadDeg",
+    "oid": "1.3.6.1.3.125.1.2.1.1.15",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPolicyLoadTC",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPERegistrationLife": {
+    "name": "rserpoolPERegistrationLife",
+    "oid": "1.3.6.1.3.125.1.2.1.1.16",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeTicks",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPEHomeENRPServer": {
+    "name": "rserpoolPEHomeENRPServer",
+    "oid": "1.3.6.1.3.125.1.2.1.1.17",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolENRPServerIdentifierTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEASAPAddrTable": {
+    "name": "rserpoolPEASAPAddrTable",
+    "oid": "1.3.6.1.3.125.1.2.2",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPEASAPAddrTableEntry": {
+    "name": "rserpoolPEASAPAddrTableEntry",
+    "oid": "1.3.6.1.3.125.1.2.2.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEASAPAddrTableIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolPEASAPAddrTableIndex": {
+    "name": "rserpoolPEASAPAddrTableIndex",
+    "oid": "1.3.6.1.3.125.1.2.2.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPEASAPL3Type": {
+    "name": "rserpoolPEASAPL3Type",
+    "oid": "1.3.6.1.3.125.1.2.2.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEASAPL3Addr": {
+    "name": "rserpoolPEASAPL3Addr",
+    "oid": "1.3.6.1.3.125.1.2.2.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEUserAddrTable": {
+    "name": "rserpoolPEUserAddrTable",
+    "oid": "1.3.6.1.3.125.1.2.6",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPEUserAddrTableEntry": {
+    "name": "rserpoolPEUserAddrTableEntry",
+    "oid": "1.3.6.1.3.125.1.2.6.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEIndex",
+        "implied": 0
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUserAddrTableIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolPEUserAddrTableIndex": {
+    "name": "rserpoolPEUserAddrTableIndex",
+    "oid": "1.3.6.1.3.125.1.2.6.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPEUserL3Type": {
+    "name": "rserpoolPEUserL3Type",
+    "oid": "1.3.6.1.3.125.1.2.6.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddressType",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "unknown": 0,
+          "ipv4": 1,
+          "ipv6": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEUserL3Addr": {
+    "name": "rserpoolPEUserL3Addr",
+    "oid": "1.3.6.1.3.125.1.2.6.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "InetAddress",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 0
+          },
+          {
+            "min": 4,
+            "max": 4
+          },
+          {
+            "min": 16,
+            "max": 16
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPEUserL3Opaque": {
+    "name": "rserpoolPEUserL3Opaque",
+    "oid": "1.3.6.1.3.125.1.2.6.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolOpaqueAddressTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPUTable": {
+    "name": "rserpoolPUTable",
+    "oid": "1.3.6.1.3.125.1.3.1",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPUEntry": {
+    "name": "rserpoolPUEntry",
+    "oid": "1.3.6.1.3.125.1.3.1.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPUIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolPUIndex": {
+    "name": "rserpoolPUIndex",
+    "oid": "1.3.6.1.3.125.1.3.1.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Unsigned32",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 4294967295
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rserpoolPUOperationScope": {
+    "name": "rserpoolPUOperationScope",
+    "oid": "1.3.6.1.3.125.1.3.1.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolOperationScopeTC",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolPUPoolHandle": {
+    "name": "rserpoolPUPoolHandle",
+    "oid": "1.3.6.1.3.125.1.3.1.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RSerPoolPoolHandleTC",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPUDescription": {
+    "name": "rserpoolPUDescription",
+    "oid": "1.3.6.1.3.125.1.3.1.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "rserpoolPUUptime": {
+    "name": "rserpoolPUUptime",
+    "oid": "1.3.6.1.3.125.1.3.1.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeTicks",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rserpoolMIBCompliances": {
+    "name": "rserpoolMIBCompliances",
+    "oid": "1.3.6.1.3.125.2.1",
+    "class": "objectidentity"
+  },
+  "rserpoolMIBGroups": {
+    "name": "rserpoolMIBGroups",
+    "oid": "1.3.6.1.3.125.2.2",
+    "class": "objectidentity"
+  },
+  "rserpoolMIBCompliance": {
+    "name": "rserpoolMIBCompliance",
+    "oid": "1.3.6.1.3.125.2.1.1",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "rserpoolENRPGroup",
+        "module": "RSERPOOL-MIB"
+      },
+      {
+        "object": "rserpoolPEGroup",
+        "module": "RSERPOOL-MIB"
+      },
+      {
+        "object": "rserpoolPUGroup",
+        "module": "RSERPOOL-MIB"
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolENRPGroup": {
+    "name": "rserpoolENRPGroup",
+    "oid": "1.3.6.1.3.125.2.2.1",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPOperationScope"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPIdentifier"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPDescription"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUptime"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPASAPAnnouncePort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPASAPAnnounceAddr"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPASAPAnnounceAddrType"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPENRPAnnounceAddrType"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPENRPAnnouncePort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPENRPAnnounceAddr"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolHandle"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPoolElementID"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPASAPTransportPort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUserTransportProto"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUserTransportUse"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUserTransportPort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPolicyID"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPolicyDescription"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPolicyWeight"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPolicyLoad"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPolicyLoadDeg"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPRegistrationLife"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPHomeENRPServer"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPASAPL3Type"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPASAPL3Addr"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUserL3Type"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUserL3Addr"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPUserL3Opaque"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPENRPL3Type"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPENRPL3Addr"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerIdentifier"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerPort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerLastHeard"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerL3Type"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolENRPPeerL3Addr"
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolPEGroup": {
+    "name": "rserpoolPEGroup",
+    "oid": "1.3.6.1.3.125.2.2.2",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEOperationScope"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEPoolHandle"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEIdentifier"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEDescription"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUptime"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEASAPTransportPort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUserTransportProto"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUserTransportPort"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUserTransportUse"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEPolicyID"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEPolicyDescription"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEPolicyWeight"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEPolicyLoad"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEPolicyLoadDeg"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPERegistrationLife"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEHomeENRPServer"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEASAPL3Type"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEASAPL3Addr"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUserL3Type"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUserL3Addr"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPEUserL3Opaque"
+      }
+    ],
+    "status": "current"
+  },
+  "rserpoolPUGroup": {
+    "name": "rserpoolPUGroup",
+    "oid": "1.3.6.1.3.125.2.2.3",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPUOperationScope"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPUPoolHandle"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPUDescription"
+      },
+      {
+        "module": "RSERPOOL-MIB",
+        "object": "rserpoolPUUptime"
+      }
+    ],
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/RSERPOOL-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:54:24 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "RSERPOOL-MIB"
+  }
+}

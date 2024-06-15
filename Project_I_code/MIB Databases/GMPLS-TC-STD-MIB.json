@@ -1,0 +1,103 @@
+{
+  "imports": {
+    "class": "imports",
+    "MPLS-TC-STD-MIB": [
+      "mplsStdMIB"
+    ],
+    "SNMPv2-CONF": [
+      "NOTIFICATION-GROUP",
+      "MODULE-COMPLIANCE"
+    ],
+    "SNMPv2-SMI": [
+      "OBJECT-IDENTITY",
+      "Counter32",
+      "TimeTicks",
+      "Gauge32",
+      "Unsigned32",
+      "IpAddress",
+      "MibIdentifier",
+      "Counter64",
+      "Integer32",
+      "OBJECT-TYPE",
+      "MODULE-IDENTITY",
+      "Bits",
+      "NOTIFICATION-TYPE",
+      "iso"
+    ],
+    "SNMPv2-TC": [
+      "TEXTUAL-CONVENTION",
+      "DisplayString"
+    ]
+  },
+  "gmplsTCStdMIB": {
+    "name": "gmplsTCStdMIB",
+    "oid": "1.3.6.1.2.1.10.166.12",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2007-02-28 00:00",
+        "description": "Initial version published as part of RFC 4801."
+      }
+    ]
+  },
+  "GmplsFreeformLabelTC": {
+    "name": "GmplsFreeformLabelTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "OCTET STRING",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 64
+          }
+        ]
+      }
+    },
+    "status": "current"
+  },
+  "GmplsLabelTypeTC": {
+    "name": "GmplsLabelTypeTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "gmplsMplsLabel": 1,
+          "gmplsPortWavelengthLabel": 2,
+          "gmplsFreeformGeneralizedLabel": 3,
+          "gmplsSonetLabel": 4,
+          "gmplsSdhLabel": 5,
+          "gmplsWavebandLabel": 6
+        }
+      }
+    },
+    "status": "current"
+  },
+  "GmplsSegmentDirectionTC": {
+    "name": "GmplsSegmentDirectionTC",
+    "class": "textualconvention",
+    "type": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "forward": 1,
+          "reverse": 2
+        }
+      }
+    },
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/GMPLS-TC-STD-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:40:07 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "GMPLS-TC-STD-MIB"
+  }
+}

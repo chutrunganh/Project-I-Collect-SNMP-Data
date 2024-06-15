@@ -1,0 +1,145 @@
+{
+  "imports": {
+    "class": "imports",
+    "IF-MIB": [
+      "ifStackLowerLayer",
+      "ifStackHigherLayer",
+      "ifStackGroup2"
+    ],
+    "SNMPv2-CONF": [
+      "MODULE-COMPLIANCE",
+      "NOTIFICATION-GROUP",
+      "OBJECT-GROUP"
+    ],
+    "SNMPv2-SMI": [
+      "Unsigned32",
+      "TimeTicks",
+      "NOTIFICATION-TYPE",
+      "MibIdentifier",
+      "MODULE-IDENTITY",
+      "iso",
+      "Bits",
+      "OBJECT-IDENTITY",
+      "Counter32",
+      "IpAddress",
+      "mib-2",
+      "Gauge32",
+      "Counter64",
+      "Integer32",
+      "OBJECT-TYPE"
+    ],
+    "SNMPv2-TC": [
+      "TEXTUAL-CONVENTION",
+      "RowStatus",
+      "DisplayString"
+    ]
+  },
+  "ifInvertedStackMIB": {
+    "name": "ifInvertedStackMIB",
+    "oid": "1.3.6.1.2.1.77",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2000-06-14 00:00",
+        "description": "Initial revision, published as RFC 2864"
+      }
+    ]
+  },
+  "ifInvMIBObjects": {
+    "name": "ifInvMIBObjects",
+    "oid": "1.3.6.1.2.1.77.1",
+    "class": "objectidentity"
+  },
+  "ifInvStackTable": {
+    "name": "ifInvStackTable",
+    "oid": "1.3.6.1.2.1.77.1.1",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "ifInvStackEntry": {
+    "name": "ifInvStackEntry",
+    "oid": "1.3.6.1.2.1.77.1.1.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "IF-MIB",
+        "object": "ifStackLowerLayer",
+        "implied": 0
+      },
+      {
+        "module": "IF-MIB",
+        "object": "ifStackHigherLayer",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "ifInvStackStatus": {
+    "name": "ifInvStackStatus",
+    "oid": "1.3.6.1.2.1.77.1.1.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "RowStatus",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "ifInvConformance": {
+    "name": "ifInvConformance",
+    "oid": "1.3.6.1.2.1.77.1.2",
+    "class": "objectidentity"
+  },
+  "ifInvGroups": {
+    "name": "ifInvGroups",
+    "oid": "1.3.6.1.2.1.77.1.2.1",
+    "class": "objectidentity"
+  },
+  "ifInvCompliances": {
+    "name": "ifInvCompliances",
+    "oid": "1.3.6.1.2.1.77.1.2.2",
+    "class": "objectidentity"
+  },
+  "ifInvCompliance": {
+    "name": "ifInvCompliance",
+    "oid": "1.3.6.1.2.1.77.1.2.2.1",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "ifInvStackGroup",
+        "module": "IF-INVERTED-STACK-MIB"
+      },
+      {
+        "object": "ifStackGroup2",
+        "module": "IF-MIB"
+      }
+    ],
+    "status": "current"
+  },
+  "ifInvStackGroup": {
+    "name": "ifInvStackGroup",
+    "oid": "1.3.6.1.2.1.77.1.2.1.1",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "IF-INVERTED-STACK-MIB",
+        "object": "ifInvStackStatus"
+      }
+    ],
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/IF-INVERTED-STACK-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:42:47 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "IF-INVERTED-STACK-MIB"
+  }
+}

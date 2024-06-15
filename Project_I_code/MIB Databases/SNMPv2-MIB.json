@@ -31,6 +31,14 @@
       "TEXTUAL-CONVENTION"
     ]
   },
+  "snmpV2": {
+    "name": "snmp",
+    "oid": "1.3.6.1.6"
+  },
+  "snmpModules": {
+    "name": "snmpModules",
+    "oid": "1.3.6.1.6.3"
+  },
   "snmpMIB": {
     "name": "snmpMIB",
     "oid": "1.3.6.1.6.3.1",

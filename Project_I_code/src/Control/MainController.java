@@ -32,17 +32,27 @@ import static Model.SNMRequest.SnmpResponseFormatter.format;
 public class MainController {
 
 
-    @FXML private AnchorPane MIBTreeDisplay;  //Use to display list of MIBs which are loaded/opened by users + "Loaded MIBs" label
-    @FXML private FlowPane MIBsloaded; //Use to display list of MIBs which are loaded/opened by users
-    @FXML private TextField tfOID;
+    @FXML
+    private AnchorPane MIBTreeDisplay;  //Use to display list of MIBs which are loaded/opened by users + "Loaded MIBs" label
+    @FXML
+    private FlowPane MIBsloaded; //Use to display list of MIBs which are loaded/opened by users
+    @FXML
+    private TextField tfOID;
 
-    @FXML private Label lbAccess;
-    @FXML private Label lbName;
-    @FXML private Label lbStatus;
-    @FXML private Label lbType;
-    @FXML private TextArea taDescription;
-    @FXML private PasswordField tfCommunityString;
-    @FXML private TextField tfTargetIP;
+    @FXML
+    private Label lbAccess;
+    @FXML
+    private Label lbName;
+    @FXML
+    private Label lbStatus;
+    @FXML
+    private Label lbType;
+    @FXML
+    private TextArea taDescription;
+    @FXML
+    private PasswordField tfCommunityString;
+    @FXML
+    private TextField tfTargetIP;
 
     @FXML
     private TableView<ARowInQueryTable> queryTable;
@@ -61,7 +71,7 @@ public class MainController {
     String ip = "127.0.0.1"; //Localhost by default
     String community = "password"; //Community string by default
     String nodeType = null;
-    Map<String,Object> constraints = new HashMap<>();
+    Map<String, Object> constraints = new HashMap<>();
 
     TreeView<String> treeView;
 
@@ -88,7 +98,9 @@ public class MainController {
 
         List<String> mibFilePaths = Arrays.asList(
                 "Project_I_code/MIB Databases/RFC1213-MIB.json",
-                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
+                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json",
+                "Project_I_code/MIB Databases/SNMPv2-MIB.json",
+                "Project_I_code/MIB Databases/IF-MIB.json"
         );
         try {
             treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
@@ -117,8 +129,6 @@ public class MainController {
                 }
             }
         });
-
-
 
 
         //Expand the treeview to fit the anchorpane width and height
@@ -166,6 +176,23 @@ public class MainController {
                 }
             }
         });
+
+
+
+        // Add an event listener to the TableView
+        queryTable.setOnMouseClicked(event ->
+
+        {
+            if (event.getClickCount() == 2) { // Single-click event
+                ARowInQueryTable selectedRow = queryTable.getSelectionModel().getSelectedItem();
+                if (selectedRow != null) {
+                    //If the node name contains postfix ".1", remove it before highlighting
+                    String nodeName =  selectedRow.getName().substring(selectedRow.getName().length()-2, selectedRow.getName().length() - 1).equals(".")
+                            ? selectedRow.getName().substring(0, selectedRow.getName().length() - 2) : selectedRow.getName();
+                    highlightNodeInTreeView(treeView, nodeName);
+                }
+            }
+        });
     }
 
 
@@ -196,7 +223,6 @@ public class MainController {
         }
 
     }
-
 
 
     @FXML
@@ -242,10 +268,10 @@ public class MainController {
 //
 //        //Show the chosen file in loaded section
 //        showMIBsLoaded(file);
-   }
+    }
 
 
-//    /*
+    //    /*
 //     * Function to show the MIBs loaded/opened by the user in the MIBsloaded FlowPane
 //     * */
     public void showMIBsLoaded(File file) {
@@ -275,29 +301,29 @@ public class MainController {
      * to transform the JSON file to a TreeView
      * */
 
-        public void displayTreeFromChosenMIB(File jsonFile) throws IOException {
-            //Clear the MIBTreeDisplay AnchorPane before displaying the new MIB
-            MIBTreeDisplay.getChildren().clear();
+    public void displayTreeFromChosenMIB(File jsonFile) throws IOException {
+        //Clear the MIBTreeDisplay AnchorPane before displaying the new MIB
+        MIBTreeDisplay.getChildren().clear();
 
-            BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
+        BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
 
-            List<String> mibFilePaths = Arrays.asList(
-                    "Project_I_code/MIB Databases/RFC1213-MIB.json",
-                    "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
-            );
-            try {
-                treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
-            TreeView<Node> treeView = new TreeView<>(rootItem);
-
+        List<String> mibFilePaths = Arrays.asList(
+                "Project_I_code/MIB Databases/RFC1213-MIB.json",
+                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
+        );
+        try {
+            treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
+        TreeView<Node> treeView = new TreeView<>(rootItem);
 
-            /*
+    }
+
+
+    /*
      * Function to handle the  click action on a tree cell /node. In the context of a TreeView, you can think of a
      * TreeItem as your data, the TreeCell as the visual representation of that data
      *
@@ -365,8 +391,6 @@ public class MainController {
 //    }
 
 
-
-
     @FXML
     void SNMPGetClicked(MouseEvent event) {
         System.out.println("perfroming SNMP Get.......");
@@ -425,10 +449,12 @@ public class MainController {
                     e.printStackTrace();
                 }
             } else {
+                System.out.println("Still Working on this part 4 (handling non-scalar nodes)");
                 // If the nodeType is not scalar, append from ".1" to ".100" and perform SNMP Get until a response is received
                 for (int i = 1; i <= 100; i++) {
                     String oidToTry = oidValue + "." + i;
                     try {
+                        System.out.println("Still Working on this part 5 (handling non-scalar nodes)");
                         SNMPGet snmpGet = new SNMPGet((UdpAddress) targetAddress, community, oidToTry);
                         VariableBinding vb = snmpGet.getVariableBinding(); // Get the response from the SNMP request
 
@@ -448,13 +474,19 @@ public class MainController {
                                 String humanReadableValue = format(vb.getVariable(), dataType, constraints);
                                 System.out.println("Human Readable Value: " + humanReadableValue);
                                 //Add the result to the query table
-                                queryTable.getItems().add(new ARowInQueryTable(lbName.getText() +"."+ i, humanReadableValue, lbType.getText()));
+                                queryTable.getItems().add(new ARowInQueryTable(lbName.getText() + "." + i, humanReadableValue, lbType.getText()));
                             }
 
 
                             // If the response is "noSuchInstance", break the loop
                             if (response.equals("noSuchInstance")) {
-                                break;
+                                if (i == 1) { // If the first response is "noSuchInstance", mean that it is not exist in the device
+                                    System.out.println("Error: Failed to get response for OID: " + oidToTry);
+                                    queryTable.getItems().add(new ARowInQueryTable(lbName.getText(), "noSuchInstance", lbType.getText()));
+                                    break;
+                                } else { // If the response is "noSuchInstance" after some iteration, mean that it exits, we have reached the end of the table
+                                    break;
+                                }
                             }
                         }
 
@@ -469,11 +501,10 @@ public class MainController {
     }
 
 
-
     @FXML
     void SNMPWalkClicked(MouseEvent event) {
 
-        System.out.println("perfroming SNMP Get.......");
+        //System.out.println("perfroming SNMP Walk.......");
         // Get the OID from the text field
         oidValue = tfOID.getText();
 
@@ -508,12 +539,12 @@ public class MainController {
                 for (VariableBinding varBinding : varBindings) {
                     String oid = varBinding.getOid().toString();
                     //Print raw response to console
-                    System.out.println("Walk: " + oid + " : " + varBinding.getVariable().toString());
+                    //System.out.println("Walk: " + oid + " : " + varBinding.getVariable().toString());
                     //Stroe the last teo chracter to add to name when print out
-                    String lastTwoChar = oid.substring(oid.length()-2);
+                    String lastTwoChar = oid.substring(oid.length() - 2);
                     //remove the last two characters of the OID to get the node
-                    Node node = mibLoader.lookupNode(oid.substring(0, oid.length()-2));
-                    System.out.println("Node: " + node);
+                    Node node = mibLoader.lookupNode(oid.substring(0, oid.length() - 2));
+                    //System.out.println("Node: " + node);
 
                     if (node != null) {
                         //System.out.println("Look up by OID Fucking work!");
@@ -521,15 +552,14 @@ public class MainController {
                         String dataType = node.type;
                         Map<String, Object> constraint = node.constraints;
 
-                        System.out.println("OID: " + oid + ", Name: " + name + ", DataType: " + dataType + ", Constraints: " + constraint);
+                        //System.out.println("OID: " + oid + ", Name: " + name + ", DataType: " + dataType + ", Constraints: " + constraint);
                         // Convert the variable to a human-readable format
                         String humanReadableValue = format(varBinding.getVariable(), dataType, constraints);
-                        System.out.println("Human Readable Value: " + humanReadableValue);
+                        //System.out.println("Human Readable Value: " + humanReadableValue);
                         //Add the result to the query table
                         queryTable.getItems().add(new ARowInQueryTable(name + lastTwoChar, humanReadableValue, dataType));
-                    }
-                    else { //In case we can find that node base on OID, return the OID and raw inout
-                        System.out.println("Can not find OID: " + oid + ": return raw value: " + varBinding.getVariable().toString());
+                    } else { //In case we can find that node base on OID, return the OID and raw inout
+                        //System.out.println("Can not find OID: " + oid + ": return raw value: " + varBinding.getVariable().toString());
                         //Add the result to the query table
                         queryTable.getItems().add(new ARowInQueryTable(oid, varBinding.getVariable().toString() + " (raw value)", "None defined"));
                     }
@@ -547,5 +577,34 @@ public class MainController {
         // Clear the query table
         queryTable.getItems().clear();
     }
+
+
+
+
+    // Method to highlight a node in the TreeView
+    private void highlightNodeInTreeView(TreeView<Node> treeView, String nodeName) {
+        TreeItem<Node> root = treeView.getRoot();
+        TreeItem<Node> targetNode = findNode(root, nodeName);
+
+        if (targetNode != null) {
+            treeView.getSelectionModel().select(targetNode);
+            treeView.scrollTo(treeView.getRow(targetNode));
+        }
+    }
+
+    // Recursive method to find a node by name in the TreeView
+    private TreeItem<Node> findNode(TreeItem<Node> currentNode, String nodeName) {
+        if (currentNode.getValue().name.equals(nodeName)) {
+            return currentNode;
+        }
+        for (TreeItem<Node> child : currentNode.getChildren()) {
+            TreeItem<Node> result = findNode(child, nodeName);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
+    }
+
 
 }

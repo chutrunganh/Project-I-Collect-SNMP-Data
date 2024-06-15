@@ -1,0 +1,241 @@
+{
+  "imports": {
+    "class": "imports",
+    "IPV6-TC": [
+      "Ipv6IfIndexOrZero",
+      "Ipv6Address"
+    ],
+    "SNMPv2-CONF": [
+      "OBJECT-GROUP",
+      "MODULE-COMPLIANCE",
+      "NOTIFICATION-GROUP"
+    ],
+    "SNMPv2-SMI": [
+      "Bits",
+      "MibIdentifier",
+      "MODULE-IDENTITY",
+      "Counter64",
+      "Counter32",
+      "TimeTicks",
+      "Integer32",
+      "Gauge32",
+      "experimental",
+      "NOTIFICATION-TYPE",
+      "mib-2",
+      "OBJECT-IDENTITY",
+      "OBJECT-TYPE",
+      "IpAddress",
+      "Unsigned32",
+      "iso"
+    ],
+    "SNMPv2-TC": [
+      "TEXTUAL-CONVENTION",
+      "DisplayString"
+    ]
+  },
+  "ipv6TcpMIB": {
+    "name": "ipv6TcpMIB",
+    "oid": "1.3.6.1.3.86",
+    "class": "moduleidentity"
+  },
+  "tcp": {
+    "name": "tcp",
+    "oid": "1.3.6.1.2.1.6",
+    "class": "objectidentity"
+  },
+  "ipv6TcpConnTable": {
+    "name": "ipv6TcpConnTable",
+    "oid": "1.3.6.1.2.1.6.16",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "ipv6TcpConnEntry": {
+    "name": "ipv6TcpConnEntry",
+    "oid": "1.3.6.1.2.1.6.16.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "IPV6-TCP-MIB",
+        "object": "ipv6TcpConnLocalAddress",
+        "implied": 0
+      },
+      {
+        "module": "IPV6-TCP-MIB",
+        "object": "ipv6TcpConnLocalPort",
+        "implied": 0
+      },
+      {
+        "module": "IPV6-TCP-MIB",
+        "object": "ipv6TcpConnRemAddress",
+        "implied": 0
+      },
+      {
+        "module": "IPV6-TCP-MIB",
+        "object": "ipv6TcpConnRemPort",
+        "implied": 0
+      },
+      {
+        "module": "IPV6-TCP-MIB",
+        "object": "ipv6TcpConnIfIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "ipv6TcpConnLocalAddress": {
+    "name": "ipv6TcpConnLocalAddress",
+    "oid": "1.3.6.1.2.1.6.16.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Ipv6Address",
+      "class": "type"
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "ipv6TcpConnLocalPort": {
+    "name": "ipv6TcpConnLocalPort",
+    "oid": "1.3.6.1.2.1.6.16.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 0,
+            "max": 65535
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "ipv6TcpConnRemAddress": {
+    "name": "ipv6TcpConnRemAddress",
+    "oid": "1.3.6.1.2.1.6.16.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Ipv6Address",
+      "class": "type"
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "ipv6TcpConnRemPort": {
+    "name": "ipv6TcpConnRemPort",
+    "oid": "1.3.6.1.2.1.6.16.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 0,
+            "max": 65535
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "ipv6TcpConnIfIndex": {
+    "name": "ipv6TcpConnIfIndex",
+    "oid": "1.3.6.1.2.1.6.16.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Ipv6IfIndexOrZero",
+      "class": "type"
+    },
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "ipv6TcpConnState": {
+    "name": "ipv6TcpConnState",
+    "oid": "1.3.6.1.2.1.6.16.1.6",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "closed": 1,
+          "listen": 2,
+          "synSent": 3,
+          "synReceived": 4,
+          "established": 5,
+          "finWait1": 6,
+          "finWait2": 7,
+          "closeWait": 8,
+          "lastAck": 9,
+          "closing": 10,
+          "timeWait": 11,
+          "deleteTCB": 12
+        }
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current"
+  },
+  "ipv6TcpConformance": {
+    "name": "ipv6TcpConformance",
+    "oid": "1.3.6.1.3.86.2",
+    "class": "objectidentity"
+  },
+  "ipv6TcpCompliances": {
+    "name": "ipv6TcpCompliances",
+    "oid": "1.3.6.1.3.86.2.1",
+    "class": "objectidentity"
+  },
+  "ipv6TcpGroups": {
+    "name": "ipv6TcpGroups",
+    "oid": "1.3.6.1.3.86.2.2",
+    "class": "objectidentity"
+  },
+  "ipv6TcpCompliance": {
+    "name": "ipv6TcpCompliance",
+    "oid": "1.3.6.1.3.86.2.1.1",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "ipv6TcpGroup",
+        "module": "IPV6-TCP-MIB"
+      }
+    ],
+    "status": "current"
+  },
+  "ipv6TcpGroup": {
+    "name": "ipv6TcpGroup",
+    "oid": "1.3.6.1.3.86.2.2.1",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "IPV6-TCP-MIB",
+        "object": "ipv6TcpConnState"
+      }
+    ],
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/IPV6-TCP-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:44:54 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "IPV6-TCP-MIB"
+  }
+}

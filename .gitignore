@@ -14,6 +14,9 @@ __pycache__/
 /out/
 bin/
 
+# ignore all JSON files
+*.json
+
 
 # .class files from Java
 *.class

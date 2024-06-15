@@ -1,0 +1,197 @@
+{
+  "imports": {
+    "class": "imports",
+    "ROHC-MIB": [
+      "rohcContextCID",
+      "rohcChannelID"
+    ],
+    "SNMPv2-CONF": [
+      "NOTIFICATION-GROUP",
+      "OBJECT-GROUP",
+      "MODULE-COMPLIANCE"
+    ],
+    "SNMPv2-SMI": [
+      "iso",
+      "TimeTicks",
+      "OBJECT-TYPE",
+      "MibIdentifier",
+      "OBJECT-IDENTITY",
+      "Gauge32",
+      "NOTIFICATION-TYPE",
+      "MODULE-IDENTITY",
+      "Counter32",
+      "Integer32",
+      "IpAddress",
+      "Unsigned32",
+      "mib-2",
+      "Bits",
+      "Counter64"
+    ],
+    "SNMPv2-TC": [
+      "DisplayString",
+      "TEXTUAL-CONVENTION"
+    ]
+  },
+  "rohcUncmprMIB": {
+    "name": "rohcUncmprMIB",
+    "oid": "1.3.6.1.2.1.113",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2004-06-03 00:00",
+        "description": "Initial version, published as RFC 3816."
+      }
+    ]
+  },
+  "rohcUncmprObjects": {
+    "name": "rohcUncmprObjects",
+    "oid": "1.3.6.1.2.1.113.1",
+    "class": "objectidentity"
+  },
+  "rohcUncmprConformance": {
+    "name": "rohcUncmprConformance",
+    "oid": "1.3.6.1.2.1.113.2",
+    "class": "objectidentity"
+  },
+  "rohcUncmprContextTable": {
+    "name": "rohcUncmprContextTable",
+    "oid": "1.3.6.1.2.1.113.1.1",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current"
+  },
+  "rohcUncmprContextEntry": {
+    "name": "rohcUncmprContextEntry",
+    "oid": "1.3.6.1.2.1.113.1.1.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "ROHC-MIB",
+        "object": "rohcChannelID",
+        "implied": 0
+      },
+      {
+        "module": "ROHC-MIB",
+        "object": "rohcContextCID",
+        "implied": 0
+      }
+    ],
+    "status": "current"
+  },
+  "rohcUncmprContextState": {
+    "name": "rohcUncmprContextState",
+    "oid": "1.3.6.1.2.1.113.1.1.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "initAndRefresh": 1,
+          "normal": 2,
+          "noContext": 3,
+          "fullContext": 4
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rohcUncmprContextMode": {
+    "name": "rohcUncmprContextMode",
+    "oid": "1.3.6.1.2.1.113.1.1.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "unidirectional": 1,
+          "bidirectional": 2
+        }
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rohcUncmprContextACKs": {
+    "name": "rohcUncmprContextACKs",
+    "oid": "1.3.6.1.2.1.113.1.1.1.5",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current"
+  },
+  "rohcUncmprCompliances": {
+    "name": "rohcUncmprCompliances",
+    "oid": "1.3.6.1.2.1.113.2.1",
+    "class": "objectidentity"
+  },
+  "rohcUncmprGroups": {
+    "name": "rohcUncmprGroups",
+    "oid": "1.3.6.1.2.1.113.2.2",
+    "class": "objectidentity"
+  },
+  "rohcUncmprCompliance": {
+    "name": "rohcUncmprCompliance",
+    "oid": "1.3.6.1.2.1.113.2.1.1",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "rohcUncmprContextGroup",
+        "module": "ROHC-UNCOMPRESSED-MIB"
+      },
+      {
+        "object": "rohcUncmprStatisticsGroup",
+        "module": "ROHC-UNCOMPRESSED-MIB"
+      }
+    ],
+    "status": "current"
+  },
+  "rohcUncmprContextGroup": {
+    "name": "rohcUncmprContextGroup",
+    "oid": "1.3.6.1.2.1.113.2.2.1",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "ROHC-UNCOMPRESSED-MIB",
+        "object": "rohcUncmprContextState"
+      },
+      {
+        "module": "ROHC-UNCOMPRESSED-MIB",
+        "object": "rohcUncmprContextMode"
+      }
+    ],
+    "status": "current"
+  },
+  "rohcUncmprStatisticsGroup": {
+    "name": "rohcUncmprStatisticsGroup",
+    "oid": "1.3.6.1.2.1.113.2.2.2",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "ROHC-UNCOMPRESSED-MIB",
+        "object": "rohcUncmprContextACKs"
+      }
+    ],
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/ROHC-UNCOMPRESSED-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:54:24 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "ROHC-UNCOMPRESSED-MIB"
+  }
+}

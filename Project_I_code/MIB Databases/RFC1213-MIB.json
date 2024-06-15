@@ -27,31 +27,6 @@
       "TEXTUAL-CONVENTION"
     ]
   },
-  "iso": {
-    "name": "iso",
-    "oid": "1",
-    "class": "objectidentity"
-  },
-  "org": {
-      "name": "org",
-      "oid": "1.3",
-      "class": "objectidentity"
-  },
-  "dod": {
-      "name": "dod",
-      "oid": "1.3.6",
-      "class": "objectidentity"
-  },
-  "internet": {
-      "name": "internet",
-      "oid": "1.3.6.1",
-      "class": "objectidentity"
-  },
-  "ngmt": {
-    "name": "ngmt",
-    "oid": "1.3.6.1.2",
-    "class": "objectidentity"
-  },
   "mib_2": {
     "name": "mib_2",
     "oid": "1.3.6.1.2.1",
@@ -72,6 +47,31 @@
       "type": "OCTET STRING",
       "class": "type"
     }
+  },
+  "iso": {
+    "name": "iso",
+    "oid": "1",
+    "class": "objectidentity"
+  },
+  "org": {
+    "name": "org",
+    "oid": "1.3",
+    "class": "objectidentity"
+  },
+  "dod": {
+      "name": "dod",
+      "oid": "1.3.6",
+      "class": "objectidentity"
+  },
+  "internet": {
+      "name": "internet",
+      "oid": "1.3.6.1",
+      "class": "objectidentity"
+  },
+  "mgmt": {
+      "name": "mgmt",
+      "oid": "1.3.6.1.2",
+        "class": "objectidentity"
   },
   "system": {
     "name": "system",

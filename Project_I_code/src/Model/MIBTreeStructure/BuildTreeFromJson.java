@@ -80,8 +80,8 @@ public class BuildTreeFromJson {
                         existingNode.type = type;
                         existingNode.access = access;
                         existingNode.status = status;
-                        existingNode.description = description;
                         existingNode.constraints = constraints; // Update constraints
+                        existingNode.description = description;
                     } else {
                         // Create new node
                         current.children.put(part, new Node(name, oid, nodeType, type, access, status, description, constraints));

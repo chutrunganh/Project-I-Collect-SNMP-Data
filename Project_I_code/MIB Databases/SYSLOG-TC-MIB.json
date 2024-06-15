@@ -1,0 +1,108 @@
+{
+  "imports": {
+    "class": "imports",
+    "SNMPv2-CONF": [
+      "MODULE-COMPLIANCE",
+      "NOTIFICATION-GROUP"
+    ],
+    "SNMPv2-SMI": [
+      "Integer32",
+      "NOTIFICATION-TYPE",
+      "Counter64",
+      "MibIdentifier",
+      "OBJECT-TYPE",
+      "Bits",
+      "mib-2",
+      "Gauge32",
+      "IpAddress",
+      "Counter32",
+      "iso",
+      "TimeTicks",
+      "Unsigned32",
+      "OBJECT-IDENTITY",
+      "MODULE-IDENTITY"
+    ],
+    "SNMPv2-TC": [
+      "TEXTUAL-CONVENTION",
+      "DisplayString"
+    ]
+  },
+  "syslogTCMIB": {
+    "name": "syslogTCMIB",
+    "oid": "1.3.6.1.2.1.173",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2009-03-30 00:00",
+        "description": "The initial version, published as RFC 5427."
+      }
+    ]
+  },
+  "SyslogFacility": {
+    "name": "SyslogFacility",
+    "class": "textualconvention",
+    "type": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "kern": 0,
+          "user": 1,
+          "mail": 2,
+          "daemon": 3,
+          "auth": 4,
+          "syslog": 5,
+          "lpr": 6,
+          "news": 7,
+          "uucp": 8,
+          "cron": 9,
+          "authpriv": 10,
+          "ftp": 11,
+          "ntp": 12,
+          "audit": 13,
+          "console": 14,
+          "cron2": 15,
+          "local0": 16,
+          "local1": 17,
+          "local2": 18,
+          "local3": 19,
+          "local4": 20,
+          "local5": 21,
+          "local6": 22,
+          "local7": 23
+        }
+      }
+    },
+    "status": "current"
+  },
+  "SyslogSeverity": {
+    "name": "SyslogSeverity",
+    "class": "textualconvention",
+    "type": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "emerg": 0,
+          "alert": 1,
+          "crit": 2,
+          "err": 3,
+          "warning": 4,
+          "notice": 5,
+          "info": 6,
+          "debug": 7
+        }
+      }
+    },
+    "status": "current"
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///usr/share/snmp/mibs/ietf/SYSLOG-TC-MIB",
+      "Produced by pysmi-1.1.12 at Sat Jun 15 23:49:54 2024",
+      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
+      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+    ],
+    "module": "SYSLOG-TC-MIB"
+  }
+}
