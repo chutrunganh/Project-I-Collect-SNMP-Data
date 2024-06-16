@@ -10,35 +10,35 @@
       "OBJECT-GROUP"
     ],
     "SNMPv2-SMI": [
-      "IpAddress",
-      "Unsigned32",
-      "Gauge32",
-      "OBJECT-TYPE",
-      "NOTIFICATION-TYPE",
-      "TimeTicks",
-      "MODULE-IDENTITY",
-      "iso",
-      "mib-2",
-      "Integer32",
-      "zeroDotZero",
-      "Counter64",
       "OBJECT-IDENTITY",
-      "MibIdentifier",
+      "zeroDotZero",
+      "iso",
+      "OBJECT-TYPE",
       "Bits",
-      "Counter32"
+      "Counter64",
+      "Counter32",
+      "Integer32",
+      "mib-2",
+      "TimeTicks",
+      "NOTIFICATION-TYPE",
+      "MibIdentifier",
+      "IpAddress",
+      "MODULE-IDENTITY",
+      "Gauge32",
+      "Unsigned32"
     ],
     "SNMPv2-TC": [
-      "TimeStamp",
+      "DateAndTime",
+      "DisplayString",
       "TDomain",
       "TEXTUAL-CONVENTION",
-      "DisplayString",
-      "TruthValue",
       "TestAndIncr",
-      "DateAndTime"
+      "TimeStamp",
+      "TruthValue"
     ],
     "SYSAPPL-MIB": [
-      "sysApplElmtRunIndex",
-      "LongUtf8String"
+      "LongUtf8String",
+      "sysApplElmtRunIndex"
     ]
   },
   "applicationMib": {
@@ -2875,7 +2875,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/APPLICATION-MIB",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:31:04 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:14:34 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

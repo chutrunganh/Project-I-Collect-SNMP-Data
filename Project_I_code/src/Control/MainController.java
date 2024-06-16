@@ -81,10 +81,10 @@ public class MainController {
     @FXML
     public void initialize() throws IOException {
         //Load the default MIBs to the MIBsloaded FlowPane
-        File defaultMIB1 = new File("Project_I_code/MIB Databases/RFC1213-MIB.json");
-        File defaultMIB2 = new File("Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json");
-        showMIBsLoaded(defaultMIB1);
-        showMIBsLoaded(defaultMIB2);
+//        File defaultMIB1 = new File("Project_I_code/MIB Databases/RFC1213-MIB.json");
+//        File defaultMIB2 = new File("Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json");
+//        showMIBsLoaded(defaultMIB1);
+//        showMIBsLoaded(defaultMIB2);
 
 
         //loadMIBs();
@@ -97,6 +97,7 @@ public class MainController {
 //        }
 
         List<String> mibFilePaths = Arrays.asList(
+                "Project_I_code/MIB Databases/Root.json",
                 "Project_I_code/MIB Databases/RFC1213-MIB.json",
                 "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json",
                 "Project_I_code/MIB Databases/SNMPv2-MIB.json",
@@ -186,10 +187,19 @@ public class MainController {
             if (event.getClickCount() == 2) { // Single-click event
                 ARowInQueryTable selectedRow = queryTable.getSelectionModel().getSelectedItem();
                 if (selectedRow != null) {
-                    //If the node name contains postfix ".1", remove it before highlighting
-                    String nodeName =  selectedRow.getName().substring(selectedRow.getName().length()-2, selectedRow.getName().length() - 1).equals(".")
-                            ? selectedRow.getName().substring(0, selectedRow.getName().length() - 2) : selectedRow.getName();
-                    highlightNodeInTreeView(treeView, nodeName);
+
+                    //If the node name contains postfix ".any_numer", remove it before highlighting
+                    int lastDotPosition = selectedRow.getName().lastIndexOf(".");
+                    if (lastDotPosition != -1) {
+                        // Remove the postfix (e.g. ".25", ".10", ".2004" etc.)
+                        String nodeName = selectedRow.getName().substring(0, lastDotPosition);
+                        highlightNodeInTreeView(treeView, nodeName);
+                    } else {
+                        // If the node name does not contain a postfix (e.g. ".1", ".2", ".3", etc.)
+                        // Remove the postfix (e.g. ".1", ".2", ".3", etc.)
+                        // If the node name does not contain a postfix (e.g. ".1", ".2", ".3", etc.
+                        highlightNodeInTreeView(treeView, selectedRow.getName());
+                    }
                 }
             }
         });
@@ -451,7 +461,7 @@ public class MainController {
             } else {
                 System.out.println("Still Working on this part 4 (handling non-scalar nodes)");
                 // If the nodeType is not scalar, append from ".1" to ".100" and perform SNMP Get until a response is received
-                for (int i = 1; i <= 100; i++) {
+                for (int i = 1; i <= 1000; i++) {
                     String oidToTry = oidValue + "." + i;
                     try {
                         System.out.println("Still Working on this part 5 (handling non-scalar nodes)");
@@ -538,12 +548,12 @@ public class MainController {
                 // For each VariableBinding, print OID, name, and data type
                 for (VariableBinding varBinding : varBindings) {
                     String oid = varBinding.getOid().toString();
-                    //Print raw response to console
-                    //System.out.println("Walk: " + oid + " : " + varBinding.getVariable().toString());
-                    //Stroe the last teo chracter to add to name when print out
-                    String lastTwoChar = oid.substring(oid.length() - 2);
-                    //remove the last two characters of the OID to get the node
-                    Node node = mibLoader.lookupNode(oid.substring(0, oid.length() - 2));
+                    // Find the position of the last dot
+                    int lastDotPosition = oid.lastIndexOf('.');
+                    // Remove everything after the last dot
+                    String oidWithoutLastPart = oid.substring(0, lastDotPosition);
+                    // Lookup the node using the modified OID
+                    Node node = mibLoader.lookupNode(oidWithoutLastPart);
                     //System.out.println("Node: " + node);
 
                     if (node != null) {
@@ -557,7 +567,7 @@ public class MainController {
                         String humanReadableValue = format(varBinding.getVariable(), dataType, constraints);
                         //System.out.println("Human Readable Value: " + humanReadableValue);
                         //Add the result to the query table
-                        queryTable.getItems().add(new ARowInQueryTable(name + lastTwoChar, humanReadableValue, dataType));
+                        queryTable.getItems().add(new ARowInQueryTable(name + oid.substring(lastDotPosition), humanReadableValue, dataType));
                     } else { //In case we can find that node base on OID, return the OID and raw inout
                         //System.out.println("Can not find OID: " + oid + ": return raw value: " + varBinding.getVariable().toString());
                         //Add the result to the query table

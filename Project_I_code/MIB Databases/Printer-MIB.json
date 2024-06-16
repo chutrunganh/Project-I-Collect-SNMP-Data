@@ -9,49 +9,49 @@
       "IANACharset"
     ],
     "IANA-PRINTER-MIB": [
-      "PrtMarkerMarkTechTC",
-      "PrtMediaPathTypeTC",
-      "PrtAlertGroupTC",
-      "PrtChannelTypeTC",
       "PrtOutputTypeTC",
-      "PrtInputTypeTC",
-      "PrtInterpreterLangFamilyTC",
-      "PrtConsoleColorTC",
-      "PrtCoverStatusTC",
-      "PrtGeneralResetTC",
-      "PrtMarkerSuppliesTypeTC",
-      "PrtConsoleDisableTC",
       "PrtAlertTrainingLevelTC",
-      "PrtAlertCodeTC"
+      "PrtChannelTypeTC",
+      "PrtConsoleColorTC",
+      "PrtConsoleDisableTC",
+      "PrtMediaPathTypeTC",
+      "PrtMarkerMarkTechTC",
+      "PrtAlertGroupTC",
+      "PrtAlertCodeTC",
+      "PrtCoverStatusTC",
+      "PrtInterpreterLangFamilyTC",
+      "PrtInputTypeTC",
+      "PrtMarkerSuppliesTypeTC",
+      "PrtGeneralResetTC"
     ],
     "IF-MIB": [
       "InterfaceIndexOrZero"
     ],
     "SNMPv2-CONF": [
-      "OBJECT-GROUP",
+      "MODULE-COMPLIANCE",
       "NOTIFICATION-GROUP",
-      "MODULE-COMPLIANCE"
+      "OBJECT-GROUP"
     ],
     "SNMPv2-SMI": [
-      "OBJECT-TYPE",
-      "OBJECT-IDENTITY",
-      "Counter32",
-      "Counter64",
       "NOTIFICATION-TYPE",
-      "Bits",
-      "MibIdentifier",
-      "IpAddress",
-      "Unsigned32",
       "iso",
-      "mib-2",
-      "TimeTicks",
+      "Counter64",
       "Gauge32",
+      "Bits",
+      "IpAddress",
+      "OBJECT-IDENTITY",
+      "mib-2",
+      "Unsigned32",
+      "Integer32",
       "MODULE-IDENTITY",
-      "Integer32"
+      "MibIdentifier",
+      "TimeTicks",
+      "OBJECT-TYPE",
+      "Counter32"
     ],
     "SNMPv2-TC": [
-      "TEXTUAL-CONVENTION",
-      "DisplayString"
+      "DisplayString",
+      "TEXTUAL-CONVENTION"
     ]
   },
   "printmib": {
@@ -4495,7 +4495,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/Printer-MIB",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:38:19 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:15:57 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

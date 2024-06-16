@@ -31,14 +31,6 @@
       "TEXTUAL-CONVENTION"
     ]
   },
-  "snmpV2": {
-    "name": "snmp",
-    "oid": "1.3.6.1.6"
-  },
-  "snmpModules": {
-    "name": "snmpModules",
-    "oid": "1.3.6.1.6.3"
-  },
   "snmpMIB": {
     "name": "snmpMIB",
     "oid": "1.3.6.1.6.3.1",
@@ -61,6 +53,14 @@
     "organization": "IETF SNMPv3 Working Group",
     "contactinfo": "WG-EMail: snmpv3@lists.tislabs.com Subscribe: snmpv3-request@lists.tislabs.com Co-Chair: Russ Mundy Network Associates Laboratories postal: 15204 Omega Drive, Suite 300 Rockville, MD 20850-4601 USA EMail: mundy@tislabs.com phone: +1 301 947-7107 Co-Chair: David Harrington Enterasys Networks postal: 35 Industrial Way P. O. Box 5005 Rochester, NH 03866-5005 USA EMail: dbh@enterasys.com phone: +1 603 337-2614 Editor: Randy Presuhn BMC Software, Inc. postal: 2141 North First Street San Jose, CA 95131 USA EMail: randy_presuhn@bmc.com phone: +1 408 546-1006",
     "description": "The MIB module for SNMP entities. Copyright (C) The Internet Society (2002). This version of this MIB module is part of RFC 3418; see the RFC itself for full legal notices. "
+  },
+  "snmpV2": {
+    "name": "snmpV2",
+    "oid": "1.3.6.1.6"
+  },
+  "snmpModules": {
+    "name": "snmpModules",
+    "oid": "1.3.6.1.6.3"
   },
   "snmpMIBObjects": {
     "name": "snmpMIBObjects",

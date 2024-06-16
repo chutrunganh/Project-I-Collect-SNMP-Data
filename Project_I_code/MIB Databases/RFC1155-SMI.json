@@ -7,14 +7,14 @@
     ],
     "SNMPv2-SMI": [
       "MODULE-IDENTITY",
-      "NOTIFICATION-TYPE",
-      "OBJECT-IDENTITY",
       "iso",
-      "OBJECT-TYPE"
+      "OBJECT-IDENTITY",
+      "OBJECT-TYPE",
+      "NOTIFICATION-TYPE"
     ],
     "SNMPv2-TC": [
-      "DisplayString",
-      "TEXTUAL-CONVENTION"
+      "TEXTUAL-CONVENTION",
+      "DisplayString"
     ]
   },
   "internet": {
@@ -130,7 +130,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/RFC1155-SMI",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:31:03 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:16:50 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

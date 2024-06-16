@@ -2,25 +2,72 @@ package Model.MIBTreeStructure;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * This class is responsible for loading MIB files from a folder and looking up nodes based on a provided OID, primarily used for SNMP Walk operations.
- * Its opens all the files in the directory, loads them into the memory, then for each incoming OID, it looks up the corresponding node in the loaded MIB files.
+ * It loads all the files in the directory into memory, then for each incoming OID, it looks up the corresponding node in the loaded MIB files.
  * @return: the Node object corresponding to the OID, if found.
  */
 public class MibLoader {
-    private JsonNode rootNode;
+    private final Map<String, List<JsonNode>> mibFilesByRootOid = new HashMap<>();
+    private final Map<String, List<String>> predefinedRootOids = new HashMap<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public MibLoader() {
+        // Predefined root OID to file name map
+        predefinedRootOids.put("1.3.6.1.6", Arrays.asList("SNMPv2-TM.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.16", Arrays.asList("RMON2-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.12", Arrays.asList("RFC1229-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.33", Arrays.asList("RFC1317-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.15", Arrays.asList("FDDI-SMT73-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1", Arrays.asList("IP-MIB.json", "RFC1213-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.2021.14", Arrays.asList("UCD-DEMO-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10", Arrays.asList("RFC1382-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.31", Arrays.asList("RFC1304-MIB.json"));
+        predefinedRootOids.put("1.3.6.1", Arrays.asList("RFC1155-SMI.json", "SNMPv2-MIB.json", "IF-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.24", Arrays.asList("RFC1414-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.19", Arrays.asList("RFC1316-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.6.3.10", Arrays.asList("SNMP-FRAMEWORK-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1", Arrays.asList("RFC1156-MIB.json", "RFC1271-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.8072.2", Arrays.asList("NET-SNMP-EXAMPLES-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.23", Arrays.asList("TCPIPX-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.34", Arrays.asList("SNA-NAU-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.33", Arrays.asList("UPS-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.43", Arrays.asList("Printer-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.62", Arrays.asList("APPLICATION-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.9", Arrays.asList("RFC1231-MIB.json", "TOKENRING-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.34", Arrays.asList("RFC1318-MIB.json", "PARALLEL-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.18", Arrays.asList("DECNET-PHIV-MIB.json", "RFC1289-phivMIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.16", Arrays.asList("RMON-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.18", Arrays.asList("RFC1406-MIB.json", "RFC1232-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.37", Arrays.asList("ATM-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.14", Arrays.asList("RFC1253-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.30", Arrays.asList("IANAifType-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.29", Arrays.asList("DSA-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2", Arrays.asList("RFC1389-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.8072.3", Arrays.asList("NET-SNMP-TC.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.2021", Arrays.asList("UCD-SNMP-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.6.3.16", Arrays.asList("SNMP-VIEW-BASED-ACM-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.30", Arrays.asList("RFC1407-MIB.json", "RFC1233-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.19", Arrays.asList("CHARACTER-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.47", Arrays.asList("ENTITY-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.2021.13.15", Arrays.asList("UCD-DISKIO-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.2021.13.1", Arrays.asList("UCD-IPFWACC-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.7", Arrays.asList("RFC1398-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.76", Arrays.asList("INET-ADDRESS-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.8072", Arrays.asList("NET-SNMP-AGENT-MIB.json", "NET-SNMP-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.25", Arrays.asList("HOST-RESOURCES-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.2.1.10.16", Arrays.asList("RFC1381-MIB.json"));
+        predefinedRootOids.put("1.3.6.1.4.1.2021.13.14", Arrays.asList("UCD-DLMOD-MIB.json"));
+        predefinedRootOids.put("1", Arrays.asList("Root.json"));
+    }
 
     /**
-     * Load MIB files from a folder. For each file in the directory (in our project context it will be the MIB Databases directory), call the loadMibFromFile method to load the MIB file.
+     * Load MIB files from a folder. For each file in the directory, load the MIB file into memory.
      * @param folderPath: the path to the folder containing the MIB files.
      */
     public void loadMibsFromFolder(String folderPath) {
@@ -29,10 +76,17 @@ public class MibLoader {
 
         if (files != null) {
             for (File file : files) {
-                //System.out.println("Using file: " + file.getName());
                 if (file.isFile() && file.getName().endsWith(".json")) {
                     try {
-                        loadMibFromFile(file);
+                        System.out.println("Loading file: " + file.getName());
+                        JsonNode fileNode = objectMapper.readTree(file);
+                        String rootOid = getRootOidFromFile(file.getName());
+                        if (rootOid != null) {
+                            if (!mibFilesByRootOid.containsKey(rootOid)) {
+                                mibFilesByRootOid.put(rootOid, new ArrayList<>());
+                            }
+                            mibFilesByRootOid.get(rootOid).add(fileNode);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -42,34 +96,39 @@ public class MibLoader {
     }
 
     /**
-     * Load a single MIB file. Read the JSON file using the ObjectMapper from the Jackson library and store the JSON tree structure in the rootNode attribute.
-     * If the rootNode is already initialized, combine the existing rootNode with the new fileNode.
-     * @param file: the MIB file to load.
+     * Helper method to extract root OID from file name based on predefinedRootOids map.
+     * @param fileName: the name of the MIB file.
+     * @return: the root OID associated with the file name.
      */
-    private void loadMibFromFile(File file) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        if (rootNode == null) {
-            rootNode = objectMapper.readTree(file);
-        } else {
-            JsonNode fileNode = objectMapper.readTree(file);
-            // Combine rootNode and fileNode
-            ((ObjectNode) rootNode).setAll((ObjectNode) fileNode);
+    private String getRootOidFromFile(String fileName) {
+        for (Map.Entry<String, List<String>> entry : predefinedRootOids.entrySet()) {
+            if (entry.getValue().contains(fileName)) {
+                return entry.getKey();
+            }
         }
+        return null;
     }
 
     /**
-     * Look up a node based on the provided OID. Traverse the JSON tree structure starting from the rootNode and recursively search for the node with the matching OID.
+     * Look up a node based on the provided OID. Determine which MIB file to search based on the root OID.
      * @param oid: the OID to look up.
      * @return: the Node object corresponding to the OID, if found.
      */
     public Node lookupNode(String oid) {
-        // Print OID that is being looked up
-        //System.out.println("Looking up node for OID: " + oid);
-        Node node = findNodeWithOid(rootNode, oid);
-        if (node == null) {
-            //System.out.println("Node not found for OID: " + oid);
+        //System.out.println("Looking up OID: " + oid);
+        for (Map.Entry<String, List<JsonNode>> entry : mibFilesByRootOid.entrySet()) {
+            String rootOid = entry.getKey();
+            if (oid.startsWith(rootOid)) {
+                List<JsonNode> mibFiles = entry.getValue();
+                for (JsonNode mibFile : mibFiles) {
+                    Node node = findNodeWithOid(mibFile, oid);
+                    if (node != null) {
+                        return node;
+                    }
+                }
+            }
         }
-        return node;
+        return null;
     }
 
     private Node findNodeWithOid(JsonNode currentNode, String oid) {
@@ -79,7 +138,7 @@ public class MibLoader {
 
         // Check if the current node has the matching OID
         if (currentNode.has("oid") && oid.equals(currentNode.get("oid").asText())) {
-            return createNodeFromJson(currentNode); // Create a Node object from the JSON node with the matching OID node
+            return createNodeFromJson(currentNode);
         }
 
         // Traverse the children of the current node
@@ -116,7 +175,7 @@ public class MibLoader {
             type = Optional.ofNullable(syntaxNode.get("type")).map(JsonNode::asText).orElse(null);
             JsonNode constraintsNode = syntaxNode.get("constraints");
             if (constraintsNode != null) {
-                constraints = new ObjectMapper().convertValue(constraintsNode, Map.class);
+                constraints = objectMapper.convertValue(constraintsNode, Map.class);
             }
         }
         String access = jsonNode.has("maxaccess") ? jsonNode.get("maxaccess").asText() : null;
@@ -124,17 +183,5 @@ public class MibLoader {
         String description = Optional.ofNullable(jsonNode.get("description")).map(JsonNode::asText).orElse(null);
         return new Node(name, oid, nodeType, type, access, status, description, constraints);
     }
-
-    public Node getRootNode() {
-        return createNodeFromJson(rootNode);
-    }
-
-
-    //Close all the open resources after the work is done
-//    public void close() {
-//        // Close any open resources
-//    }
-
-   //We are using ObjectMapper from the Jackson library to read the files.
-    // This library handles closing files on its own, so no need to worry about that.
 }
+

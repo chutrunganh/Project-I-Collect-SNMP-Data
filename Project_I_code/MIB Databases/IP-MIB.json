@@ -5,45 +5,45 @@
       "InterfaceIndex"
     ],
     "INET-ADDRESS-MIB": [
-      "InetVersion",
       "InetZoneIndex",
-      "InetAddressType",
+      "InetAddressPrefixLength",
       "InetAddress",
-      "InetAddressPrefixLength"
+      "InetAddressType",
+      "InetVersion"
     ],
     "SNMPv2-CONF": [
-      "NOTIFICATION-GROUP",
+      "MODULE-COMPLIANCE",
       "OBJECT-GROUP",
-      "MODULE-COMPLIANCE"
+      "NOTIFICATION-GROUP"
     ],
     "SNMPv2-SMI": [
-      "iso",
-      "Gauge32",
-      "MibIdentifier",
-      "mib-2",
-      "MODULE-IDENTITY",
-      "Counter32",
-      "Bits",
-      "IpAddress",
+      "OBJECT-IDENTITY",
       "OBJECT-TYPE",
+      "zeroDotZero",
+      "iso",
+      "Bits",
+      "Counter32",
+      "Gauge32",
       "Integer32",
+      "MibIdentifier",
+      "MODULE-IDENTITY",
+      "mib-2",
       "Counter64",
+      "IpAddress",
       "NOTIFICATION-TYPE",
       "TimeTicks",
-      "zeroDotZero",
-      "OBJECT-IDENTITY",
       "Unsigned32"
     ],
     "SNMPv2-TC": [
-      "RowStatus",
-      "TruthValue",
-      "StorageType",
-      "DisplayString",
-      "RowPointer",
       "PhysAddress",
       "TimeStamp",
+      "RowPointer",
+      "TEXTUAL-CONVENTION",
+      "StorageType",
+      "DisplayString",
       "TestAndIncr",
-      "TEXTUAL-CONVENTION"
+      "TruthValue",
+      "RowStatus"
     ]
   },
   "ipMIB": {
@@ -4778,7 +4778,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/IP-MIB",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:44:20 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:15:55 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

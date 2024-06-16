@@ -2,25 +2,25 @@
   "imports": {
     "class": "imports",
     "SNMPv2-CONF": [
-      "MODULE-COMPLIANCE",
-      "NOTIFICATION-GROUP"
+      "NOTIFICATION-GROUP",
+      "MODULE-COMPLIANCE"
     ],
     "SNMPv2-SMI": [
-      "Unsigned32",
-      "Bits",
+      "mib-2",
       "TimeTicks",
-      "MODULE-IDENTITY",
-      "Gauge32",
-      "Counter32",
       "iso",
+      "Counter32",
       "IpAddress",
-      "Integer32",
-      "OBJECT-IDENTITY",
+      "Unsigned32",
       "Counter64",
-      "OBJECT-TYPE",
+      "Gauge32",
+      "OBJECT-IDENTITY",
+      "Bits",
       "NOTIFICATION-TYPE",
+      "OBJECT-TYPE",
+      "Integer32",
       "MibIdentifier",
-      "mib-2"
+      "MODULE-IDENTITY"
     ],
     "SNMPv2-TC": [
       "DisplayString",
@@ -267,7 +267,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/INET-ADDRESS-MIB",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:31:43 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:15:54 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

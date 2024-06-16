@@ -6,24 +6,24 @@
       "NOTIFICATION-GROUP"
     ],
     "SNMPv2-SMI": [
-      "Unsigned32",
-      "Bits",
-      "OBJECT-TYPE",
-      "TimeTicks",
-      "Integer32",
-      "MibIdentifier",
-      "IpAddress",
       "MODULE-IDENTITY",
-      "Gauge32",
-      "OBJECT-IDENTITY",
-      "Counter32",
       "NOTIFICATION-TYPE",
+      "IpAddress",
+      "MibIdentifier",
+      "Integer32",
+      "TimeTicks",
+      "OBJECT-TYPE",
+      "Bits",
+      "Gauge32",
+      "iso",
       "Counter64",
-      "iso"
+      "OBJECT-IDENTITY",
+      "Unsigned32",
+      "Counter32"
     ],
     "SNMPv2-TC": [
-      "DisplayString",
-      "TEXTUAL-CONVENTION"
+      "TEXTUAL-CONVENTION",
+      "DisplayString"
     ],
     "UCD-SNMP-MIB": [
       "ucdavis"
@@ -117,7 +117,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/UCD-DEMO-MIB.txt",
-      "Produced by pysmi-1.1.12 at Sun Jun 16 00:00:07 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:28:32 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

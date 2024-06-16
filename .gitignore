@@ -15,7 +15,7 @@ __pycache__/
 bin/
 
 # ignore all JSON files
-*.json
+#*.json
 
 
 # .class files from Java

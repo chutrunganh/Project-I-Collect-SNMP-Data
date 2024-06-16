@@ -2,48 +2,48 @@
   "imports": {
     "class": "imports",
     "ATM-TC-MIB": [
-      "AtmConnKind",
-      "AtmVpIdentifier",
-      "AtmVcIdentifier",
       "atmNoClpNoScr",
-      "AtmServiceCategory",
-      "AtmVorXOperStatus",
-      "AtmVorXLastChange",
-      "AtmAddr",
       "AtmVorXAdminStatus",
+      "AtmVpIdentifier",
+      "AtmAddr",
+      "AtmConnCastType",
+      "AtmConnKind",
+      "AtmVorXLastChange",
       "AtmTrafficDescrParamIndex",
-      "AtmConnCastType"
+      "AtmVcIdentifier",
+      "AtmVorXOperStatus",
+      "AtmServiceCategory"
     ],
     "IF-MIB": [
       "InterfaceIndex",
       "ifIndex"
     ],
     "SNMPv2-CONF": [
-      "MODULE-COMPLIANCE",
       "OBJECT-GROUP",
+      "MODULE-COMPLIANCE",
       "NOTIFICATION-GROUP"
     ],
     "SNMPv2-SMI": [
-      "mib-2",
-      "Counter64",
-      "NOTIFICATION-TYPE",
-      "OBJECT-IDENTITY",
-      "Bits",
-      "IpAddress",
-      "Counter32",
       "OBJECT-TYPE",
-      "TimeTicks",
-      "Gauge32",
+      "OBJECT-IDENTITY",
       "Unsigned32",
-      "MibIdentifier",
-      "iso",
+      "TimeTicks",
+      "NOTIFICATION-TYPE",
+      "Counter64",
+      "Counter32",
       "MODULE-IDENTITY",
-      "Integer32"
+      "Bits",
+      "mib-2",
+      "Gauge32",
+      "MibIdentifier",
+      "Integer32",
+      "IpAddress",
+      "iso"
     ],
     "SNMPv2-TC": [
-      "TEXTUAL-CONVENTION",
-      "DisplayString",
       "RowStatus",
+      "DisplayString",
+      "TEXTUAL-CONVENTION",
       "TruthValue"
     ]
   },
@@ -2466,7 +2466,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/ATM-MIB",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:31:41 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:14:35 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

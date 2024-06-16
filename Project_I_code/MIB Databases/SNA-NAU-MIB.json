@@ -2,32 +2,32 @@
   "imports": {
     "class": "imports",
     "SNMPv2-CONF": [
-      "NOTIFICATION-GROUP",
       "MODULE-COMPLIANCE",
-      "OBJECT-GROUP"
+      "OBJECT-GROUP",
+      "NOTIFICATION-GROUP"
     ],
     "SNMPv2-SMI": [
-      "iso",
-      "Gauge32",
-      "TimeTicks",
-      "OBJECT-TYPE",
-      "IpAddress",
-      "Bits",
-      "NOTIFICATION-TYPE",
-      "MibIdentifier",
       "MODULE-IDENTITY",
+      "Unsigned32",
+      "Integer32",
+      "Gauge32",
+      "iso",
+      "NOTIFICATION-TYPE",
+      "Bits",
+      "Counter64",
       "OBJECT-IDENTITY",
+      "IpAddress",
+      "TimeTicks",
       "Counter32",
       "mib-2",
-      "Unsigned32",
-      "Counter64",
-      "Integer32"
+      "OBJECT-TYPE",
+      "MibIdentifier"
     ],
     "SNMPv2-TC": [
       "RowStatus",
-      "TimeStamp",
-      "DisplayString",
       "TEXTUAL-CONVENTION",
+      "DisplayString",
+      "TimeStamp",
       "InstancePointer"
     ]
   },
@@ -2579,7 +2579,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/SNA-NAU-MIB",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:31:03 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:27:36 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],

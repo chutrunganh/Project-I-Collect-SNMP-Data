@@ -157,7 +157,7 @@
                            </GridPane.margin>
                         </Label>
                         <Label alignment="CENTER" prefHeight="39.0" prefWidth="118.0" text="Type" GridPane.rowIndex="1" />
-                        <Label fx:id="lbType" prefHeight="26.0" prefWidth="440.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="lbType" prefHeight="26.0" prefWidth="440.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label alignment="CENTER" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: lightgrey;" text="Access" GridPane.rowIndex="2" />
                         <Label fx:id="lbAccess" prefHeight="40.0" prefWidth="446.0" style="-fx-background-color: lightgrey;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <padding>
@@ -165,7 +165,7 @@
                            </padding>
                         </Label>
                         <Label alignment="CENTER" prefHeight="39.0" prefWidth="118.0" text="Status" GridPane.rowIndex="3" />
-                        <Label fx:id="lbStatus" prefHeight="28.0" prefWidth="440.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="lbStatus" prefHeight="28.0" prefWidth="440.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label alignment="CENTER" prefHeight="64.0" prefWidth="120.0" style="-fx-background-color: lightgrey;" text="Description" GridPane.rowIndex="4" />
                         <TextArea fx:id="taDescription" editable="false" prefHeight="63.0" prefWidth="450.0" style="-fx-background-color: lightgrey;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>

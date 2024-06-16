@@ -1,40 +1,36 @@
 {
   "imports": {
     "class": "imports",
-    "IF-MIB": [
-      "InterfaceIndex"
-    ],
     "SNMPv2-CONF": [
-      "MODULE-COMPLIANCE",
-      "OBJECT-GROUP",
-      "NOTIFICATION-GROUP"
+      "NOTIFICATION-GROUP",
+      "MODULE-COMPLIANCE"
     ],
     "SNMPv2-SMI": [
-      "NOTIFICATION-TYPE",
-      "MODULE-IDENTITY",
-      "Integer32",
-      "iso",
-      "transmission",
-      "Counter64",
-      "TimeTicks",
-      "Bits",
       "OBJECT-IDENTITY",
-      "Unsigned32",
+      "iso",
       "OBJECT-TYPE",
-      "Counter32",
+      "transmission",
+      "NOTIFICATION-TYPE",
       "IpAddress",
+      "Integer32",
+      "Counter64",
+      "Unsigned32",
+      "Gauge32",
+      "TimeTicks",
+      "Counter32",
+      "Bits",
       "MibIdentifier",
-      "Gauge32"
+      "MODULE-IDENTITY"
     ],
     "SNMPv2-TC": [
-      "TEXTUAL-CONVENTION",
-      "DisplayString"
+      "DisplayString",
+      "TEXTUAL-CONVENTION"
     ]
   },
   "para": {
     "name": "para",
     "oid": "1.3.6.1.2.1.10.34",
-    "class": "moduleidentity"
+    "class": "objectidentity"
   },
   "paraNumber": {
     "name": "paraNumber",
@@ -42,11 +38,12 @@
     "nodetype": "scalar",
     "class": "objecttype",
     "syntax": {
-      "type": "Integer32",
+      "type": "INTEGER",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The number of ports (regardless of their current state) in the Parallel-printer-like port table."
   },
   "paraPortTable": {
     "name": "paraPortTable",
@@ -54,7 +51,8 @@
     "nodetype": "table",
     "class": "objecttype",
     "maxaccess": "not-accessible",
-    "status": "current"
+    "status": "mandatory",
+    "description": "A list of port entries. The number of entries is given by the value of paraNumber."
   },
   "paraPortEntry": {
     "name": "paraPortEntry",
@@ -64,12 +62,13 @@
     "maxaccess": "not-accessible",
     "indices": [
       {
-        "module": "PARALLEL-MIB",
+        "module": "RFC1318-MIB",
         "object": "paraPortIndex",
         "implied": 0
       }
     ],
-    "status": "current"
+    "status": "mandatory",
+    "description": "Status and parameter values for a port."
   },
   "paraPortIndex": {
     "name": "paraPortIndex",
@@ -77,11 +76,12 @@
     "nodetype": "column",
     "class": "objecttype",
     "syntax": {
-      "type": "InterfaceIndex",
+      "type": "INTEGER",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "A unique value for each port. Its value ranges between 1 and the value of paraNumber. By convention and if possible, hardware port numbers map directly to external connectors. The value for each port must remain constant at least from one re-initialization of the network management agent to the next."
   },
   "paraPortType": {
     "name": "paraPortType",
@@ -100,7 +100,8 @@
       }
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The port's hardware type."
   },
   "paraPortInSigNumber": {
     "name": "paraPortInSigNumber",
@@ -108,11 +109,12 @@
     "nodetype": "column",
     "class": "objecttype",
     "syntax": {
-      "type": "Integer32",
+      "type": "INTEGER",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The number of input signals for the port in the input signal table (paraPortInSigTable). The table contains entries only for those signals the software can detect."
   },
   "paraPortOutSigNumber": {
     "name": "paraPortOutSigNumber",
@@ -120,11 +122,12 @@
     "nodetype": "column",
     "class": "objecttype",
     "syntax": {
-      "type": "Integer32",
+      "type": "INTEGER",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The number of output signals for the port in the output signal table (paraPortOutSigTable). The table contains entries only for those signals the software can assert."
   },
   "paraInSigTable": {
     "name": "paraInSigTable",
@@ -132,7 +135,8 @@
     "nodetype": "table",
     "class": "objecttype",
     "maxaccess": "not-accessible",
-    "status": "current"
+    "status": "mandatory",
+    "description": "A list of port input control signal entries."
   },
   "paraInSigEntry": {
     "name": "paraInSigEntry",
@@ -142,17 +146,18 @@
     "maxaccess": "not-accessible",
     "indices": [
       {
-        "module": "PARALLEL-MIB",
+        "module": "RFC1318-MIB",
         "object": "paraInSigPortIndex",
         "implied": 0
       },
       {
-        "module": "PARALLEL-MIB",
+        "module": "RFC1318-MIB",
         "object": "paraInSigName",
         "implied": 0
       }
     ],
-    "status": "current"
+    "status": "mandatory",
+    "description": "Input control signal status for a hardware port."
   },
   "paraInSigPortIndex": {
     "name": "paraInSigPortIndex",
@@ -160,11 +165,12 @@
     "nodetype": "column",
     "class": "objecttype",
     "syntax": {
-      "type": "InterfaceIndex",
+      "type": "INTEGER",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The value of paraPortIndex for the port to which this entry belongs."
   },
   "paraInSigName": {
     "name": "paraInSigName",
@@ -185,7 +191,8 @@
       }
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "Identification of a hardware signal."
   },
   "paraInSigState": {
     "name": "paraInSigState",
@@ -204,7 +211,8 @@
       }
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The current signal state."
   },
   "paraInSigChanges": {
     "name": "paraInSigChanges",
@@ -212,11 +220,12 @@
     "nodetype": "column",
     "class": "objecttype",
     "syntax": {
-      "type": "Counter32",
+      "type": "Counter",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The number of times the signal has changed from 'on' to 'off' or from 'off' to 'on'."
   },
   "paraOutSigTable": {
     "name": "paraOutSigTable",
@@ -224,7 +233,8 @@
     "nodetype": "table",
     "class": "objecttype",
     "maxaccess": "not-accessible",
-    "status": "current"
+    "status": "mandatory",
+    "description": "A list of port output control signal entries."
   },
   "paraOutSigEntry": {
     "name": "paraOutSigEntry",
@@ -234,17 +244,18 @@
     "maxaccess": "not-accessible",
     "indices": [
       {
-        "module": "PARALLEL-MIB",
+        "module": "RFC1318-MIB",
         "object": "paraOutSigPortIndex",
         "implied": 0
       },
       {
-        "module": "PARALLEL-MIB",
+        "module": "RFC1318-MIB",
         "object": "paraOutSigName",
         "implied": 0
       }
     ],
-    "status": "current"
+    "status": "mandatory",
+    "description": "Output control signal status for a hardware port."
   },
   "paraOutSigPortIndex": {
     "name": "paraOutSigPortIndex",
@@ -252,11 +263,12 @@
     "nodetype": "column",
     "class": "objecttype",
     "syntax": {
-      "type": "InterfaceIndex",
+      "type": "INTEGER",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The value of paraPortIndex for the port to which this entry belongs."
   },
   "paraOutSigName": {
     "name": "paraOutSigName",
@@ -277,7 +289,8 @@
       }
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "Identification of a hardware signal."
   },
   "paraOutSigState": {
     "name": "paraOutSigState",
@@ -296,7 +309,8 @@
       }
     },
     "maxaccess": "read-only",
-    "status": "current"
+    "status": "mandatory",
+    "description": "The current signal state."
   },
   "paraOutSigChanges": {
     "name": "paraOutSigChanges",
@@ -304,106 +318,20 @@
     "nodetype": "column",
     "class": "objecttype",
     "syntax": {
-      "type": "Counter32",
+      "type": "Counter",
       "class": "type"
     },
     "maxaccess": "read-only",
-    "status": "current"
-  },
-  "paraConformance": {
-    "name": "paraConformance",
-    "oid": "1.3.6.1.2.1.10.34.5",
-    "class": "objectidentity"
-  },
-  "paraGroups": {
-    "name": "paraGroups",
-    "oid": "1.3.6.1.2.1.10.34.5.1",
-    "class": "objectidentity"
-  },
-  "paraCompliances": {
-    "name": "paraCompliances",
-    "oid": "1.3.6.1.2.1.10.34.5.2",
-    "class": "objectidentity"
-  },
-  "paraCompliance": {
-    "name": "paraCompliance",
-    "oid": "1.3.6.1.2.1.10.34.5.2.1",
-    "class": "modulecompliance",
-    "modulecompliance": [
-      {
-        "object": "paraGroup",
-        "module": "PARALLEL-MIB"
-      }
-    ],
-    "status": "current"
-  },
-  "paraGroup": {
-    "name": "paraGroup",
-    "oid": "1.3.6.1.2.1.10.34.5.1.1",
-    "class": "objectgroup",
-    "objects": [
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraNumber"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraPortIndex"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraPortType"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraPortInSigNumber"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraPortOutSigNumber"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraInSigPortIndex"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraInSigName"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraInSigState"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraInSigChanges"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraOutSigPortIndex"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraOutSigName"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraOutSigState"
-      },
-      {
-        "module": "PARALLEL-MIB",
-        "object": "paraOutSigChanges"
-      }
-    ],
-    "status": "current"
+    "status": "mandatory",
+    "description": "The number of times the signal has changed from 'on' to 'off' or from 'off' to 'on'."
   },
   "meta": {
     "comments": [
-      "ASN.1 source file:///usr/share/snmp/mibs/ietf/PARALLEL-MIB",
-      "Produced by pysmi-1.1.12 at Sun Jun 16 19:15:56 2024",
-      "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
-      "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
+      "ASN.1 source file:///Users/neermitt/kusanagi/mibs.snmplabs.com/asn1/RFC1318-MIB",
+      "Produced by pysmi-0.3.4 at Fri May 24 21:19:24 2019",
+      "On host NEERMITT-M-J0NV platform Darwin version 18.6.0 by user neermitt",
+      "Using Python version 3.7.3 (default, Mar 27 2019, 09:23:15) "
     ],
-    "module": "PARALLEL-MIB"
+    "module": "RFC1318-MIB"
   }
 }

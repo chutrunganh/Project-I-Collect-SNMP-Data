@@ -6,21 +6,21 @@
       "MODULE-COMPLIANCE"
     ],
     "SNMPv2-SMI": [
-      "MODULE-IDENTITY",
-      "mib-2",
-      "OBJECT-IDENTITY",
-      "MibIdentifier",
       "Counter32",
-      "Bits",
-      "iso",
+      "MODULE-IDENTITY",
       "IpAddress",
-      "TimeTicks",
-      "NOTIFICATION-TYPE",
-      "Integer32",
+      "OBJECT-IDENTITY",
       "Gauge32",
-      "OBJECT-TYPE",
+      "Unsigned32",
       "Counter64",
-      "Unsigned32"
+      "NOTIFICATION-TYPE",
+      "MibIdentifier",
+      "mib-2",
+      "TimeTicks",
+      "iso",
+      "Integer32",
+      "Bits",
+      "OBJECT-TYPE"
     ],
     "SNMPv2-TC": [
       "DisplayString",
@@ -28,9 +28,9 @@
     ],
     "TCP-MIB": [
       "tcpConnRemPort",
-      "tcpConnLocalAddress",
+      "tcpConnLocalPort",
       "tcpConnRemAddress",
-      "tcpConnLocalPort"
+      "tcpConnLocalAddress"
     ]
   },
   "ident": {
@@ -182,7 +182,7 @@
   "meta": {
     "comments": [
       "ASN.1 source file:///usr/share/snmp/mibs/ietf/RFC1414-MIB",
-      "Produced by pysmi-1.1.12 at Sat Jun 15 23:53:45 2024",
+      "Produced by pysmi-1.1.12 at Sun Jun 16 19:25:40 2024",
       "On host ThinkPad-CTA platform Linux version 6.5.0-1020-oem by user chutrunganh",
       "Using Python version 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]"
     ],
