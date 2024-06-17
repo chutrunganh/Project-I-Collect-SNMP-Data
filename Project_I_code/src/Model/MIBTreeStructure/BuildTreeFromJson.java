@@ -9,14 +9,15 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * @author: Chu Trung Anh 20225564
  * This class contains all necessary methods to build a tree structure from a directory of MIB files. To test if the tree can be build successfully,
- *  we only need this class and the Node class, then using the TestBuildTree class in the Test package to run the test, the resul will be displayed in a TreeView object.
+ *  we only need this class and the Node class, then using the TestBuildTree class in the Test package to run the test, the resul will be displayed in a TreeView object on javaFX.
  * @return: the TreeView object in javafx
  */
 
 public class BuildTreeFromJson {
     private final Node root = new Node("root", "", "", "", "", "", "", null); // Root node of the tree
-    // Using the same root node for all trees created by this class, allowing to concatenate multiple MIB files into a single tree
+    // Using the same root node for all trees created by this class, allowing to concatenate/merge multiple MIB files into a single tree
 
     /**
      * Build a tree structure from a single JSON file. With each node in the JSON file, extract the following information: name, oid, nodeType, type, access, status, description, constraints
@@ -30,6 +31,7 @@ public class BuildTreeFromJson {
         while (fields.hasNext()) {
             Map.Entry<String, JsonNode> field = fields.next();
 
+            // Extract information from the JSON object
             String name = Optional.ofNullable(field.getValue().get("name")).map(JsonNode::asText).orElse(null);
             String oid = Optional.ofNullable(field.getValue().get("oid")).map(JsonNode::asText).orElse(null);
             String nodeType = Optional.ofNullable(field.getValue().get("nodetype")).map(JsonNode::asText).orElse(null);
@@ -46,6 +48,8 @@ public class BuildTreeFromJson {
             String access = field.getValue().has("maxaccess") ? field.getValue().get("maxaccess").asText() : null;
             String status = field.getValue().has("status") ? field.getValue().get("status").asText() : null;
             String description = Optional.ofNullable(field.getValue().get("description")).map(JsonNode::asText).orElse(null);
+
+            //After extracting the information, add the node to the tree structure
             addNode(name, oid, nodeType, type, access, status, description, constraints);
         }
     }
@@ -96,7 +100,7 @@ public class BuildTreeFromJson {
     }
 
     /**
-     * Convert the tree structure to a TreeItem object for display in a TreeView.
+     * Convert the tree structure to a TreeItem object for display in a javafx TreeView.
      */
     public TreeItem<Node> convertNodeToTreeItem(Node node) {
         TreeItem<Node> treeItem = new TreeItem<>(node);
@@ -106,7 +110,7 @@ public class BuildTreeFromJson {
         return treeItem;
     }
 
-
+    // Getter for the root node
     public Node getRoot() {
         return root;
     }

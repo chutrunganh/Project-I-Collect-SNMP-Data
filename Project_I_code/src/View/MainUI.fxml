@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
+<!--@author Chu Trung Anh HUST 20225564 -->
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Control.MainController">
     <children>
         <MenuBar>
@@ -94,15 +94,25 @@
                             <font>
                                 <Font name="System Bold" size="13.0" />
                             </font>
+                            <!--@author Chu Trung Anh HUST 20225564 -->
                         </Label>
                         <TextField fx:id="tfOID" layoutX="79.0" layoutY="6.0" prefHeight="24.0" prefWidth="468.0">
                             <font>
                                 <Font size="11.0" />
                             </font>
                         </TextField>
-                  <Button layoutX="79.0" layoutY="44.0" mnemonicParsing="false" onMouseClicked="#SNMPGetClicked" text="GET" />
-                  <Button layoutX="305.0" layoutY="44.0" mnemonicParsing="false" onMouseClicked="#SNMPWalkClicked" text="WALK" />
-                  <Button layoutX="180.0" layoutY="44.0" mnemonicParsing="false" text="GET NEXT" />
+                  <Button layoutX="79.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#SNMPGetClicked" prefHeight="33.0" prefWidth="62.0" text="GET">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button layoutX="295.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#SNMPWalkClicked" prefHeight="33.0" prefWidth="69.0" text="WALK">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button layoutX="169.0" layoutY="40.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="100.0" text="GET NEXT">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
                     </children>
                 </AnchorPane>
                 <ScrollPane layoutX="320.0" layoutY="134.0" prefHeight="289.0" prefWidth="567.0">
@@ -120,7 +130,8 @@
                            <children>
                               <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#clearTableClicked" prefHeight="45.0" prefWidth="25.0" text="X" textFill="#e80606">
                                  <font>
-                                    <Font name="System Bold" size="18.0" />
+                                    <Font name="System Bold" size="20.0" />
+                                     <!--@author Chu Trung Anh HUST 20225564 -->
                                  </font>
                                  <FlowPane.margin>
                                     <Insets top="30.0" />
@@ -145,6 +156,7 @@
                       <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="69.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
+                        <!--@author Chu Trung Anh HUST 20225564 -->
                     </rowConstraints>
                      <children>
                         <Label alignment="CENTER" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: lightgrey;" text="Name" />
@@ -157,7 +169,11 @@
                            </GridPane.margin>
                         </Label>
                         <Label alignment="CENTER" prefHeight="39.0" prefWidth="118.0" text="Type" GridPane.rowIndex="1" />
-                        <Label fx:id="lbType" prefHeight="26.0" prefWidth="440.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="lbType" prefHeight="21.0" prefWidth="454.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
                         <Label alignment="CENTER" prefHeight="40.0" prefWidth="122.0" style="-fx-background-color: lightgrey;" text="Access" GridPane.rowIndex="2" />
                         <Label fx:id="lbAccess" prefHeight="40.0" prefWidth="446.0" style="-fx-background-color: lightgrey;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <padding>
@@ -165,7 +181,12 @@
                            </padding>
                         </Label>
                         <Label alignment="CENTER" prefHeight="39.0" prefWidth="118.0" text="Status" GridPane.rowIndex="3" />
-                        <Label fx:id="lbStatus" prefHeight="28.0" prefWidth="440.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label fx:id="lbStatus" prefHeight="21.0" prefWidth="454.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <!--@author Chu Trung Anh HUST 20225564 -->
+                            <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
                         <Label alignment="CENTER" prefHeight="64.0" prefWidth="120.0" style="-fx-background-color: lightgrey;" text="Description" GridPane.rowIndex="4" />
                         <TextArea fx:id="taDescription" editable="false" prefHeight="63.0" prefWidth="450.0" style="-fx-background-color: lightgrey;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>

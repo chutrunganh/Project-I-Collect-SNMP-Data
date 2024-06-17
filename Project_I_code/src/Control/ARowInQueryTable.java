@@ -1,6 +1,8 @@
 package Control;
 
-
+/** @author Chu Trung Anh 20225564
+ * This class defined the structure of a row in the query table
+ */
 public class ARowInQueryTable {
     private final String name;
     private final String value;

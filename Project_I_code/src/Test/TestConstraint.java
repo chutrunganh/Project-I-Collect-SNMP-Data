@@ -8,6 +8,11 @@ import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
 
+/** @author: Chu Trung Anh 20225564
+ * Test for MibLoader class and SnmpResponseFormatter class
+ * This class is used to test if we are successfully finding the Node in MIB files based on the OID we specified, then process the Enumeration constraints
+ * The OID and return value can be simulated by the user.
+ */
 public class TestConstraint {
 
     public static void main(String[] args) {
@@ -34,7 +39,7 @@ public class TestConstraint {
             // Simulate SNMP response
             VariableBinding vb = new VariableBinding();
             vb.setOid(new OID(oidToLookup));
-            vb.setVariable(new Integer32(2)); // Simulate an integer value of 1
+            vb.setVariable(new Integer32(2));
 
             // Format SNMP response
             String formattedResponse = SnmpResponseFormatter.format(vb.getVariable(), node.type, node.constraints);

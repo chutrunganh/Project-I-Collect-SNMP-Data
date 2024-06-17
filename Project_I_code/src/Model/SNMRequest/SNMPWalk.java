@@ -39,14 +39,17 @@ import java.util.List;
  *
  * */
 
-/*
+/** @author Chu Trung Anh 20225564
  * When performing SNMP Walk, we scan the whole tree structure (or a part of it if we specify the start OID) of the SNMP agent.
  * This tree structure is already embedded in the SNMP agent firewall. That is why we can perform SNMP Walk without providing any
  * MIB file.
- *
+ * <p>
  * But if we want to read the value retrieved from the SNMP Walk (in human-readable format), we will need to know the data type of the
  * OID we are scanning. And the data type associates with the OID is stored in the MIB files provided by vendors for their specific devices.
- * That is why we need the MIB files.
+ * That is why we need the MIB files. These parse processing will be further implemented in the SnmpResponseFormatter class.
+ *
+ * @input: This SNMPWalk class takes the start OID, IP address, community string of the SNMP agent as input, then perform the SNMP Walk operation
+ * @return: a list of VariableBinding objects, each object contains the OID and the value of the OID in the SNMP agent
  * */
 public class SNMPWalk {
 

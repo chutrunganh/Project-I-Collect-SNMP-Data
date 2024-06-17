@@ -18,11 +18,12 @@ import java.io.IOException;
 /*
  * To verify that this class work correctly, we can use SNMP command line utility in 'snmp' package
  * by 'sudo apt install snmp', then run: 'snmpget -v2c -c public localhost desired_OID', some result
- * can b different from the result of
+ * can be different from the result of
  * this class: https://stackoverflow.com/questions/70892857/why-did-snmp4j-return-different-result-with-net-snmp
  */
 
 /**
+ * @author Chu Trung Anh 20225564
  * Perform SNMP GET request to retrieve the value of a specific OID from an SNMP agent.
  *
  * @input: ipAddress (UdpAddress data type), community string, and OID we want to scan
@@ -146,8 +147,7 @@ public class SNMPGet {
     }
 
     /**
-     * Function to get the VariableBinding object containing the response data
-     *
+     * Getter
      * @return The VariableBinding object containing the response data
      */
     public VariableBinding getVariableBinding() {

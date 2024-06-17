@@ -6,6 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author: Chu Trung Anh 20225564
+ * This class is used to find the root OID of MIB files. The root OID is the longest common prefix of all OIDs in the file.
+ * it iterates through all the JSON files in the specified directory and finds the root OID for each file. These root OIDs help optimizing
+ * the finding process of Node based on the OID in SNMP Walk request.
+ */
+
 public class MibRootOidFinder {
     public static void main(String[] args) {
         // Set the directory containing the JSON files

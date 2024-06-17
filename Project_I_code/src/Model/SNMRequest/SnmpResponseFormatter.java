@@ -4,7 +4,13 @@ import java.util.Calendar;
 import java.util.Map;
 
 // We tried to use the Mibble API to get the data type of the given OID (getType(), getTag(), getReferenceTo(),...), but it just returns the primitive type instead of the Textual Convention.
-//     * for example, it just returns OCTET STRING instead of DisplayString or DataAndTime,...
+// for example, it just returns OCTET STRING instead of DisplayString or DataAndTime,...
+
+/**
+ * This class contains a set of static methods to format the response from an SNMP agent based on the data type, constraint of the Node.
+ * @input: the response from the SNMP agent, the data type, constraints of the Node
+ * @return: the formatted response in human-readable format (String0
+ */
 public class SnmpResponseFormatter {
 
     public static String format(Object variable, String dataType, Map<String, Object> constraints) {
@@ -18,17 +24,18 @@ public class SnmpResponseFormatter {
             case "integer":
                 return formatInteger(variable, constraints);
 
-            case "displaystring":
-                return formatDisplayString(variable, constraints);
             case "dateandtime":
                 return formatDataAbdTime(variable, constraints);
-            // Add more cases for other data types as needed
 
             default:
                 return variable.toString();
         }
     }
 
+    /**
+     * With integer data type, we can have some constraints like enumeration, size,...
+     * To test for the Enumeration constraints, use the TestConstraint class in the Test package to simulate the SNMP response
+     */
     private static String formatInteger(Object variable, Map<String, Object> constraints) {
         //System.out.println("Formatting Integer with constraints: " + constraints);
         if (constraints != null && constraints.containsKey("enumeration")) {
@@ -45,14 +52,9 @@ public class SnmpResponseFormatter {
         return variable.toString();
     }
 
-    private static String formatDisplayString(Object variable, Map<String, Object> constraints) {
-        // You can add more formatting based on constraints if needed
-        return variable.toString();
-    }
 
 
-    //DateAndTime
-    /*
+    /** DateAndTime
      * Raw response looks like: 07:e8:05:10:08:34:12:00:2b:07:00
      * Seems like DateAndTime is a child of OCTET STRING, as: http://www.ireasoning.com/javadocs/com/ireasoning/protocol/snmp/SnmpDateAndTime.html
      * and https://docs.lextudio.com/blog/snmp-pro-dateandtime-syntax-support-e99abc51bc2f

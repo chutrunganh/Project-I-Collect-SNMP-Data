@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-/**
+/** @author Chu Trung Anh 20225564
  * This class is used to test for the BuildTreeFromJson class and the Node class.
  * If two of these classes run successfully, there will be a TreeView object in JavaFX to display the tree structure built from the MIB files when running this
  * TestBuildTree class. Also, clicking on each node in the TreeView will display the attributes of the node in the console.

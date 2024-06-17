@@ -3,6 +3,10 @@ package Test;
 import Model.MIBTreeStructure.MibLoader;
 import Model.MIBTreeStructure.Node;
 
+/** @author: Chu Trung Anh 20225564
+ * This class is used to test the lookup functionality of the MibLoader class. It loads MIB files from a directory and performs a lookup for an OID we specified, return
+ * the corresponding Node if found.
+ */
 public class LookUpForOIDTest {
 
     public static void main(String[] args) {
@@ -11,8 +15,6 @@ public class LookUpForOIDTest {
         mibLoader.loadMibsFromFolder("Project_I_code/MIB Databases");
 
         // Example OID to lookup
-        //String oidToLookup = "1.3.6.1.2.1.1.1"; // Example OID
-
         String oidToLookup = "1.3.6.1.2.1.2.2.1.8";
 
         // Perform lookup

@@ -29,27 +29,25 @@
  
 <!-- Screenshot of the app -->
 <p align="center">
-  <img src="Image/ScreenshotOfApp.png" alt="Not Found Image" width="300">
+  <img src="Image/AppDemo.png" alt="Not Found Image" width="600">
 </p>
-Replace This Cat By Gif App Screenshot Demo later
+
 
 <p><img src="Image/ColorLine.png" alt="Not Found Image"> </P>
 
 # Installation ⚒️
-
->Turn this section into a separate InstallGuide.md later : Please visit (hyperlink) our docs for the installation guide
-
-**Using a ready-made build (Recommened)**
-
-Download the lastest release that compatible with your OS from the releases page (Create later).
-
-**Building yourself**
 
 1. Clone the repository
 ```bash
 git clone https://img.shields.io/badge/MoreBadgeLater-Something-blue
 ```
 2. Install dependencies
+java-sdk (version 17 or later), javafx to run the application 
+
+fasterxml.jackson.core.databind for reading JSON file
+
+snmp4j for SNMP operation
+python , pysnmp-pysmi to conver .mib to JSON file (no need if you do not intend to re complie the MIB file)
 
 ***Rewrite this section later since our team change to Java instead of Python***
 
