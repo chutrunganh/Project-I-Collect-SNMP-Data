@@ -43,6 +43,7 @@ git clone https://img.shields.io/badge/MoreBadgeLater-Something-blue
 ```
 2. Install dependencies
 java-sdk (version 17 or later), javafx to run the application 
+ don forget the VM option to run the application: --module-path /home/chutrunganh/Downloads/javafx-sdk-17.0.11/lib --add-modules javafx.controls,javafx.fxml
 
 fasterxml.jackson.core.databind for reading JSON file
 
