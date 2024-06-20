@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
@@ -25,6 +26,7 @@ import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.VariableBinding;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -198,6 +200,40 @@ public class MainController {
         showMIBFileInLoadPane(file);
     }
 
+    @FXML
+    void aboutUsClicked(ActionEvent event) {
+        // Create an Alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About Us");
+        alert.setHeaderText("SNMP Browser");
+
+        // Create a TextFlow to include a hyperlink
+        Label label = new Label("Acknowledgments:\n" +
+                "This application is developed by Chu Trung Anh (20225564) \nfor the Project I,Semester " +
+                "20232, Hanoi University of Science \nand Technology." +
+                "\nVisit our website at: ");
+        Hyperlink link = new Hyperlink("""
+                https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git""");
+
+
+        TextFlow textFlow = new TextFlow(label, link);
+        alert.getDialogPane().setContent(textFlow);
+
+        // Set preferred width and height
+        alert.getDialogPane().setPrefSize(450, 250);
+
+        // Show the Alert
+        alert.showAndWait();
+    }
+
+
+    @FXML
+    void unloadAllMIBsClicked(ActionEvent event) {
+        MIBsLoaded.getChildren().clear();
+        MIBTreeDisplay.getChildren().clear();
+        ShowingMIBTreeName.setText("Showing MIB Tree: Default MIBs");
+    }
+
 
     /**
     * Function to show the MIBs loaded/opened by the user in the MIBsLoaded FlowPane
@@ -230,6 +266,7 @@ public class MainController {
         }
     }
 
+
     @FXML
     void returnToDefaultClicked(MouseEvent event) throws IOException {
         // Build the tree view from the default MIB files
@@ -255,31 +292,6 @@ public class MainController {
     }
 
 
-    /**
-     * Function to display the TreeView of the chosen MIB from MIBsLoaded FlowPane. The TreeView is proceeded by the JsonToTreeView class in
-     * the MIBTreeView class
-     * to transform the JSON file to a TreeView
-     * */
-    public void displayTreeFromChosenMIB(File jsonFile) throws IOException {
-        //Clear the MIBTreeDisplay AnchorPane before displaying the new MIB
-        MIBTreeDisplay.getChildren().clear();
-
-        BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
-
-        List<String> mibFilePaths = Arrays.asList(
-                "Project_I_code/MIB Databases/RFC1213-MIB.json",
-                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
-        );
-        try {
-            treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
-        TreeView<Node> treeView = new TreeView<>(rootItem);
-
-    }
 
 
     public TreeView<Node> displayTreeFromFiles(List<String> mibFilePaths) throws IOException {
@@ -675,6 +687,67 @@ public class MainController {
             }
         }
         return null;
+    }
+
+    @FXML
+    void searchButtonClicked(MouseEvent event) {
+        // Create a TextInputDialog to prompt the user for the name to search
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Search");
+        dialog.setHeaderText("Enter the name to search:");
+        Optional<String> result = dialog.showAndWait();
+
+        // If the user entered a name, search for it in the queryTable
+        if (result.isPresent()) {
+            String nameToSearch = result.get();
+
+            // Iterate over the items in the queryTable
+            for (ARowInQueryTable row : queryTable.getItems()) {
+                // If the name of the row matches the name to search, select the row
+                if (row.getName().toLowerCase().contains(nameToSearch.toLowerCase())) {
+                    queryTable.getSelectionModel().select(row);
+                    queryTable.scrollTo(row);
+                    break;
+                }
+            }
+        }
+    }
+
+    @FXML
+    void saveButtonClicked(MouseEvent event) {
+        // Create a FileChooser to prompt the user for the file to save
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Query Table");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showSaveDialog(null);
+
+        // If the user selected a file, save the queryTable to it
+        if (file != null) {
+            try {
+                // Create a FileWriter to write the queryTable to the file
+                FileWriter writer = new FileWriter(file);
+
+                // Write the header to the CSV file
+                writer.append("Name,Type,Value\n");
+
+                // Iterate over the items in the queryTable
+                for (ARowInQueryTable row : queryTable.getItems()) {
+                    // Write each row to the CSV file
+                    writer.append(row.getName());
+                    writer.append(",");
+                    writer.append(row.getType());
+                    writer.append(",");
+                    writer.append(row.getValue());
+                    writer.append("\n");
+                }
+
+                // Close the FileWriter
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

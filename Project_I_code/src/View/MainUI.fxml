@@ -16,6 +16,8 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
@@ -34,12 +36,13 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openMIBClicked" text="Open MIB" />
                         <MenuItem mnemonicParsing="false" onAction="#importMIBClicked" text="Import MIB" />
+                  <MenuItem mnemonicParsing="false" onAction="#unloadAllMIBsClicked" text="Unload all MIBs" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit" />
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About us" />
+                        <MenuItem mnemonicParsing="false" onAction="#aboutUsClicked" text="About us" />
                     </items>
                 </Menu>
             </menus>
@@ -138,16 +141,16 @@
                <content>
                   <AnchorPane prefHeight="308.0" prefWidth="654.0">
                      <children>
-                        <TableView fx:id="queryTable" prefHeight="300.0" prefWidth="631.0">
+                        <TableView fx:id="queryTable" prefHeight="300.0" prefWidth="619.0">
                            <columns>
                               <TableColumn fx:id="nameColumn" prefWidth="149.0" text="Name" />
                               <TableColumn fx:id="typeColumn" prefWidth="178.0" text="Type" />
                               <TableColumn fx:id="valueColumn" prefWidth="303.0" text="Value" />
                            </columns>
                         </TableView>
-                        <FlowPane layoutX="628.0" prefHeight="299.0" prefWidth="25.0">
+                        <FlowPane layoutX="619.0" prefHeight="299.0" prefWidth="34.0">
                            <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#clearTableClicked" prefHeight="45.0" prefWidth="25.0" text="X" textFill="#e80606">
+                              <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#clearTableClicked" prefHeight="38.0" prefWidth="35.0" text="X" textFill="#e80606">
                                  <font>
                                     <Font name="System Bold" size="20.0" />
                                      <!--@author Chu Trung Anh HUST 20225564 -->
@@ -163,6 +166,22 @@
                                     </Tooltip>
                                  </tooltip>
                               </Label>
+                              <ImageView fitHeight="30.0" fitWidth="27.0" onMouseClicked="#searchButtonClicked" pickOnBounds="true" preserveRatio="true">
+                                 <FlowPane.margin>
+                                    <Insets left="5.0" right="3.0" top="3.0" />
+                                 </FlowPane.margin>
+                                 <image>
+                                    <Image url="@../AppImages/search.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="23.0" fitWidth="27.0" onMouseClicked="#saveButtonClicked" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../AppImages/diskette.png" />
+                                 </image>
+                                 <FlowPane.margin>
+                                    <Insets left="6.0" top="10.0" />
+                                 </FlowPane.margin>
+                              </ImageView>
                            </children>
                         </FlowPane>
                      </children>
