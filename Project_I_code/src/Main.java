@@ -9,7 +9,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("View/MainUI.fxml"));
         primaryStage.setTitle("SNMP Browser Tool");
-        primaryStage.setScene(new Scene(root, 885, 620));
+        primaryStage.setScene(new Scene(root, 977, 653));
         primaryStage.show();
     }
 

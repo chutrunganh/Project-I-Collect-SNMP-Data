@@ -6,9 +6,7 @@ import Model.MIBTreeStructure.Node;
 import Model.SNMRequest.SNMPGet;
 import Model.SNMRequest.SNMPGetNext;
 import Model.SNMRequest.SNMPWalk;
-import Model.SNMRequest.SnmpResponseFormatter;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.FileChooser;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.UdpAddress;
@@ -27,6 +26,8 @@ import org.snmp4j.smi.VariableBinding;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import static Model.SNMRequest.SnmpResponseFormatter.format;
@@ -39,12 +40,13 @@ public class MainController {
 
     // Left side of the application
     @FXML private AnchorPane MIBTreeDisplay;  //Use to display list of MIBs which are loaded/opened by users + "Loaded MIBs" label
-    @FXML private FlowPane MIBsloaded; //Use to display list of MIBs which are loaded/opened by users
+    @FXML private FlowPane MIBsLoaded; //Use to display list of MIBs which are loaded/opened by users
+    @FXML private Label ShowingMIBTreeName; //Label to show the name of the MIB tree being displayed
     @FXML private TextField tfOID;
 
     @FXML
-    private ChoiceBox<String> chooseVendor;
-    List<String> vendorMibs = new ArrayList<>();
+    private ComboBox<String> chooseVendor;
+    List<String> vendorMibs = new ArrayList<>(); //A variable to store some common MIBs of the selected vendor
 
 
     // Bottom right side of the application
@@ -63,7 +65,8 @@ public class MainController {
     @FXML private TableColumn<ARowInQueryTable, String> typeColumn;
 
 
-    private List<JsonNode> mibTree = new ArrayList<>();
+
+    TreeView<Node> treeView;
 
 
     //Some default values for attributes used across the application
@@ -80,22 +83,192 @@ public class MainController {
      */
     @FXML
     public void initialize() throws IOException {
-        //Load the default MIBs to the MIBsloaded FlowPane
-//        File defaultMIB1 = new File("Project_I_code/MIB Databases/RFC1213-MIB.json");
-//        File defaultMIB2 = new File("Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json");
-//        showMIBsLoaded(defaultMIB1);
-//        showMIBsLoaded(defaultMIB2);
 
 
-        //loadMIBs();
+        treeView = new TreeView<>();
+        returnToDefaultClicked(null);
 
-        BuildTreeFromJson treeBuilder = new BuildTreeFromJson(); //Call the BuildTreeFromJson class to build the tree structure from the MIB files
+
+
+        //Initialize the query table
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+
+        // Add an event listener to the TableView. Double-lick on a row to highlight the corresponding node in the TreeView
+        // From the name cell of the row, find the corresponding node in the TreeView with corresponding name and highlight/move to it.
+        queryTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                ARowInQueryTable selectedRow = queryTable.getSelectionModel().getSelectedItem();
+                if (selectedRow != null) {
+
+                    //If the node name contains postfix ".any_number", remove it before highlighting
+                    //(e.g. "hrDeviceStatus.25", "hrDeviceStatus.10", "hrDeviceStatus.2004", etc.)
+                    // Rows by SNMP walk will always have a postfix, SNMP Get rows will not if the node is scalar object
+                    int lastDotPosition = selectedRow.getName().lastIndexOf(".");
+
+                    if (lastDotPosition != -1) { //Check if the node name contains a postfix, then remove it and only search for the node name
+                        String nodeName = selectedRow.getName().substring(0, lastDotPosition);
+                        System.out.println("Node name to search: " + nodeName);
+                        highlightNodeInTreeView(treeView, nodeName);
+                    } else { //If the node name does not contain a postfix, search for the node name as it is
+                        highlightNodeInTreeView(treeView, selectedRow.getName());
+                    }
+                }
+            }
+        });
+
+
+        //Choice Box
+        ObservableList<String> vendors = FXCollections.observableArrayList("Cisco", "Asus", "Huawei");
+        //Extend the item to the choice box height and width
+        chooseVendor.setItems(vendors);
+
+        //Add listener to the choice box
+        chooseVendor.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("Selected vendor: " + newValue);
+                vendorMibs.clear();
+                if (newValue.equals("Cisco")) {
+                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-CVP-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-ENVMON-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-CDP-MIB.json");
+                } else if (newValue.equals("Asus")) {
+                    vendorMibs.add("Project_I_code/MIB Databases/PEGASUS-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/RT-AC68U-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/SWITCHING-MIB.json");
+                } else if (newValue.equals("Huawei")) {
+                    vendorMibs.add("Project_I_code/MIB Databases/A3COM-HUAWEI-IPV6-ADDRESS-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/HUAWEI-LINE-COMMON-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/HUAWEI-HTTP-MIB.json");
+                }
+                System.out.println("Vendor MIBs: " + vendorMibs);
+                for (String mib : vendorMibs) {
+                    showMIBFileInLoadPane(new File(mib));
+                }
+            }
+        });
+
+
+    }
+
+    @FXML
+    /**
+     * Only open the MIB without saving it to the MIB Databases directory
+     * Then show the MIB in the MIBsLoaded FlowPane
+     */
+    void openMIBClicked(ActionEvent event) throws IOException {
+        //System.out.println("Open MIB Clicked");
+
+        //Ask user to select a file
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+        System.out.println("Opening: " + file.getName() + ".");
+
+        //Show the chosen file in loaded section
+        showMIBFileInLoadPane(file);
+    }
+
+
+    @FXML
+    /**
+     * This method is called when the Load MIB button is clicked
+     * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
+     * Then show the MIB in the MIBsLoaded FlowPane
+     */
+    void importMIBClicked(ActionEvent event) {
+        //System.out.println("Import MIB Clicked");
+
+        //Ask user to select a file
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+        System.out.println("Opening: " + file.getName() + ".");
+
+        try { //Save the file to the MIB Database directory
+
+            //Create a new file in the MIB Databases folder and write the contents of the selected file to it
+            Files.copy(file.toPath(), new File("Project_I_code/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File Saved Successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        showMIBFileInLoadPane(file);
+    }
+
+
+    /**
+    * Function to show the MIBs loaded/opened by the user in the MIBsLoaded FlowPane
+    */
+    public void showMIBFileInLoadPane(File file) {
+        if (file != null) {
+            Label fileLabel = new Label(file.getName());
+            //Set fileLabel width to the width of the FlowPane so that new labels are added horizontally
+            fileLabel.prefWidthProperty().bind(MIBsLoaded.widthProperty());
+
+            MIBsLoaded.getChildren().add(fileLabel);
+
+            // Event handler for the file label. If use clicks on the label, display the TreeView of the chosen MIB
+            fileLabel.setOnMouseClicked(e -> {
+                try {
+                    MIBTreeDisplay.getChildren().clear();
+                    TreeView<Node> treeView = displayTreeFromFiles(List.of(file.getAbsolutePath()));
+                    MIBTreeDisplay.getChildren().clear();
+                    //Expand the treeview to fit the Anchor Pane width and height
+                    treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
+                    treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
+                    MIBTreeDisplay.getChildren().add(treeView);
+
+                    System.out.println("Displaying MIB: " + file.getName());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
+        }
+    }
+
+    @FXML
+    void returnToDefaultClicked(MouseEvent event) throws IOException {
+        // Build the tree view from the default MIB files
         List<String> mibFilePaths = Arrays.asList(
                 "Project_I_code/MIB Databases/SNMPv2-SMI.json",
                 "Project_I_code/MIB Databases/RFC1213-MIB.json",
                 "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json",
                 "Project_I_code/MIB Databases/SNMPv2-MIB.json",
                 "Project_I_code/MIB Databases/IF-MIB.json"
+        );
+
+
+       treeView = displayTreeFromFiles(mibFilePaths);
+
+        //This one is specifically for the default MIBs, it's using multiple MIBs to build the tree, reset the label
+        ShowingMIBTreeName.setText("Showing MIB Tree: Default MIBs");
+
+        MIBTreeDisplay.getChildren().clear();
+        //Expand the treeview to fit the Anchor Pane width and height
+        treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
+        treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
+        MIBTreeDisplay.getChildren().add(treeView);
+    }
+
+
+    /**
+     * Function to display the TreeView of the chosen MIB from MIBsLoaded FlowPane. The TreeView is proceeded by the JsonToTreeView class in
+     * the MIBTreeView class
+     * to transform the JSON file to a TreeView
+     * */
+    public void displayTreeFromChosenMIB(File jsonFile) throws IOException {
+        //Clear the MIBTreeDisplay AnchorPane before displaying the new MIB
+        MIBTreeDisplay.getChildren().clear();
+
+        BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
+
+        List<String> mibFilePaths = Arrays.asList(
+                "Project_I_code/MIB Databases/RFC1213-MIB.json",
+                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
         );
         try {
             treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
@@ -104,7 +277,25 @@ public class MainController {
         }
 
         TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
-        TreeView<Node> treeView = new TreeView<>(rootItem); //Create a TreeView object to display to UI from the rootItem
+        TreeView<Node> treeView = new TreeView<>(rootItem);
+
+    }
+
+
+    public TreeView<Node> displayTreeFromFiles(List<String> mibFilePaths) throws IOException {
+
+        //Extract the MIB name from the file path
+        String mibName = mibFilePaths.get(0).substring(mibFilePaths.get(0).lastIndexOf("/") + 1, mibFilePaths.get(0).lastIndexOf("."));
+        ShowingMIBTreeName.setText("Showing MIB Tree: " + mibName);
+        BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
+        try {
+            treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
+        treeView = new TreeView<>(rootItem); //Create a TreeView object to display to UI from the rootItem
 
         //Set the action for each tree node, when clicked, display the information of the node in the bottom right pane
         treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Node>>() {
@@ -123,23 +314,10 @@ public class MainController {
                     lbStatus.setText(selectedNode.status);
                     taDescription.setText(selectedNode.description);
 
-
                     resetCurrentOid(); //Used by SNMP Get Next to reset the current OID when clicking on a new node
                 }
             }
         });
-
-
-        //Expand the treeview to fit the Anchor Pane width and height
-        treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
-        treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
-        MIBTreeDisplay.getChildren().add(treeView);
-
-
-        //Initialize the query table
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         // Double-click on a tree node to perform SNMP Get on that
         treeView.setOnMouseClicked(event -> {
@@ -178,183 +356,8 @@ public class MainController {
             }
         });
 
-
-
-        // Add an event listener to the TableView. Double-lick on a row to highlight the corresponding node in the TreeView
-        // From the name cell of the row, find the corresponding node in the TreeView with corresponding name and highlight/move to it.
-        queryTable.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                ARowInQueryTable selectedRow = queryTable.getSelectionModel().getSelectedItem();
-                if (selectedRow != null) {
-
-                    //If the node name contains postfix ".any_number", remove it before highlighting
-                    //(e.g. "hrDeviceStatus.25", "hrDeviceStatus.10", "hrDeviceStatus.2004", etc.)
-                    // Rows by SNMP walk will always have a postfix, SNMP Get rows will not if the node is scalar object
-                    int lastDotPosition = selectedRow.getName().lastIndexOf(".");
-
-                    if (lastDotPosition != -1) { //Check if the node name contains a postfix, then remove it and only search for the node name
-                        String nodeName = selectedRow.getName().substring(0, lastDotPosition);
-                        highlightNodeInTreeView(treeView, nodeName);
-                    } else { //If the node name does not contain a postfix, search for the node name as it is
-                        highlightNodeInTreeView(treeView, selectedRow.getName());
-                    }
-                }
-            }
-        });
-
-
-        //Choice Box
-        ObservableList<String> vendors = FXCollections.observableArrayList("Cisco", "Juniper", "Huawei");
-        chooseVendor.setItems(vendors);
-
-        //Add listener to the choice box
-        chooseVendor.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println("Selected vendor: " + newValue);
-                if (newValue.equals("Cisco")) {
-                    vendorMibs.clear();
-                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-PRODUCTS-MIB.json");
-                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-ENVMON-MIB.json");
-                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-CDP-MIB.json");
-                }
-                System.out.println("Vendor MIBs: " + vendorMibs);
-                for (String mib : vendorMibs) {
-                    File file = new File(mib);
-                }
-            }
-        });
-
-
+        return treeView;
     }
-
-
-    public void loadMIBs() {
-        File folder = new File("Project_I_code/MIB Databases");
-        File[] listOfFiles = folder.listFiles();
-
-        System.out.println("Loading MIBs from the MIB Databases directory...");
-        System.out.println("Number of MIBs found: " + listOfFiles.length);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                try {
-                    JsonNode mib = objectMapper.readTree(file);
-                    mibTree.add(mib);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        System.out.println("MIBs loaded successfully.");
-        //print out the mibTree for testing
-        for (JsonNode node : mibTree) {
-            System.out.println(node);
-        }
-
-    }
-
-
-    @FXML
-    /**
-     * Only open the MIB without saving it to the MIB Databases directory
-     * Then show the MIB in the MIBsloaded FlowPane
-     */
-    void openMIBClicked(ActionEvent event) throws IOException {
-//        //System.out.println("Open MIB Clicked");
-//
-//        //Ask user to select a file
-//        FileChooser fileChooser = new FileChooser();
-//        File file = fileChooser.showOpenDialog(null);
-//        System.out.println("Opening: " + file.getName() + ".");
-//
-//        //Show the chosen file in loaded section
-//        showMIBsLoaded(file);
-    }
-
-
-    @FXML
-    /**
-     * This method is called when the Load MIB button is clicked
-     * It opens a file chooser dialog and allows the user to select a file, then saves the file to the MIB Databases directory also
-     * Then show the MIB in the MIBsloaded FlowPane
-     */
-    void importMIBClicked(ActionEvent event) {
-//        //System.out.println("Import MIB Clicked");
-//
-//        //Ask user to select a file
-//        FileChooser fileChooser = new FileChooser();
-//        File file = fileChooser.showOpenDialog(null);
-//        System.out.println("Opening: " + file.getName() + ".");
-//
-//        try { //Save the file to the MIB Database directory
-//
-//            //Create a new file in the MIB Databases folder and write the contents of the selected file to it
-//            Files.copy(file.toPath(), new File("Project_I_code/MIB-Browser/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-//            System.out.println("File Saved Successfully");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        //Show the chosen file in loaded section
-//        showMIBsLoaded(file);
-    }
-
-
-    /**
-    * Function to show the MIBs loaded/opened by the user in the MIBsloaded FlowPane
-    */
-    public void showMIBsLoaded(File file) {
-        if (file != null) {
-            Label fileLabel = new Label(file.getName());
-            //Set fileLabel width to the width of the FlowPane so that new labels are added horizontally
-            fileLabel.prefWidthProperty().bind(MIBsloaded.widthProperty());
-
-            MIBsloaded.getChildren().add(fileLabel);
-
-            // Event handler for the file label. If use clicks on the label, display the TreeView of the chosen MIB
-            fileLabel.setOnMouseClicked(e -> {
-                try {
-                    displayTreeFromChosenMIB(file);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-
-        }
-    }
-
-
-    /**
-     * Function to display the TreeView of the chosen MIB from MIBsloaded FlowPane. The TreeView is proceeded by the JsonToTreeView class in
-     * the MIBTreeView class
-     * to transform the JSON file to a TreeView
-     * */
-    public void displayTreeFromChosenMIB(File jsonFile) throws IOException {
-        //Clear the MIBTreeDisplay AnchorPane before displaying the new MIB
-        MIBTreeDisplay.getChildren().clear();
-
-        BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
-
-        List<String> mibFilePaths = Arrays.asList(
-                "Project_I_code/MIB Databases/RFC1213-MIB.json",
-                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json"
-        );
-        try {
-            treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        TreeItem<Node> rootItem = treeBuilder.convertNodeToTreeItem(treeBuilder.getRoot());
-        TreeView<Node> treeView = new TreeView<>(rootItem);
-
-    }
-
-
 
     /**
      * Method to handle the SNMP Get button click event. This method performs an SNMP Get operation on the selected OID.
@@ -511,6 +514,8 @@ public class MainController {
                 System.out.println("OID that GetNext performed: " + vb.getOid());
                 System.out.println("Return value: " + vb.getVariable());
 
+
+
                 // Update currentOid with the OID from the response
                 currentOid = vb.getOid().toString();
 
@@ -649,6 +654,7 @@ public class MainController {
     private void highlightNodeInTreeView(TreeView<Node> treeView, String nodeName) {
         TreeItem<Node> root = treeView.getRoot();
         TreeItem<Node> targetNode = findNode(root, nodeName);
+        System.out.println("Target node: " + targetNode);
 
         if (targetNode != null) {
             treeView.getSelectionModel().select(targetNode);
