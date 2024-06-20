@@ -4,12 +4,15 @@ import Model.MIBTreeStructure.BuildTreeFromJson;
 import Model.MIBTreeStructure.MibLoader;
 import Model.MIBTreeStructure.Node;
 import Model.SNMRequest.SNMPGet;
+import Model.SNMRequest.SNMPGetNext;
 import Model.SNMRequest.SNMPWalk;
 import Model.SNMRequest.SnmpResponseFormatter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -38,6 +41,11 @@ public class MainController {
     @FXML private AnchorPane MIBTreeDisplay;  //Use to display list of MIBs which are loaded/opened by users + "Loaded MIBs" label
     @FXML private FlowPane MIBsloaded; //Use to display list of MIBs which are loaded/opened by users
     @FXML private TextField tfOID;
+
+    @FXML
+    private ChoiceBox<String> chooseVendor;
+    List<String> vendorMibs = new ArrayList<>();
+
 
     // Bottom right side of the application
     @FXML private Label lbAccess;
@@ -114,6 +122,9 @@ public class MainController {
                     lbAccess.setText(selectedNode.access);
                     lbStatus.setText(selectedNode.status);
                     taDescription.setText(selectedNode.description);
+
+
+                    resetCurrentOid(); //Used by SNMP Get Next to reset the current OID when clicking on a new node
                 }
             }
         });
@@ -190,6 +201,31 @@ public class MainController {
                 }
             }
         });
+
+
+        //Choice Box
+        ObservableList<String> vendors = FXCollections.observableArrayList("Cisco", "Juniper", "Huawei");
+        chooseVendor.setItems(vendors);
+
+        //Add listener to the choice box
+        chooseVendor.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("Selected vendor: " + newValue);
+                if (newValue.equals("Cisco")) {
+                    vendorMibs.clear();
+                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-PRODUCTS-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-ENVMON-MIB.json");
+                    vendorMibs.add("Project_I_code/MIB Databases/CISCO-CDP-MIB.json");
+                }
+                System.out.println("Vendor MIBs: " + vendorMibs);
+                for (String mib : vendorMibs) {
+                    File file = new File(mib);
+                }
+            }
+        });
+
+
     }
 
 
@@ -432,7 +468,85 @@ public class MainController {
         }
     }
 
+    /**
+     * Method to handle the SNMP Get Next button click event. This method performs an SNMP Get Next operation on the selected OID.
+     * @param event
+     */
+    private String currentOid; // To track the current OID
 
+    // Method to perform SNMP GET-NEXT request
+    @FXML
+    void SNMPGetNextClicked(MouseEvent event) throws IOException {
+        System.out.println("Performing SNMP Get Next.......");
+
+        // Get the OID from the text field if it's the first click
+        if (currentOid == null) {
+            currentOid = tfOID.getText();
+        }
+
+        if (currentOid.isEmpty()) {
+            System.out.println("Error: OID field is empty");
+            return;
+        }
+
+        // Get the target IP address from the text field, change it to UdpAddress format
+        // In case user let this field empty, use the default IP address
+        if (!tfTargetIP.getText().isEmpty()) {
+            ip = "udp:" + tfTargetIP.getText() + "/161";
+        } else {
+            ip = "udp:127.0.0.1/161";
+        }
+        Address targetAddress = GenericAddress.parse(ip);
+
+        if (targetAddress instanceof UdpAddress udpTargetAddress) {
+            // Get the community string from the password field
+            if (!tfCommunityString.getText().isEmpty()) {
+                community = tfCommunityString.getText();
+            }
+
+            SNMPGetNext snmpGetNext = new SNMPGetNext(udpTargetAddress, community, currentOid);
+            VariableBinding vb = snmpGetNext.getVariableBinding(); // Get the response from the SNMP request
+
+            if (vb != null) {
+                System.out.println("OID that GetNext performed: " + vb.getOid());
+                System.out.println("Return value: " + vb.getVariable());
+
+                // Update currentOid with the OID from the response
+                currentOid = vb.getOid().toString();
+
+                // Process the retrieved OID and its value
+                String oidForGetNext = vb.getOid().toString();
+                int lastDotPosition = oidForGetNext.lastIndexOf('.');
+                String oidWithoutLastPart = oidForGetNext.substring(0, lastDotPosition);
+
+                // Load the MIB files and look up the node
+                MibLoader mibLoader = new MibLoader();
+                mibLoader.loadMibsFromFolder("Project_I_code/MIB Databases/");
+                Node node = mibLoader.lookupNode(oidWithoutLastPart);
+
+                if (node != null) {
+                    // Format the return value to human-readable format
+                    String dataType = node.type;
+                    Map<String, Object> constraints = node.constraints;
+                    String humanReadableValue = format(vb.getVariable(), dataType, constraints);
+                    // Add the result to the query table
+                    queryTable.getItems().add(new ARowInQueryTable(node.name + oidForGetNext.substring(lastDotPosition), humanReadableValue, dataType));
+                } else {
+                    // If we can't find the node in the MIB files, return the OID and raw input
+                    queryTable.getItems().add(new ARowInQueryTable(oidForGetNext, vb.getVariable().toString() + " (raw value)", "None defined"));
+                }
+            } else {
+                System.out.println("Error: No response received.");
+            }
+        } else {
+            System.out.println("Error: Invalid target address.");
+        }
+    }
+
+    // Method to reset the current OID when a new node is selected
+    public void resetCurrentOid() {
+        currentOid = null;
+    }
     /**
      * Method to handle the SNMP Walk button click event. This method performs an SNMP Walk operation on from the selected OID.
      * @param event
@@ -521,6 +635,9 @@ public class MainController {
     public void clearTableClicked(MouseEvent event) {
         // Clear the query table
         queryTable.getItems().clear();
+
+        // Also reset the current OID of SNMP Get Next
+        resetCurrentOid();
     }
 
 
