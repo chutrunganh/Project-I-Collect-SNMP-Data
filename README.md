@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="Project_I_code/src/Asserts/Icon.png" alt="Not Found Image" width=300>
+  <img src="Project_I_code/src/Asserts/Icon.png" alt="Not Found Image" width=500>
 </p>
 
 
