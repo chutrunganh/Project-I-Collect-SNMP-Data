@@ -86,7 +86,7 @@ Project_I_code/
 │       ├── MIBTreeStructure/
 │       │   ├── Node.java  # Used to define a node in the MIB tree
 │       │   ├── BuildMIBTree.java  # Used to build the MIB tree from the JSON file
-│       │   └── MibLoader.java  # Used to load the MIB file for GET NEXT and Walk
+│       │   └── MibLoader.java  # Used to load MIB files for GET NEXT and Walk
 │       └── SNMPRequest/
 │           ├── SNMPGet.java
 │           ├── SNMPGetNext.java
