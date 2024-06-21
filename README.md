@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="Project_I_code/src/Asserts/Icon.png" alt="Not Found Image" width=500>
+  <img src="Project_I_code/src/Asserts/Icon.png" alt="Not Found Image" width=150>
 </p>
 
 
@@ -23,7 +23,7 @@
  
 <!-- Screenshot of the app -->
 <p align="center">
-  <img src="Image/AppDemo.png" alt="Not Found Image" width="600">
+  <img src="Image/AppDemo.png" alt="Not Found Image" width="800">
 </p>
 
 
