@@ -11,7 +11,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("View/MainUI.fxml"));
         primaryStage.setTitle("SNMP Browser Tool");
-        primaryStage.getIcons().add(new Image("file:Project_I_code/src/AppImages/Icon.png"));
+        primaryStage.getIcons().add(new Image("file:Project_I_code/src/Asserts/Icon.png"));
 
 
         primaryStage.setScene(new Scene(root, 977, 653));

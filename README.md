@@ -1,6 +1,6 @@
-<!-- Insert App Logo -->
+
 <p align="center">
-  <img src="Image/SNMP-Logo.webp" alt="Not Found Image" width=250>
+  <img src="Project_I_code/src/Asserts/Icon.png" alt="Not Found Image" width=300>
 </p>
 
 
@@ -12,16 +12,10 @@
 
 <p><img src="Image/ColorLine.png" alt="Not Found Image">  </p>
 
-
-<p align="center">A simple Control program buils by JavaFX to run as a SNMP manager on your computer</p>
-<!-- Add some badges -->
-
 <div align="center"> 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Static Badge](https://img.shields.io/badge/AddLater-SonarTest-green)
-![Static Badge](https://img.shields.io/badge/Messenger-00B2FF?style=flat&logo=messenger&logoColor=white)
-
+![Static Badge](https://img.shields.io/badge/GUI-javaFX-green)
 
 </div>
 
@@ -33,57 +27,83 @@
 </p>
 
 
-<p><img src="Image/ColorLine.png" alt="Not Found Image"> </P>
+<p><img src="Image/ColorLine.png" alt="Not Found Image"> </p>
+
+# Overview 📝
+This SNMP Browser is a simple Java-based application designed to collect SNMP data 
+from network devices. It allows users to perform SNMP operations such as 
+GET, GETNEXT, and WALK requests, and then parse the raw data into a more readable format, 
+displaying it using JavaFX. The primary aim is to manage and monitor network devices i
+n the simplest way.
+
+This application was developed as part of the Course Project 1 for the semester 20232 at [SOICT HUST](https://soict.hust.edu.vn/)
 
 # Installation ⚒️
-
 1. Clone the repository
 ```bash
-git clone https://img.shields.io/badge/MoreBadgeLater-Something-blue
+git clone https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git
 ```
 2. Install dependencies
-java-sdk (version 17 or later), javafx to run the application 
- don forget the VM option to run the application: --module-path /home/chutrunganh/Downloads/javafx-sdk-17.0.11/lib --add-modules javafx.controls,javafx.fxml
 
-fasterxml.jackson.core.databind for reading JSON file
+- Ensure you have Java SDK (version 17 or later) and JavaFX installed to run the application.
+  Use the following VM options to run the 
+  application:  ```--module-path /home/chutrunganh/Downloads/javafx-sdk-17.0.11/lib --add-modules javafx.controls,javafx.fxml```.
+  Also, ensure to mark the `src `directory as the Sources Root in your IDE, as it relates to some paths used in the project.
 
-snmp4j for SNMP operation
-python , pysnmp-pysmi to conver .mib to JSON file (no need if you do not intend to re complie the MIB file)
 
-***Rewrite this section later since our team change to Java instead of Python***
+- Additional dependencies:
+  - fasterxml.jackson.core.databind for reading JSON files
+  - snmp4j for SNMP operations
+  - pysnmp-pysmi for converting .mib files to JSON (only needed if you intend to recompile MIB files)
 
-- For Debian/Ubuntu/Mint:
 
-```bash
-sudo apt install snmp snmp-mibs-downloader #for manager side
+ 
+# Feature🕹️
+
+- Perform SNMP operations (currently supports only GET, GETNEXT, WALK).
+
+
+- View MIB files in hierarchy structure (currently supports only .json files; if you have .mib 
+files, you can convert them using the provided script. There are over 70 MIB files already 
+available in the `MIB Databases` directory, or users can import their own MIB files.
+
+
+- Display formatted results, with options to search and save these results to a file.
+
+For more details, you can check our Use Case diagram.
+
+# Code Structure 🏗️
+We designed our code following the Model-View-Controller (MVC) pattern. Here is the 
+main structure and their short purpose:
 ```
-```bash
-sudo apt install snmpd   #for agent side
+Project_I_code/
+├── src/
+│   ├── View/
+│   │   └── MainUI.fxml
+│   ├── Control/
+│   │   ├── MainController.java
+│   │   └── ARowInQuery.java  # Used to define a row structure in the query table
+│   └── Model/
+│       ├── MIBTreeStructure/
+│       │   ├── Node.java  # Used to define a node in the MIB tree
+│       │   ├── BuildMIBTree.java  # Used to build the MIB tree from the JSON file
+│       │   └── MibLoader.java  # Used to load the MIB file for GET NEXT and Walk
+│       └── SNMPRequest/
+│           ├── SNMPGet.java
+│           ├── SNMPGetNext.java
+│           ├── SNMPWalk.java
+│           └── SnmpResponseFormat.java  # Used to format the raw data to a more readable format
 ```
-- For other Linux Distro 
-```bash
-#I don't know :))
-```
-- For Windows
 
-3. Configuration
-4. Run it locally
+Additionally, the project includes:
+ - `test` directory: Contains test files for individual functions of the project.
+- `MIB Databases` directory: Contains the MIB files that the application uses to extract information.
 
-# What's Included 📦
+# License 📜
+Distribution of this project is under the MIT License. 
+See [LICENSE](https://github.com/chutrunganh/Project_I_Collect_SNMP_Data?tab=MIT-1-ov-file) for more information.
 
-- Dashboard
-- 
-- Some function...
+# Contact 📧
+This project is maintained by: Chu Trung Anh - [Email](mailto:chutrunganh04@gmail.com).
 
-
-
-# Usage 🕹️
-
-
-Choose the one that you feel best fits your project.
-
-# Documentation 📜
-
-Check out [our report](https://github.com/chutrunganh/Project_I_Collect_SNMP_Data/blob/master/Docs/SNMP_Theory.md) about SNMP theory
-
-
+Feel free to contact me if you have any question or suggestion.
