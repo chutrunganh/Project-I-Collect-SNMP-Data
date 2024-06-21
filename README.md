@@ -33,8 +33,7 @@
 This SNMP Browser is a simple Java-based application designed to collect SNMP data 
 from network devices. It allows users to perform SNMP operations such as 
 GET, GETNEXT, and WALK requests, and then parse the raw data into a more readable format, 
-displaying it using JavaFX. The primary aim is to manage and monitor network devices i
-n the simplest way.
+displaying it using JavaFX. The primary aim is to manage and monitor network devices in the simplest way.
 
 This application was developed as part of the Course Project 1 for the semester 20232 at [SOICT HUST](https://soict.hust.edu.vn/)
 
