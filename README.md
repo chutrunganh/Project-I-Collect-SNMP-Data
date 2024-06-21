@@ -47,7 +47,7 @@ git clone https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git
 
 - Ensure you have Java SDK (version 17 or later) and JavaFX installed to run the application.
   Use the following VM options to run the 
-  application:  ```--module-path /home/chutrunganh/Downloads/javafx-sdk-17.0.11/lib --add-modules javafx.controls,javafx.fxml```.
+  application:  ```--module-path Path_To_JavaFX/lib --add-modules javafx.controls,javafx.fxml```.
   Also, ensure to mark the `src `directory as the Sources Root in your IDE, as it relates to some paths used in the project.
 
 
