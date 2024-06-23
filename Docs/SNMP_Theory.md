@@ -634,3 +634,16 @@ Each of these components plays a crucial role in the management and monitoring o
 
 More detail: https://www.ranecommercial.com/legacy/note161.html
 # Ref:
+
+
+
+1. Over view
+
+As mentioned across the chappter 2 theory, thhe application only contains Get,   operate on SNMPv2c
+
+
+2. Furture Works
+
+Develop for GetBulk, Set, Trap and Inform
+Migrating SNMPv3 to enhance security
+Optimize the seraching process in SNMP Walk to reduce execution time. May be read all Mib file then store in a databse, apply database tuning so no nee dto look up mib file .

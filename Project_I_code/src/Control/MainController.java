@@ -41,17 +41,18 @@ import static Model.SNMRequest.SnmpResponseFormatter.format;
 public class MainController {
 
     // Left side of the application
-    @FXML private AnchorPane MIBTreeDisplay;  //Use to display list of MIBs which are loaded/opened by users + "Loaded MIBs" label
-    @FXML private FlowPane MIBsLoaded; //Use to display list of MIBs which are loaded/opened by users
-    @FXML private Label ShowingMIBTreeName; //Label to show the name of the MIB tree being displayed
-    @FXML private TextField tfOID;
+    @FXML private AnchorPane MIBTreeDisplay;  //This Pane is used to display the TreeView structure of the MIBs
+    @FXML private FlowPane MIBsLoaded; //This Pane is used to display the MIBs loaded by the user (when the user clicks on the Open/Load MIB
+    // button or MIBs in the vendor tab)
+    @FXML private Label ShowingMIBTreeName; //Label to show the name of the MIB  that are being displayed in the MIBTreeDisplay Pane
+    @FXML private TextField tfOID; //Text field to display the OID of the selected node
 
-    @FXML
-    private ComboBox<String> chooseVendor;
+    //Vendor Tab
+    @FXML private ComboBox<String> chooseVendor;  //A choice box to allow the user to select a vendor
     List<String> vendorMibs = new ArrayList<>(); //A variable to store some common MIBs of the selected vendor
 
 
-    // Bottom right side of the application
+    // Bottom right side of the application, the place where the user can see the extracted  information of the selected node
     @FXML private Label lbAccess;
     @FXML private Label lbName;
     @FXML private Label lbStatus;
@@ -60,33 +61,33 @@ public class MainController {
     @FXML private PasswordField tfCommunityString;
     @FXML private TextField tfTargetIP;
 
-    // Query Table
+    // Query Table : show the result of the SNMP Get, SNMP Get Next, SNMP Walk operations
     @FXML private TableView<ARowInQueryTable> queryTable;
     @FXML private TableColumn<ARowInQueryTable, String> nameColumn;
     @FXML private TableColumn<ARowInQueryTable, String> valueColumn;
     @FXML private TableColumn<ARowInQueryTable, String> typeColumn;
 
-
-
+    //TreeView to display the MIB tree
     TreeView<Node> treeView;
 
 
     //Some default values for attributes used across the application
     String oidValue = null;
-    String ip = "127.0.0.1"; //Localhost by default
-    String community = "password"; //Community string by default
+    String ip = "127.0.0.1";
+    String community = "password";
     String nodeType = null; //Node type of the selected node, help to distinguish between scalar
     // and non-scalar nodes. This is crucial to determine the OID to be used in SNMP Get
-    Map<String, Object> constraints = new HashMap<>();
+    Map<String, Object> constraints = new HashMap<>(); //Constraints of the selected node, String is the
+    // constraint name, also we do not in advance what kind of constraints can have, so use Object type. This info will not be displayed to the UI
 
 
-    /*
+    /**
      * Load some default MIBs when the program starts
      */
     @FXML
     public void initialize() throws IOException {
 
-
+        //Build the tree view from the default MIB files
         treeView = new TreeView<>();
         returnToDefaultClicked(null);
 
@@ -122,12 +123,11 @@ public class MainController {
         });
 
 
-        //Choice Box
+        //Initialize the choice box with some vendors
         ObservableList<String> vendors = FXCollections.observableArrayList("Cisco", "Asus", "Huawei");
-        //Extend the item to the choice box height and width
-        chooseVendor.setItems(vendors);
+        chooseVendor.setItems(vendors);  //Extend the item to the choice box height and width
 
-        //Add listener to the choice box
+        //Add event listener to the choice box. When click on a vendor, show a list of MIBs of that vendor in the MIBsLoaded Pane
         chooseVendor.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -146,7 +146,7 @@ public class MainController {
                     vendorMibs.add("Project_I_code/MIB Databases/HUAWEI-LINE-COMMON-MIB.json");
                     vendorMibs.add("Project_I_code/MIB Databases/HUAWEI-HTTP-MIB.json");
                 }
-                System.out.println("Vendor MIBs: " + vendorMibs);
+                //System.out.println("Vendor MIBs: " + vendorMibs);
                 for (String mib : vendorMibs) {
                     showMIBFileInLoadPane(new File(mib));
                 }
@@ -156,6 +156,7 @@ public class MainController {
 
     }
 
+    /**-------------------------------------File button in the menu bar-------------------------------------**/
     @FXML
     /**
      * Only open the MIB without saving it to the MIB Databases directory
@@ -172,7 +173,6 @@ public class MainController {
         //Show the chosen file in loaded section
         showMIBFileInLoadPane(file);
     }
-
 
     @FXML
     /**
@@ -191,6 +191,7 @@ public class MainController {
         try { //Save the file to the MIB Database directory
 
             //Create a new file in the MIB Databases folder and write the contents of the selected file to it
+            // Overwrite the file if it already exists
             Files.copy(file.toPath(), new File("Project_I_code/MIB Databases/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("File Saved Successfully");
         } catch (Exception e) {
@@ -200,6 +201,19 @@ public class MainController {
         showMIBFileInLoadPane(file);
     }
 
+    /**
+     * Method to handle the Unload All MIBs button click event. This method
+     * clears the MIBsLoaded FlowPane and the MIBTreeDisplay AnchorPane.
+     */
+    @FXML
+    void unloadAllMIBsClicked(ActionEvent event) {
+        MIBsLoaded.getChildren().clear();
+        MIBTreeDisplay.getChildren().clear();
+        ShowingMIBTreeName.setText("Showing MIB Tree: Default MIBs");
+    }
+
+
+    /**--------------------------------------Help button in the menu bar--------------------------------------**/
     @FXML
     void aboutUsClicked(ActionEvent event) {
         // Create an Alert
@@ -227,16 +241,12 @@ public class MainController {
     }
 
 
-    @FXML
-    void unloadAllMIBsClicked(ActionEvent event) {
-        MIBsLoaded.getChildren().clear();
-        MIBTreeDisplay.getChildren().clear();
-        ShowingMIBTreeName.setText("Showing MIB Tree: Default MIBs");
-    }
+    /**---------------------------------------------------MIBsLoaded and MIBTreeDisplay Pane------------------------------------------------------**/
 
 
     /**
-    * Function to show the MIBs loaded/opened by the user in the MIBsLoaded FlowPane
+    * Function to show the MIBs loaded/opened or when choose a vendor in vendor tab by the user in the MIBsLoaded FlowPane
+     * @param file: the file that the user has chosen to open or the file that is in the vendor MIBs list
     */
     public void showMIBFileInLoadPane(File file) {
         if (file != null) {
@@ -246,7 +256,7 @@ public class MainController {
 
             MIBsLoaded.getChildren().add(fileLabel);
 
-            // Event handler for the file label. If use clicks on the label, display the TreeView of the chosen MIB
+            // Event handler for the file label. If user clicks on the label, display the TreeView of the chosen MIB
             fileLabel.setOnMouseClicked(e -> {
                 try {
                     MIBTreeDisplay.getChildren().clear();
@@ -257,7 +267,7 @@ public class MainController {
                     treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
                     MIBTreeDisplay.getChildren().add(treeView);
 
-                    System.out.println("Displaying MIB: " + file.getName());
+                    //System.out.println("Displaying MIB: " + file.getName());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -267,33 +277,12 @@ public class MainController {
     }
 
 
-    @FXML
-    void returnToDefaultClicked(MouseEvent event) throws IOException {
-        // Build the tree view from the default MIB files
-        List<String> mibFilePaths = Arrays.asList(
-                "Project_I_code/MIB Databases/SNMPv2-SMI.json",
-                "Project_I_code/MIB Databases/RFC1213-MIB.json",
-                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json",
-                "Project_I_code/MIB Databases/SNMPv2-MIB.json",
-                "Project_I_code/MIB Databases/IF-MIB.json"
-        );
-
-
-       treeView = displayTreeFromFiles(mibFilePaths);
-
-        //This one is specifically for the default MIBs, it's using multiple MIBs to build the tree, reset the label
-        ShowingMIBTreeName.setText("Showing MIB Tree: Default MIBs");
-
-        MIBTreeDisplay.getChildren().clear();
-        //Expand the treeview to fit the Anchor Pane width and height
-        treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
-        treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
-        MIBTreeDisplay.getChildren().add(treeView);
-    }
-
-
-
-
+    /**
+     * Method to display the MIB tree from the selected MIB files in the MIBTreeDisplay AnchorPane.
+     * When user click on a MIB file label in the MIBsLoaded FlowPane, this method is called to display the MIB tree in the MIBTreeDisplay AnchorPane.
+     * @param mibFilePaths: a list of paths to the JSON files
+     * @return a TreeView object to display the MIB tree in the UI
+     */
     public TreeView<Node> displayTreeFromFiles(List<String> mibFilePaths) throws IOException {
 
         //Extract the MIB name from the file path
@@ -331,7 +320,7 @@ public class MainController {
             }
         });
 
-        // Double-click on a tree node to perform SNMP Get on that
+        // Double-click on a tree node to perform SNMP Get on that node
         treeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 TreeItem<Node> selectedItem = treeView.getSelectionModel().getSelectedItem();
@@ -370,6 +359,37 @@ public class MainController {
 
         return treeView;
     }
+
+
+    /**
+     * When click on the Return to Default MIBs button in the Standard MIBs tab, clear all and display the default MIBs as the first time the application starts
+     */
+    @FXML
+    void returnToDefaultClicked(MouseEvent event) throws IOException {
+        // Build the tree view from the default MIB files
+        List<String> mibFilePaths = Arrays.asList(
+                "Project_I_code/MIB Databases/SNMPv2-SMI.json",
+                "Project_I_code/MIB Databases/RFC1213-MIB.json",
+                "Project_I_code/MIB Databases/HOST-RESOURCES-MIB.json",
+                "Project_I_code/MIB Databases/SNMPv2-MIB.json",
+                "Project_I_code/MIB Databases/IF-MIB.json"
+        );
+
+
+        treeView = displayTreeFromFiles(mibFilePaths);
+
+        //This one is specifically for the default MIBs, it's using multiple MIBs to build the tree, reset the label
+        ShowingMIBTreeName.setText("Showing MIB Tree: Default MIBs");
+
+        MIBTreeDisplay.getChildren().clear();
+        //Expand the treeview to fit the Anchor Pane width and height
+        treeView.prefWidthProperty().bind(MIBTreeDisplay.widthProperty());
+        treeView.prefHeightProperty().bind(MIBTreeDisplay.heightProperty());
+        MIBTreeDisplay.getChildren().add(treeView);
+    }
+
+
+    /**---------------------------------------------------SNMP Operations------------------------------------------------------**/
 
     /**
      * Method to handle the SNMP Get button click event. This method performs an SNMP Get operation on the selected OID.
@@ -485,10 +505,12 @@ public class MainController {
 
     /**
      * Method to handle the SNMP Get Next button click event. This method performs an SNMP Get Next operation on the selected OID.
+     * I use the currentOid variable to track the current OID, so that from a selected node, when user click on the Get Next multi times, it
+     * will perform Get Next on the next OID from the original node, then the next OID from the previous Get Next result, and so on (incremental)
+     * Only reset the currentOid when user click on a new node in the TreeView or click on the Clear Table button
      * @param event
      */
     private String currentOid; // To track the current OID
-
     // Method to perform SNMP GET-NEXT request
     @FXML
     void SNMPGetNextClicked(MouseEvent event) throws IOException {
@@ -643,6 +665,8 @@ public class MainController {
     }
 
 
+    /**---------------------------------------------------Query Table------------------------------------------------------**/
+
     /**
      * Method to handle the Clear Table button click event. This method clears the query table.
      * used for the red "X" button in the UI, beside the query table
@@ -689,6 +713,10 @@ public class MainController {
         return null;
     }
 
+    /**
+     * Method to handle the Search button click event. This method prompts the user to enter a name to search for a
+     * row with matching name in the query table. If a row with the matching name is found, the row is highlighted and moved to.
+     */
     @FXML
     void searchButtonClicked(MouseEvent event) {
         // Create a TextInputDialog to prompt the user for the name to search
@@ -713,6 +741,10 @@ public class MainController {
         }
     }
 
+    /**
+     * Method to handle the Save button click event. This method prompts the user to select a file to save the query table to.
+     * The query table is saved as a CSV file with the columns "Name", "Type", and "Value".
+     */
     @FXML
     void saveButtonClicked(MouseEvent event) {
         // Create a FileChooser to prompt the user for the file to save
