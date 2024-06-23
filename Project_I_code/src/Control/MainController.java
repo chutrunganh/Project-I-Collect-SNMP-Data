@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -33,6 +34,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import static Model.SNMRequest.SnmpResponseFormatter.format;
+import static javax.swing.SwingUtilities.getRoot;
 
 /** @author Chu Trung Anh 20225564
  * MainController class is the controller class for the main.fxml file. It contains all the methods to handle the user's actions
@@ -86,6 +88,13 @@ public class MainController {
      */
     @FXML
     public void initialize() throws IOException {
+
+
+
+
+
+
+
 
         //Build the tree view from the default MIB files
         treeView = new TreeView<>();
@@ -156,6 +165,8 @@ public class MainController {
 
     }
 
+
+
     /**-------------------------------------File button in the menu bar-------------------------------------**/
     @FXML
     /**
@@ -211,6 +222,26 @@ public class MainController {
         MIBTreeDisplay.getChildren().clear();
         ShowingMIBTreeName.setText("Showing MIB Tree: Default MIBs");
     }
+
+    /**---------------------------------------Edit button in the menu bar--------------------------------------**/
+    private Scene mainScene;
+
+    public void setMainScene(Scene mainScene) {
+        this.mainScene = mainScene;
+    }
+
+    @FXML
+    public void darkModeClicked() {
+        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().add(getClass().getResource("/Asserts/styles.css").toExternalForm());
+    }
+
+    @FXML
+    public void lightModeClicked() {
+        mainScene.getStylesheets().clear();
+    }
+
+
 
 
     /**--------------------------------------Help button in the menu bar--------------------------------------**/
