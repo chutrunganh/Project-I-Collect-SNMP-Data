@@ -506,7 +506,7 @@ Các phiên bản của SNMP
 
 SNMP có 3 phiên bản : **SNMPv1**, **SNMPv2c**, và **SNMPv3**. Các phiên bản này khác nhau một chút ở định dạng bản tin và phương thức hoạt động. 
 
-*Hiện tại SNMPv1 là phổ biến nhất do có nhiều thiết bị tương thích nhất và có nhiều phần mềm hỗ trợ nhất. Trong khi đó chỉ có một số thiết bị và phần mềm hỗ trợ SNMPv3.*
+
 
 - **SNMPv1**
     
@@ -609,18 +609,28 @@ Các đặc tính của giao thức SNMPv2 và SNMPv3
 # Part V: Programming
 
 
+![alt text](image.png)
+
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+
+SNMP PDU (Protocol Data Unit) or SNMP message contains a header, get/set header, trap header, and variable bindings. The following figure shows the SNMP message structure.
+![alt text](image-3.png)
+
+The structure of an SNMP (Simple Network Management Protocol) Protocol Data Unit (PDU) is designed to facilitate effective communication between an SNMP Manager and an SNMP Agent. Here’s a breakdown of the typical structure of an SNMP PDU:
+
+    Version: Indicates the version of SNMP being used, such as SNMPv1, SNMPv2c, or SNMPv31.
+    Community String: Acts as a password to authenticate the source or destination of the PDU (mainly in SNMPv1 and SNMPv2c).
+    PDU Type: Defines the operation to be performed, such as GET, GET-NEXT, SET, TRAP, etc.
+    Request ID: A unique identifier for each request to match requests with responses.
+    Error Status: Indicates if there was an error in processing the request and the type of error.
+    Error Index: Specifies the variable binding in which the error occurred.
+    Variable Bindings: A list of pairs of object identifiers (OIDs) and their values. This is where the actual data for the request or response is contained.
+
+Each of these components plays a crucial role in the management and monitoring of network devices via SNMP. The PDU contains all the necessary information needed for the SNMP entities to understand each other’s requests and responses2. It’s like a well-organized envelope containing not just the message but also metadata that aids in the sorting and delivery of the communication2.
+
+More detail: https://www.ranecommercial.com/legacy/note161.html
 # Ref:
-
-https://www.site24x7.com/network/what-is-snmp.html
-
-https://mdungblog.wordpress.com/2020/01/06/ly-thuyet-giao-thuc-snmp-toan-tap/
-
-http://tailieuso.udn.vn/bitstream/TTHL_125/4920/3/Tomtat.pdf
-
-https://www.noction.com/blog/snmp-versions-evolution-security
-
-https://licensesoft.vn/snmp-la-gi.htm
-
-refer: https://www.youtube.com/watch?v=2IXP0TkwNJU and https://www.youtube.com/watch?v=Lq7j-QipNrI
-
-Refer: https://vietnix.vn/snmp-la-gi/

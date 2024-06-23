@@ -102,6 +102,9 @@ Additionally, the project includes:
 Distribution of this project is under the MIT License. 
 See [LICENSE](https://github.com/chutrunganh/Project_I_Collect_SNMP_Data?tab=MIT-1-ov-file) for more information.
 
+# Documentation 📚
+For more details about both SNMP theory and our application, you can check our [Project Report](https://www.overleaf.com/read/kknznpfhdhky#dcb50d).
+
 # Contact 📧
 This project is maintained by: Chu Trung Anh - [Email](mailto:chutrunganh04@gmail.com).
 
