@@ -76,22 +76,22 @@ We designed our code following the Model-View-Controller (MVC) pattern. Here is 
 main structure and their short purpose:
 ```
 Project_I_code/
-├── src/
-│   ├── View/
-│   │   └── MainUI.fxml
-│   ├── Control/
-│   │   ├── MainController.java
-│   │   └── ARowInQuery.java  # Used to define a row structure in the query table
-│   └── Model/
-│       ├── MIBTreeStructure/
-│       │   ├── Node.java  # Used to define a node in the MIB tree
-│       │   ├── BuildMIBTree.java  # Used to build the MIB tree from the JSON file
-│       │   └── MibLoader.java  # Used to load MIB files for GET NEXT and Walk
-│       └── SNMPRequest/
-│           ├── SNMPGet.java
-│           ├── SNMPGetNext.java
-│           ├── SNMPWalk.java
-│           └── SnmpResponseFormat.java  # Used to format the raw data to a more readable format
+  └── src/
+    ├── View/
+    │   └── MainUI.fxml
+    ├── Control/
+    │   ├── MainController.java
+    │   └── ARowInQuery.java  # Used to define a row structure in the query table
+    └── Model/
+        ├── MIBTreeStructure/
+        │   ├── Node.java  # Used to define a node in the MIB tree
+        │   ├── BuildMIBTree.java  # Used to build the MIB tree from the JSON file
+        │   └── MibLoader.java  # Used to load MIB files for GET NEXT and Walk
+        └── SNMPRequest/
+            ├── SNMPGet.java
+            ├── SNMPGetNext.java
+            ├── SNMPWalk.java
+            └── SnmpResponseFormat.java  # Used to format the raw data to a more readable format
 ```
 
 Additionally, the project includes:
