@@ -6,8 +6,6 @@ import Model.MIBTreeStructure.Node;
 import Model.SNMRequest.SNMPGet;
 import Model.SNMRequest.SNMPGetNext;
 import Model.SNMRequest.SNMPWalk;
-import javafx.scene.control.Tooltip;
-import com.fasterxml.jackson.databind.JsonNode;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,14 +15,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
-import javafx.stage.PopupWindow;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.UdpAddress;
@@ -38,7 +33,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import static Model.SNMRequest.SnmpResponseFormatter.format;
-import static javax.swing.SwingUtilities.getRoot;
 
 /** @author Chu Trung Anh 20225564
  * MainController class is the controller class for the main.fxml file. It contains all the methods to handle the user's actions
@@ -237,7 +231,7 @@ public class MainController {
     @FXML
     public void darkModeClicked() {
         mainScene.getStylesheets().clear();
-        mainScene.getStylesheets().add(getClass().getResource("/Asserts/styles.css").toExternalForm());
+        mainScene.getStylesheets().add(getClass().getResource("/Resources/styles.css").toExternalForm());
     }
 
     @FXML

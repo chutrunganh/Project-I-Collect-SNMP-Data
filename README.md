@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="Project_I_code/src/Asserts/Image/Icon.png" alt="Not Found Image" width=150>
+  <img src="Image/Icon.png" alt="Not Found Image" width=150>
 </p>
 
 
@@ -44,7 +44,7 @@ git clone https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git
 ```
 2. Install dependencies
 
-- Ensure you have Java SDK (version 17 or later) and JavaFX installed to run the application.
+- Ensure you have Java SDK (version 21 or later) and JavaFX installed to run the application.
   Use the following VM options to run the 
   application:  ```--module-path Path_To_JavaFX/lib --add-modules javafx.controls,javafx.fxml```.
   Also, ensure to mark the `src `directory as the Sources Root in your IDE, as it relates to some paths used in the project.
@@ -60,16 +60,32 @@ git clone https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git
 # Feature🕹️
 
 - Perform SNMP operations (currently supports only GET, GETNEXT, WALK).
+    - **GET**: Retrieve the value of a single OID.
+  
+      <img src="Image/GetDemo.gif" alt="Not Found Image" width="300">
+  
+    - **GETNEXT**: Retrieve the value of the next OID in the MIB tree.
+     
+        <img src="Image/GetNextDemo.gif" alt="Not Found Image" width="300">
+  
+    - **WALK**: Retrieve the values of all OIDs in the MIB subtree.
+  
+        <img src="Image/WalkDemo.gif" alt="Not Found Image" width="300">
+
+          
 
 
 - View MIB files in hierarchy structure (currently supports only .json files; if you have .mib 
 files, you can convert them using the provided script. There are over 70 MIB files already 
 available in the `MIB Databases` directory, or users can import their own MIB files.
+      
+     <img src="Image/TreeDemo.gif" alt="Not Found Image" width="300">
 
 
 - Display formatted results, with options to search and save these results to a file.
+      
+     <img src="Image/TableDemo.gif" alt="Not Found Image" width="300">
 
-For more details, you can check our Use Case diagram.
 
 # Code Structure 🏗️
 We designed our code following the Model-View-Controller (MVC) pattern. Here is the 
@@ -95,8 +111,9 @@ Project_I_code/
 ```
 
 Additionally, the project includes:
- - `test` directory: Contains test files for individual functions of the project.
-- `MIB Databases` directory: Contains the MIB files that the application uses to extract information.
+ - `Test` directory: Contains test files for individual functions of the project.
+ - `Resources` directory: Contains the images, script and CSS files used in the project.
+ - `MIB Databases` directory: Contains the MIB files that the application uses to extract information.
 
 # License 📜
 Distribution of this project is under the MIT License. 
