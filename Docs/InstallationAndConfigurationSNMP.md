@@ -5,6 +5,7 @@ On your local machine, install the necessary packages for the SNMP Manager:
 ```bash
 sudo apt update && sudo apt upgrade
 sudo apt install snmp snmp-mibs-downloader
+sudo download-mibs
 ```
 The `snmp` package provides a suite of command-line tools for sending SNMP requests to agents. The `snmp-mibs-downloader` package assists in installing and managing Management Information Base (MIB) files.
 
@@ -20,7 +21,6 @@ sudo apt install snmpd
 This command installs the SNMP daemon.
 
 
-*Or you can try to run an SNMP agent on a Virtual machine for better demonstrayion. Here I tested on Linux Mint Xfce 21.3 using KVM. Install instruction in this: https://phoenixnap.com/kb/ubuntu-install-kvm.*.
 # Step 2: Configure SNMP
 
 ## On the NMS
@@ -72,7 +72,7 @@ The view is defined in these lines above:
 view   systemonly  included   .1.3.6.1.2.1.1
 view   systemonly  included   .1.3.6.1.2.1.25.1
 ```
-The lines you've posted are from an SNMP (Simple Network Management Protocol) configuration file. They define a view in SNMP, which is a subset of the MIB (Management Information Base) that is available for management operations. 
+The mentioned lines establish an SNMP view, essentially a subset of the Management Information Base (MIB) that's accessible for management tasks. Put simply, it restricts our access to the information of Object Identifiers (OIDs) that fall under the subset of 1.3.6.1.2.1.1
 
 Here's what each line means:
 
@@ -159,9 +159,15 @@ sudo systemctl start snmpd
 ```
 
 After completing the above steps, send a GET request from the NMS to the agent using the `snmpget` command:
+
+With SNMPv3:
 ```bash
 snmpget -u chutrunganh -l authPriv -a MD5 -x DES -A chutrunganh.123 -X chutrunganh.123 192.168.1.8  1.3.6.1.2.1.1.1.0
 ```
+With SNMPv1 or SNMPv2c:
+```bash
+snmpget -v 2c -c public 192.168.1.8 1.3.6.1.2.1.1.1.0
+````
 
 In this command:
 
@@ -183,6 +189,7 @@ SNMPv2-MIB::sysDescr.0 = STRING: Linux ThinkPad-CTA 6.5.0-1020-oem #21-Ubuntu SM
 
 # References
 
-- [How To Install and Configure an SNMP Daemon and Client on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-an-snmp-daemon-and-client-on-ubuntu-18-04)
-- [Configuring SNMP on Linux](https://www.site24x7.com/help/admin/adding-a-monitor/configuring-snmp-linux.html)
-- [SNMP Configuration Video](https://www.youtube.com/watch?v=D5uifMiVdbY&t=54s)
+- https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-an-snmp-daemon-and-client-on-ubuntu-18-04
+- https://www.site24x7.com/help/admin/adding-a-monitor/configuring-snmp-linux.html
+- https://www.youtube.com/watch?v=D5uifMiVdbY&t=54s
+- https://hiendef.wordpress.com/wp-content/uploads/2013/07/th5-nm.pdf

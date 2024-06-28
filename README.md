@@ -40,7 +40,7 @@ This application was developed as part of the Course Project 1 for the semester 
 # Installation ⚒️
 1. Clone the repository
 ```bash
-git clone https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git
+git clone https://github.com/chutrunganh/Project-I-Collect-SNMP-Data.git
 ```
 2. Install dependencies
 
@@ -62,15 +62,15 @@ git clone https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git
 - Perform SNMP operations (currently supports only GET, GETNEXT, WALK).
     - **GET**: Retrieve the value of a single OID.
   
-      <img src="Image/GetDemo.gif" alt="Not Found Image" width="300">
+      <img src="Image/GetDemo.gif" alt="Not Found Image" width="400">
   
     - **GETNEXT**: Retrieve the value of the next OID in the MIB tree.
      
-        <img src="Image/GetNextDemo.gif" alt="Not Found Image" width="300">
+        <img src="Image/GetNextDemo.gif" alt="Not Found Image" width="400">
   
     - **WALK**: Retrieve the values of all OIDs in the MIB subtree.
   
-        <img src="Image/WalkDemo.gif" alt="Not Found Image" width="300">
+        <img src="Image/WalkDemo.gif" alt="Not Found Image" width="400">
 
           
 
@@ -79,12 +79,12 @@ git clone https://github.com/chutrunganh/Project_I_Collect_SNMP_Data.git
 files, you can convert them using the provided script. There are over 70 MIB files already 
 available in the `MIB Databases` directory, or users can import their own MIB files.
       
-     <img src="Image/TreeDemo.gif" alt="Not Found Image" width="300">
+     <img src="Image/TreeDemo.gif" alt="Not Found Image" width="400">
 
 
 - Display formatted results, with options to search and save these results to a file.
       
-     <img src="Image/TableDemo.gif" alt="Not Found Image" width="300">
+     <img src="Image/TableDemo.gif" alt="Not Found Image" width="400">
 
 
 # Code Structure 🏗️
@@ -120,7 +120,7 @@ Distribution of this project is under the MIT License.
 See [LICENSE](https://github.com/chutrunganh/Project_I_Collect_SNMP_Data?tab=MIT-1-ov-file) for more information.
 
 # Documentation 📚
-For more details about both SNMP theory and our application, you can check our [Project Report](https://www.overleaf.com/read/kknznpfhdhky#dcb50d).
+For more details about both SNMP theory and our application, you can check our [Project Report](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/blob/master/Docs/Project_I_Report.pdf).
 
 # Contact 📧
 This project is maintained by: Chu Trung Anh - [Email](mailto:chutrunganh04@gmail.com).
