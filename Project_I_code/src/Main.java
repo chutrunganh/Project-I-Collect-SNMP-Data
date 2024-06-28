@@ -20,7 +20,7 @@ public class Main extends Application {
 
 
         primaryStage.setTitle("SNMP Browser Tool");
-        primaryStage.getIcons().add(new Image("file:Project_I_code/src/Asserts/Icon.png"));
+        primaryStage.getIcons().add(new Image("file:Project_I_code/src/Asserts/Image/Icon.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
     }

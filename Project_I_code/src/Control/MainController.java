@@ -6,6 +6,7 @@ import Model.MIBTreeStructure.Node;
 import Model.SNMRequest.SNMPGet;
 import Model.SNMRequest.SNMPGetNext;
 import Model.SNMRequest.SNMPWalk;
+import javafx.scene.control.Tooltip;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,11 +17,14 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
+import javafx.stage.PopupWindow;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.UdpAddress;
@@ -497,7 +501,7 @@ public class MainController {
                             String response = vb.getVariable().toString();
 
                             // If the response is not "noSuchInstance", print it
-                            if (!response.equals("noSuchInstance")) {
+                            if (!response.equals("noSuchInstance")  && !response.equals("noSuchObject")) {
                                 //System.out.println("Get: " + oidToTry + " : (raw value)  " + response);
 
                                 // Get the data type and constraints, then using SNMPResponseFormatter to format the response to human-readable format
@@ -513,7 +517,7 @@ public class MainController {
 
 
                             // If the response is "noSuchInstance", break the loop
-                            if (response.equals("noSuchInstance")) {
+                            if (response.equals("noSuchInstance") || response.equals("noSuchObject")) {
                                 if (i == 1) { // If the first response is "noSuchInstance", mean that it is not exist in the device
                                     System.out.println("Error: Failed to get response for OID: " + oidToTry);
                                     queryTable.getItems().add(new ARowInQueryTable(lbName.getText(), "noSuchInstance", lbType.getText()));
