@@ -44,7 +44,7 @@ git clone https://github.com/chutrunganh/Project-I-Collect-SNMP-Data.git
 ```
 2. Install dependencies
 
-- Ensure you have Java SDK (version 21 or later) and JavaFX installed to run the application.
+- Ensure you have Java SDK (version 21.0.3 or later) and JavaFX installed to run the application.
   Use the following VM options to run the 
   application:  ```--module-path Path_To_JavaFX/lib --add-modules javafx.controls,javafx.fxml```.
   Also, ensure to mark the `src `directory as the Sources Root in your IDE, as it relates to some paths used in the project.
@@ -55,6 +55,9 @@ git clone https://github.com/chutrunganh/Project-I-Collect-SNMP-Data.git
   - snmp4j for SNMP operations
   - pysnmp-pysmi for converting .mib files to JSON (only needed if you intend to recompile MIB files)
 
+3. Run the application
+
+Run the `Main.java` in the `src` directory to start the application.
 
  
 # Feature🕹️
