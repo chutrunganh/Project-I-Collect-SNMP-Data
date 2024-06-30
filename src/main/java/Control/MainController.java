@@ -30,8 +30,6 @@ import org.snmp4j.smi.VariableBinding;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
@@ -79,22 +77,30 @@ public class MainController {
 
 
 
-    // Method to get base directory dynamically
-    //The MIB Databases folder is located in the same directory as the jar file
+    /** Method to get base directory dynamically
+    * The MIB Databases folder is located in the same directory as the jar file.
+     * We need to dynamic get the base directory of the application to locate the MIB Databases folder since the
+     * path when run for the jar file in users' computer may be different from the path when run in the IDE.
+     * User just need to ENSURE the jar file and the MIB Databases are both located in the same level in directory
+     * named "SNMP_Browser"
+     */
     private String getBaseDirectory() {
         String basePath = System.getProperty("user.dir");
-        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-        if (jarFile.isFile()) { //We are running from a jar file
+        String path = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        File jarFile = new File(path);
+        if (path.endsWith(".jar")) { //When we run the app by using the jar file
             basePath = jarFile.getParent();
-
+            //System.out.println("Base Path of jar: " + basePath);
         }
-        else { //Running the source code from an IDE, add path to the out/artifacts folder containing the jar file
-            basePath = basePath + "/out/artifacts/SNMP_Browser/";
+        else {  //When we run the app by using the source code in the IDE
+            basePath = basePath + "/out/artifacts/SNMP_Browser";
+            //System.out.println("Base Path of IDE: " + basePath);
         }
-        //System.out.println("Base Path: " + basePath);
         return basePath;
     }
     String BASE_DIR = getBaseDirectory() + "/MIB Databases";
+    //@FXML TextArea testing;
+
 
 
 
@@ -115,7 +121,7 @@ public class MainController {
     @FXML
     public void initialize() throws IOException {
 
-
+        //testing.setText(BASE_DIR);
 
 
         //Set the image for the search and save button
@@ -169,10 +175,10 @@ public class MainController {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 //System.out.println("Selected vendor: " + newValue);
                 vendorMibs.clear();
-                // Base directory for MIB files
 
 
                 if (newValue.equals("Cisco")) {
+                    //testing.setText(BASE_DIR + "/CISCO-PRODUCTS-MIB.json");
                     vendorMibs.add(BASE_DIR + "/CISCO-CVP-MIB.json");
                     vendorMibs.add(BASE_DIR + "/CISCO-ENVMON-MIB.json");
                     vendorMibs.add(BASE_DIR + "/CISCO-CDP-MIB.json");
