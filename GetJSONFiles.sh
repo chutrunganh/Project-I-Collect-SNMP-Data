@@ -14,11 +14,11 @@ list_files() {
     done
 }
 
-# Directory containing MIB files, we want to complie these files
+# Directory containing MIB files, we want to compile these files to JSON format
 MIB_DIR="/home/chutrunganh/Downloads/ireasoning/mibbrowser/mibs"
 
 # Directory to save converted MIB files
-DEST_DIR="/home/chutrunganh/Project/Project_I_Collect_SNMP_Data/Project_I_code/MIB Databases"
+DEST_DIR="/home/chutrunganh/Project/Project_I_Collect_SNMP_Data/out/artifacts/SNMP_Browser/MIB Databases"
 
 # List all MIB files and store them in a variable
 MIB_FILES=$(list_files "$MIB_DIR")

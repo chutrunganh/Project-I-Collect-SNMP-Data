@@ -38,7 +38,10 @@ displaying it using JavaFX. The primary aim is to manage and monitor network dev
 This application was developed as part of the Course Project 1 for the semester 20232 at [SOICT HUST](https://soict.hust.edu.vn/)
 
 # Installation ⚒️
-1. Clone the repository
+You can download directly the [jar file at the Releases page](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/releases/tag/v.1.1.0) or build the project from source.
+
+### Build from source
+1.Clone the repository
 ```bash
 git clone https://github.com/chutrunganh/Project-I-Collect-SNMP-Data.git
 ```
@@ -47,17 +50,19 @@ git clone https://github.com/chutrunganh/Project-I-Collect-SNMP-Data.git
 - Ensure you have Java SDK (version 21.0.3 or later) and JavaFX installed to run the application.
   Use the following VM options to run the 
   application:  ```--module-path Path_To_JavaFX/lib --add-modules javafx.controls,javafx.fxml```.
-  Also, ensure to mark the `src `directory as the Sources Root in your IDE, as it relates to some paths used in the project.
-
-
+  
+  
 - Additional dependencies:
   - fasterxml.jackson.core.databind for reading JSON files
   - snmp4j for SNMP operations
   - pysnmp-pysmi for converting .mib files to JSON (only needed if you intend to recompile MIB files)
 
+All dependencies are included in the `pom.xml` file. You can install them automatically using Maven.
+
+
 3. Run the application
 
-Run the `Main.java` in the `src` directory to start the application.
+Run the `Main.java` in the `src/main/java/Main.java` directory to start the application.
 
  
 # Feature🕹️
@@ -91,32 +96,45 @@ available in the `MIB Databases` directory, or users can import their own MIB fi
 
 
 # Code Structure 🏗️
-We designed our code following the Model-View-Controller (MVC) pattern. Here is the 
+We designed our code following the Maven standard structure and the Model-View-Controller (MVC) pattern. Here is the 
 main structure and their short purpose:
 ```
-Project_I_code/
+Project_I_Collect_SNMP_Data/
   └── src/
-    ├── View/
-    │   └── MainUI.fxml
-    ├── Control/
-    │   ├── MainController.java
-    │   └── ARowInQuery.java  # Used to define a row structure in the query table
-    └── Model/
-        ├── MIBTreeStructure/
-        │   ├── Node.java  # Used to define a node in the MIB tree
-        │   ├── BuildMIBTree.java  # Used to build the MIB tree from the JSON file
-        │   └── MibLoader.java  # Used to load MIB files for GET NEXT and Walk
-        └── SNMPRequest/
-            ├── SNMPGet.java
-            ├── SNMPGetNext.java
-            ├── SNMPWalk.java
-            └── SnmpResponseFormat.java  # Used to format the raw data to a more readable format
+    ├── main/
+    │   ├── java/
+    │   │   ├── Control/
+    │   │   │   ├── MainController.java
+    │   │   │   └── ARowInQueryTable.java  # Used to define a row structure in the query table
+    │   │   └── Model/
+    │   │       ├── MIBTreeStructure/
+    │   │       │   ├── Node.java  # Used to define a node in the MIB tree
+    │   │       │   ├── BuildMIBTree.java  # Used to build the MIB tree from the JSON file
+    │   │       │   ├── MibRootOidFinder.java  # Used to find the root OID of a MIB file
+    │   │       │   └── MibLoader.java  # Used to load MIB files for GET NEXT and Walk
+    │   │       └── SNMPRequest/
+    │   │           ├── SNMPGet.java
+    │   │           ├── SNMPGetNext.java
+    │   │           ├── SNMPWalk.java
+    │   │           └── SnmpResponseFormat.java  # Used to format the raw data to a more readable format
+    │   └── resources/
+    │       ├── Images/
+    │       ├── styles.css # Use to render the Dark Mode
+    │       └── View/  # Contains the FXML files for the GUI
+    │
+    │
+    └── test/java/TestFiles  # Contains test files for individual functions of the project
 ```
 
-Additionally, the project includes:
- - `Test` directory: Contains test files for individual functions of the project.
- - `Resources` directory: Contains the images, script and CSS files used in the project.
- - `MIB Databases` directory: Contains the MIB files that the application uses to extract information.
+The project also incorporates the following components:  
+- `MIB Databases` directory: This directory houses the MIB files that the application utilizes to 
+gather information. It is situated within `Project_I_Collect_SNMP_Data/out/artifacts/SNMP_Browser/MIB Databases` since 
+it will be further packaged alongside the jar file. 
+
+
+- `GetJSONFiles` script: This script is employed to transform MIB ASN1 files into JSON format files. 
+If you wish to recompile the MIB files, adjust the `MIB_DIR` and `DES_DIR` variables in the script to match your case.
+
 
 # License 📜
 Distribution of this project is under the MIT License. 

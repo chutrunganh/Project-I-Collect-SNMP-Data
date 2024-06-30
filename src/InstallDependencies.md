@@ -1,7 +1,10 @@
 - With MIB files:
 
-Using the provided script in `src/Resources` to convert them to JSON files. There are over 70 MIB files already available in the `MIB Databases` 
+Using the provided script in `GetJSONFiles.sh` to convert them to JSON files. There are over 70 MIB files already available in the `MIB Databases` 
 directory files, or find them here: https://mibbrowser.online/mibdb_search.php?mib=SNMPv2-MIB with all formats
+
+Choose to download and add the dependencies manually by below steps or using Maven pom.xml file
+to install them automatically.
 
 - Install **JavaFX**:
 
@@ -13,7 +16,7 @@ use JavaFX 21.0.3 [LTS].
 With IntelliJ IDEA: Go to File -> Project Structure -> select Modules on the left -> Go to the 
 Dependencies tab.ss -> Click on the + button on the right side and select Library -> In the New Library 
 dialog, select From Maven -> In the Download Library from Maven Repository 
-dialog, enter com.fasterxml.jackson.core:jackson-databind:2.13.1 in the Coordinates field. Replace 2.13.1 
+dialog, enter com.fasterxml.jackson.core:jackson-databind:2.17.1 in the Coordinates field. Replace 2.13.1 
 with the latest version if necessary -> Click OK to start downloading the library -> Once the library is downloaded, click OK in the New Library dialog
 -> Click Apply and then OK in the Project Structure dialog.
 
