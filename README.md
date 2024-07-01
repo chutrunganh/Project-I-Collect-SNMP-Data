@@ -135,6 +135,7 @@ it will be further packaged alongside the jar file.
 - `GetJSONFiles` script: This script is employed to transform MIB ASN1 files into JSON format files. 
 If you wish to recompile the MIB files, adjust the `MIB_DIR` and `DES_DIR` variables in the script to match your case.
 
+- `ProjectCodeStructureDiagram.asta`: Astah UML project contains all Class diagrams and UseCase diagram
 
 # License 📜
 Distribution of this project is under the MIT License. 
