@@ -27,8 +27,9 @@ public class TestBuildTree extends Application {
         BuildTreeFromJson treeBuilder = new BuildTreeFromJson();
 
         List<String> mibFilePaths = Arrays.asList(
-                "out/artifacts/SNMP_Browser/MIB Databases/RFC1213-MIB.json",
-                "out/artifacts/SNMP_Browser/MIB Databases/HOST-RESOURCES-MIB.json"
+                "MIB Databases/SNMPv2-SMI.json",
+                "MIB Databases/RFC1213-MIB.json",
+                "MIB Databases/HOST-RESOURCES-MIB.json"
         );
         try {
             treeBuilder.buildTreeFromMultipleMIBs(mibFilePaths);

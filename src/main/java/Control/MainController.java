@@ -93,7 +93,7 @@ public class MainController {
             //System.out.println("Base Path of jar: " + basePath);
         }
         else {  //When we run the app by using the source code in the IDE
-            basePath = basePath + "/out/artifacts/SNMP_Browser";
+
             //System.out.println("Base Path of IDE: " + basePath);
         }
         return basePath;

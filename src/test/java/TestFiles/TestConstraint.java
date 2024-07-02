@@ -17,7 +17,7 @@ public class TestConstraint {
 
     public static void main(String[] args) {
         MibLoader mibLoader = new MibLoader();
-        mibLoader.loadMibsFromFolder("out/artifacts/SNMP_Browser/MIB Databases");
+        mibLoader.loadMibsFromFolder("MIB Databases/");
 
         // Example OID to lookup
         String oidToLookup = "1.3.6.1.2.1.2.2.1.8"; // Example OID
