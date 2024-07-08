@@ -134,6 +134,7 @@ gather information. The MIB files are in JSON format.
 - `GetJSONFiles` script: This script is employed to transform MIB ASN1 files into JSON format files. 
 If you wish to recompile the MIB files, adjust the `MIB_DIR` and `DES_DIR` variables in the script to match your case.
 
+
 - `Docs` directory: contains all the documents related to the project, including the project report, SNMP Configuration and the project structure diagram in Astah UML file.
 
 
