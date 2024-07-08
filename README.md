@@ -1,6 +1,7 @@
 <p align="center">
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=25&pause=1000&color=334DA7&random=false&width=435&lines=Welcome+to+SNMP+Browser++%F0%9F%91%8B)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=30&pause=1000&color=53B4FFFB&repeat=false&random=false&width=435&lines=Welcome+to+SNMP+Browser++%F0%9F%91%8B)](https://git.io/typing-svg)
+
 
 </p>
 
