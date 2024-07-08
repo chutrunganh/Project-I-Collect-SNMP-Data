@@ -99,7 +99,7 @@ available in the `MIB Databases` directory, or users can import their own MIB fi
 We designed our code following the Maven standard structure and the Model-View-Controller (MVC) pattern. Here is the 
 main structure and their short purpose:
 ```
-Project_I_Collect_SNMP_Data/
+Project-I-Collect-SNMP-Data/
   └── src/
     ├── main/
     │   ├── java/
@@ -128,14 +128,14 @@ Project_I_Collect_SNMP_Data/
 
 The project also incorporates the following components:  
 - `MIB Databases` directory: This directory houses the MIB files that the application utilizes to 
-gather information. It is situated within `Project_I_Collect_SNMP_Data/out/artifacts/SNMP_Browser/MIB Databases` since 
-it will be further packaged alongside the jar file. 
+gather information. The MIB files are in JSON format.
 
 
 - `GetJSONFiles` script: This script is employed to transform MIB ASN1 files into JSON format files. 
 If you wish to recompile the MIB files, adjust the `MIB_DIR` and `DES_DIR` variables in the script to match your case.
 
-- `ProjectCodeStructureDiagram.asta`: Astah UML project contains all Class diagrams and UseCase diagram
+- `Docs` directory: contains all the documents related to the project, including the project report, SNMP Configuration and the project structure diagram in Astah UML file.
+
 
 # License 📜
 Distribution of this project is under the MIT License. 

@@ -108,7 +108,7 @@ public class MainController {
     //Some default values for attributes used across the application
     String oidValue = null;
     String ip = "127.0.0.1";
-    String community = "password";
+    String community = "public";
     String nodeType = null; //Node type of the selected node, help to distinguish between scalar
     // and non-scalar nodes. This is crucial to determine the OID to be used in SNMP Get
     Map<String, Object> constraints = new HashMap<>(); //Constraints of the selected node, String is the
