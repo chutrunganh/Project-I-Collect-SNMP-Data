@@ -21,6 +21,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Static Badge](https://img.shields.io/badge/GUI-javaFX-green)
+![Static Badge](https://img.shields.io/badge/HUST%20-%20project%20-red)
+
 
 </div>
 
