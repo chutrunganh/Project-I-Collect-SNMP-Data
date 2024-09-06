@@ -45,8 +45,18 @@ displaying it using JavaFX. The primary aim is to manage and monitor network dev
 This application was developed as part of the Course Project 1 for the semester 20232 at [SOICT HUST](https://soict.hust.edu.vn/)
 
 # Installation ⚒️
-You can download directly the [jar file at the Releases page](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/releases/tag/v.1.1.0) or build the project from source.
 
+There are several ways you can try our application:
+
+1. **Download the JAR file (Recommended)**: Download directly from the [Releases page](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/releases/tag/v.1.1.2). Ensure you run the app with Java 21.
+
+2. **Build from Source**: Follow the instructions to build the project from [source](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/edit/master/README.md#build-from-source).
+
+3. **Using Docker**: Note that this method is not fully functional due to configuration issues.
+In this Docker version, MIB viewing works. However, SNMP requests are non-functional because I couldn't configure the application to reach the outside network. To try the application, execute the following command to pull and run the Docker image:
+```bash
+docker run -p 5900:5900 chutrunganh/snmp_browser:1.1.2
+```
 ### Build from source
 1.Clone the repository
 ```bash
