@@ -50,7 +50,7 @@ There are several ways you can try our application:
 
 1. **Download the JAR file (Recommended)**: Download directly from the [Releases page](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/releases/tag/v1.1.2). Ensure you run the app with Java 21.
 
-2. **Build from Source**: Follow the instructions to build the project from [source](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/edit/master/README.md#build-from-source).
+2. **Build from Source**: Follow the instructions to build the project from [source](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data?tab=readme-ov-file#build-from-source).
 
 3. **Using Docker (Experimental)**: Note that this method is not fully functional due to configuration issues.
 In this Docker version, MIB viewing works. However, SNMP requests are non-functional because I couldn't configure the application to reach the outside network. To try the application, execute the following command to pull and run the Docker image:
