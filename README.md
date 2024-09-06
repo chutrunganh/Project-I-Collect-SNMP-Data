@@ -52,13 +52,16 @@ There are several ways you can try our application:
 
 2. **Build from Source**: Follow the instructions to build the project from [source](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/edit/master/README.md#build-from-source).
 
-3. **Using Docker**: Note that this method is not fully functional due to configuration issues.
+3. **Using Docker (Experimental)**: Note that this method is not fully functional due to configuration issues.
 In this Docker version, MIB viewing works. However, SNMP requests are non-functional because I couldn't configure the application to reach the outside network. To try the application, execute the following command to pull and run the Docker image:
 ```bash
 docker run -p 5900:5900 chutrunganh/snmp_browser:1.1.2
 ```
+Then, use a VNC viewer (e.g TigerVNC Viewer) to access the application GUI on localhost:5900
+
+
 ### Build from source
-1.Clone the repository
+1. Clone the repository
 ```bash
 git clone https://github.com/chutrunganh/Project-I-Collect-SNMP-Data.git
 ```
