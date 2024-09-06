@@ -48,7 +48,7 @@ This application was developed as part of the Course Project 1 for the semester 
 
 There are several ways you can try our application:
 
-1. **Download the JAR file (Recommended)**: Download directly from the [Releases page](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/releases/tag/v.1.1.2). Ensure you run the app with Java 21.
+1. **Download the JAR file (Recommended)**: Download directly from the [Releases page](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/releases/tag/v1.1.2). Ensure you run the app with Java 21.
 
 2. **Build from Source**: Follow the instructions to build the project from [source](https://github.com/chutrunganh/Project-I-Collect-SNMP-Data/edit/master/README.md#build-from-source).
 
