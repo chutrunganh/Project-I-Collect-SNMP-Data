@@ -115,6 +115,11 @@ available in the `MIB Databases` directory, or users can import their own MIB fi
      <img src="Image/TableDemo.gif" alt="Not Found Image" width="400">
 
 
+---
+Like this project? Give a star 🌟 to SNMP Browser and make it even stronger! 💪
+
+---
+
 # Code Structure 🏗️
 We designed our code following the Maven standard structure and the Model-View-Controller (MVC) pattern. Here is the 
 main structure and their short purpose:
@@ -169,3 +174,5 @@ For more details about both SNMP theory and our application, you can check our [
 This project is maintained by: Chu Trung Anh - [Email](mailto:chutrunganh04@gmail.com).
 
 Feel free to contact me if you have any question or suggestion.
+
+
