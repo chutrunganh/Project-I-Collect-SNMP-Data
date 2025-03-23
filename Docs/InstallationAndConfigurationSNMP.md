@@ -89,7 +89,6 @@ This line indicates that we are setting up a read-write community string. Here, 
 
 Remember to restart snmpd to takes effect:
 ```sudo systemctl restart snmpd```
-S
 
 ### With SNMP version v3
 
@@ -125,13 +124,12 @@ Next, restart the `snmpd` daemon to apply the changes
 sudo systemctl restart snmpd
 ```
 
-Verify the user creation by checking these files:
+Verify the user creation by checking two of these files:
 ```bash
 sudo tail /usr/share/snmp/snmpd.conf              
 ```
-Output:
 ```plaintext
-rwuser chutrunganh
+Output: rwuser chutrunganh
 ```
 And
 
