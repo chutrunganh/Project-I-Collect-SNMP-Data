@@ -139,6 +139,8 @@ sudo nano /var/lib/snmp/snmpd.conf
 
 # Step 3: Configure Firewall
 
+## On the NMS
+
 Allow necessary ports by executing the following commands:
 
 ```bash
@@ -147,6 +149,9 @@ sudo ufw allow 162/udp
 ```
 
 # Testing the Configuration
+
+## On the agent
+
 Verify if `snmpd` is running by executing:
 ```bash
 sudo systemctl status snmpd
@@ -154,7 +159,9 @@ sudo systemctl status snmpd
 If it's not active, start it using:
 ```bash
 sudo systemctl start snmpd
+sudo systemctl enable snmpd
 ```
+## On the NMS
 
 After completing the above steps, send a GET request from the NMS to the agent using the `snmpget` command:
 
